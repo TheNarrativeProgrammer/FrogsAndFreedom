@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="ParameterPreset" id="{93f7c79f-136d-480e-ae88-5cdab1651984}">
+		<property name="name">
+			<value>ROCKET_IMPACT</value>
+		</property>
+		<relationship name="folder">
+			<destination>{6ea655d8-21f7-455f-8066-5d8651d02063}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{ef6604ca-94ff-4fbf-adc0-48bc206174a5}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{ef6604ca-94ff-4fbf-adc0-48bc206174a5}">
+		<property name="parameterType">
+			<value>2</value>
+		</property>
+		<property name="maximum">
+			<value>3</value>
+		</property>
+		<property name="enumerationLabels">
+			<value>ROCK</value>
+			<value>METAL</value>
+			<value>WOOD</value>
+		</property>
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+	</object>
+</objects>

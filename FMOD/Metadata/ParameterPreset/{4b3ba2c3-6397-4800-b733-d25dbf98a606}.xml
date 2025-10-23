@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="ParameterPreset" id="{4b3ba2c3-6397-4800-b733-d25dbf98a606}">
+		<property name="name">
+			<value>wpn_ms_hold</value>
+		</property>
+		<relationship name="folder">
+			<destination>{13b47442-05c1-4d10-b730-94b1f15aabf8}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{05b2071f-d944-436a-90af-06e64431f2de}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{05b2071f-d944-436a-90af-06e64431f2de}">
+		<property name="parameterType">
+			<value>1</value>
+		</property>
+		<property name="maximum">
+			<value>2</value>
+		</property>
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+	</object>
+</objects>

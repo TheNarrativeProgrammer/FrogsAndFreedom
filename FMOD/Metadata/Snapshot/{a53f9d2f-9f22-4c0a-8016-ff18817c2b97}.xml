@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="Snapshot" id="{a53f9d2f-9f22-4c0a-8016-ff18817c2b97}">
+		<property name="color">
+			<value>Red</value>
+		</property>
+		<property name="name">
+			<value>mute_rtn</value>
+		</property>
+		<relationship name="mixer">
+			<destination>{a411aa95-e250-4143-8c2e-069c398563d5}</destination>
+		</relationship>
+		<relationship name="automatableProperties">
+			<destination>{d889b414-a07c-4e1f-9399-9f775de78d50}</destination>
+		</relationship>
+		<relationship name="markerTracks">
+			<destination>{89828b3f-552f-4292-89f3-7b232c9e33f1}</destination>
+		</relationship>
+		<relationship name="timeline">
+			<destination>{d929b943-4897-433b-907a-978098debe19}</destination>
+		</relationship>
+		<relationship name="snapshotMasterTrack">
+			<destination>{41e1f940-7bfa-4249-9a2a-71f862e7e12f}</destination>
+		</relationship>
+	</object>
+	<object class="EventAutomatableProperties" id="{d889b414-a07c-4e1f-9399-9f775de78d50}" />
+	<object class="MarkerTrack" id="{89828b3f-552f-4292-89f3-7b232c9e33f1}" />
+	<object class="Timeline" id="{d929b943-4897-433b-907a-978098debe19}" />
+	<object class="SnapshotMasterTrack" id="{41e1f940-7bfa-4249-9a2a-71f862e7e12f}" />
+</objects>

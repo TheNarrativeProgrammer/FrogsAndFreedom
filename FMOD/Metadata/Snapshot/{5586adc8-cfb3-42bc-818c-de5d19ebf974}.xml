@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="Snapshot" id="{5586adc8-cfb3-42bc-818c-de5d19ebf974}">
+		<property name="color">
+			<value>Cyan</value>
+		</property>
+		<property name="name">
+			<value>lvl_</value>
+		</property>
+		<property name="behavior">
+			<value>1</value>
+		</property>
+		<relationship name="mixer">
+			<destination>{a411aa95-e250-4143-8c2e-069c398563d5}</destination>
+		</relationship>
+		<relationship name="automatableProperties">
+			<destination>{ecfadedc-ba26-4441-b053-b6371153b278}</destination>
+		</relationship>
+		<relationship name="markerTracks">
+			<destination>{121ae987-fa80-42ec-9713-b221c7642bb9}</destination>
+		</relationship>
+		<relationship name="timeline">
+			<destination>{524bdf35-0ca1-4c2c-833e-380e664c04e8}</destination>
+		</relationship>
+		<relationship name="snapshotMasterTrack">
+			<destination>{ace4a21e-57be-4ecf-aeea-2c35ad14d8ef}</destination>
+		</relationship>
+	</object>
+	<object class="EventAutomatableProperties" id="{ecfadedc-ba26-4441-b053-b6371153b278}" />
+	<object class="MarkerTrack" id="{121ae987-fa80-42ec-9713-b221c7642bb9}" />
+	<object class="Timeline" id="{524bdf35-0ca1-4c2c-833e-380e664c04e8}" />
+	<object class="SnapshotMasterTrack" id="{ace4a21e-57be-4ecf-aeea-2c35ad14d8ef}" />
+</objects>

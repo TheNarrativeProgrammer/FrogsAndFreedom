@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="SnapshotList" id="{b9edd2f5-65a7-4e96-a8c5-e6674d693499}">
+		<relationship name="items">
+			<destination>{1657a3c3-6d8b-4079-9896-89c14281a69d}</destination>
+			<destination>{5cd9d8d2-274d-454f-81db-6280b059560a}</destination>
+			<destination>{020607cd-666e-4be5-a469-202617b7822c}</destination>
+			<destination>{a53f9d2f-9f22-4c0a-8016-ff18817c2b97}</destination>
+			<destination>{37b17548-daf4-45ad-9c69-d576bf7c0f3d}</destination>
+			<destination>{4669ce59-a092-43b5-b9c6-4773d7dcd6fb}</destination>
+			<destination>{5586adc8-cfb3-42bc-818c-de5d19ebf974}</destination>
+			<destination>{8897f9ce-6d07-46ff-a3dd-0b4808827cb3}</destination>
+			<destination>{4de07bdf-c6bf-4c62-9d5d-365ecb9c6070}</destination>
+		</relationship>
+		<relationship name="mixer">
+			<destination>{a411aa95-e250-4143-8c2e-069c398563d5}</destination>
+		</relationship>
+	</object>
+</objects>

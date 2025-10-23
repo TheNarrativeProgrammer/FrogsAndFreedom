@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="ParameterPreset" id="{08adcf89-7a5e-4dee-bbe3-2bc9ef6cd335}">
+		<property name="name">
+			<value>WOOD_FX</value>
+		</property>
+		<relationship name="folder">
+			<destination>{374a6431-5970-45fe-aaf2-521ae1c6d74f}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{ad6ed33d-5420-4d51-861b-191daab6419a}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{ad6ed33d-5420-4d51-861b-191daab6419a}">
+		<property name="parameterType">
+			<value>2</value>
+		</property>
+		<property name="maximum">
+			<value>3</value>
+		</property>
+		<property name="enumerationLabels">
+			<value>CRATE</value>
+			<value>PALLET</value>
+			<value>DOOR</value>
+		</property>
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+	</object>
+</objects>

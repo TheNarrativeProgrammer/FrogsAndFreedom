@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="ParameterPreset" id="{ea2f2c64-caa1-44bc-a461-0139bf81b62f}">
+		<property name="name">
+			<value>GeneratorHealth</value>
+		</property>
+		<relationship name="folder">
+			<destination>{1fe3472f-553b-4a54-976e-510d10293c10}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{4623a601-d164-4d1c-a27c-7bda4273ace1}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{4623a601-d164-4d1c-a27c-7bda4273ace1}">
+		<property name="parameterType">
+			<value>2</value>
+		</property>
+		<property name="maximum">
+			<value>2</value>
+		</property>
+		<property name="enumerationLabels">
+			<value>High</value>
+			<value>Low</value>
+		</property>
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+	</object>
+</objects>

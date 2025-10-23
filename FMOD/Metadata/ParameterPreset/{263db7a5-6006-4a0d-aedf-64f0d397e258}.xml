@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="ParameterPreset" id="{263db7a5-6006-4a0d-aedf-64f0d397e258}">
+		<property name="name">
+			<value>ambWindStrength</value>
+		</property>
+		<relationship name="folder">
+			<destination>{4033466f-e7e0-4ba6-9e00-b4f7a6ec094c}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{a48ef5b6-f24f-4169-b16f-714faa7a74d8}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{a48ef5b6-f24f-4169-b16f-714faa7a74d8}">
+		<property name="isGlobal">
+			<value>true</value>
+		</property>
+		<property name="initialValue">
+			<value>0.20000000000000001</value>
+		</property>
+		<property name="isExposedRecursively">
+			<value>false</value>
+		</property>
+	</object>
+</objects>

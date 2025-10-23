@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="EventFolder" id="{c8de7f5b-5038-4422-9d9b-6c87034d4967}">
+		<property name="name">
+			<value>pinner</value>
+		</property>
+		<relationship name="folder">
+			<destination>{7936c501-17bb-4b06-9749-aa68ef7d8bfb}</destination>
+		</relationship>
+	</object>
+</objects>

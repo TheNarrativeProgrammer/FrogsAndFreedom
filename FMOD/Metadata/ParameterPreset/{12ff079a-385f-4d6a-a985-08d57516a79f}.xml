@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="ParameterPreset" id="{12ff079a-385f-4d6a-a985-08d57516a79f}">
+		<property name="name">
+			<value>fsspeedVol</value>
+		</property>
+		<relationship name="folder">
+			<destination>{0cd6a5a1-5a4f-4d60-a09e-28279cb5210f}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{50695578-fd53-4262-be09-e6c515b5fdb4}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{50695578-fd53-4262-be09-e6c515b5fdb4}">
+		<property name="isGlobal">
+			<value>true</value>
+		</property>
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+		<property name="isExposedRecursively">
+			<value>false</value>
+		</property>
+	</object>
+</objects>

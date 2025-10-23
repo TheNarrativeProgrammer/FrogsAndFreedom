@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="ParameterPreset" id="{b76acf50-1d6a-4e3b-86a1-3cfe3e3220e1}">
+		<property name="name">
+			<value>METAL_FX</value>
+		</property>
+		<relationship name="folder">
+			<destination>{374a6431-5970-45fe-aaf2-521ae1c6d74f}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{da1825e3-7484-49ee-89e2-4100f7bafba3}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{da1825e3-7484-49ee-89e2-4100f7bafba3}">
+		<property name="parameterType">
+			<value>2</value>
+		</property>
+		<property name="maximum">
+			<value>4</value>
+		</property>
+		<property name="enumerationLabels">
+			<value>DOOR</value>
+			<value>WALL</value>
+			<value>BARREL</value>
+			<value>RAIL</value>
+		</property>
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+	</object>
+</objects>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="ParameterPreset" id="{f10fe78d-0364-4e1f-aab5-8d7ec07595f4}">
+		<property name="name">
+			<value>ambwindtype</value>
+		</property>
+		<relationship name="folder">
+			<destination>{4033466f-e7e0-4ba6-9e00-b4f7a6ec094c}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{8337089b-6700-4037-a721-f0938d9f5c7c}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{8337089b-6700-4037-a721-f0938d9f5c7c}">
+		<property name="parameterType">
+			<value>2</value>
+		</property>
+		<property name="maximum">
+			<value>2</value>
+		</property>
+		<property name="enumerationLabels">
+			<value>indoor</value>
+			<value>outdoor</value>
+		</property>
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+	</object>
+</objects>

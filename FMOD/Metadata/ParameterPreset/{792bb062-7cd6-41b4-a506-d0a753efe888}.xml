@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="ParameterPreset" id="{792bb062-7cd6-41b4-a506-d0a753efe888}">
+		<property name="name">
+			<value>npcfrogmidair</value>
+		</property>
+		<relationship name="folder">
+			<destination>{3e104e53-817c-443c-82f2-056839e3eaaa}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{e3d8bdcb-b45e-4884-a05f-a8887f6e9f8a}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{e3d8bdcb-b45e-4884-a05f-a8887f6e9f8a}">
+		<property name="parameterType">
+			<value>2</value>
+		</property>
+		<property name="maximum">
+			<value>2</value>
+		</property>
+		<property name="enumerationLabels">
+			<value>AIRTIME</value>
+			<value>LANDMINE</value>
+		</property>
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+	</object>
+</objects>

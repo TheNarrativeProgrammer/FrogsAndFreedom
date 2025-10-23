@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="ParameterPresetFolder" id="{c961b6ff-8a5c-4161-8e54-e9f9b3c0591d}">
+		<property name="name">
+			<value>pogo_charge</value>
+		</property>
+		<relationship name="folder">
+			<destination>{dad57e09-015f-42b0-865e-8cf4fc19c998}</destination>
+		</relationship>
+	</object>
+</objects>

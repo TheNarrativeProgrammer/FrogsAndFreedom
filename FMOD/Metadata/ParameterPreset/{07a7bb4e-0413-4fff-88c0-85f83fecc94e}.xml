@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="ParameterPreset" id="{07a7bb4e-0413-4fff-88c0-85f83fecc94e}">
+		<property name="name">
+			<value>fsland</value>
+		</property>
+		<relationship name="folder">
+			<destination>{0cd6a5a1-5a4f-4d60-a09e-28279cb5210f}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{f244d7c4-6987-4293-881d-1762dcb00663}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{f244d7c4-6987-4293-881d-1762dcb00663}">
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+	</object>
+</objects>

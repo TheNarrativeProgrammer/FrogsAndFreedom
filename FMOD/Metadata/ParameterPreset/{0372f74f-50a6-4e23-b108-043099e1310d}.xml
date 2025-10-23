@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="ParameterPreset" id="{0372f74f-50a6-4e23-b108-043099e1310d}">
+		<property name="name">
+			<value>flusher_xplode</value>
+		</property>
+		<relationship name="folder">
+			<destination>{1fe3472f-553b-4a54-976e-510d10293c10}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{6cf90904-9869-4c77-bb60-9ff2ef3c9ebb}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{6cf90904-9869-4c77-bb60-9ff2ef3c9ebb}">
+		<property name="maximum">
+			<value>3</value>
+		</property>
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+	</object>
+</objects>

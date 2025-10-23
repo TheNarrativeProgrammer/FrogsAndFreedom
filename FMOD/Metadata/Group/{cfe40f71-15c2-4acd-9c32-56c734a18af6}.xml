@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="MixerGroup" id="{cfe40f71-15c2-4acd-9c32-56c734a18af6}">
+		<property name="name">
+			<value>DIALOGUE</value>
+		</property>
+		<relationship name="automators">
+			<destination>{0ee8e944-9e20-4873-b25c-b77c26c64767}</destination>
+		</relationship>
+		<relationship name="masters">
+			<destination>{765c6127-e62d-4530-bb15-ee172a2e200c}</destination>
+		</relationship>
+		<relationship name="effectChain">
+			<destination>{5d266880-1772-4a2b-90fc-e7e444203b69}</destination>
+		</relationship>
+		<relationship name="panner">
+			<destination>{2131bb96-6ae9-400d-9d75-4ace8a9bc5cb}</destination>
+		</relationship>
+		<relationship name="output">
+			<destination>{6a726f08-28cc-4338-a77f-adfe697f6bec}</destination>
+		</relationship>
+	</object>
+	<object class="Automator" id="{0ee8e944-9e20-4873-b25c-b77c26c64767}">
+		<property name="nameOfPropertyBeingAutomated">
+			<value>volume</value>
+		</property>
+		<relationship name="automationCurves">
+			<destination>{9f1374b4-ec4c-4b7d-a2ed-c7a106ebe2ed}</destination>
+		</relationship>
+	</object>
+	<object class="MixerBusEffectChain" id="{5d266880-1772-4a2b-90fc-e7e444203b69}">
+		<relationship name="effects">
+			<destination>{95074009-8eeb-4806-b8f5-6bcc098f2fb9}</destination>
+			<destination>{106b92d7-0538-43ca-ade3-0fb01d5330e2}</destination>
+			<destination>{bce580c0-9eca-4a55-a97b-5a0da9f46479}</destination>
+		</relationship>
+	</object>
+	<object class="MixerBusPanner" id="{2131bb96-6ae9-400d-9d75-4ace8a9bc5cb}" />
+	<object class="AutomationCurve" id="{9f1374b4-ec4c-4b7d-a2ed-c7a106ebe2ed}">
+		<relationship name="parameter">
+			<destination>{40f685f7-55ae-4d4c-9b67-344ba39d1d63}</destination>
+		</relationship>
+		<relationship name="automationPoints">
+			<destination>{eefbaf96-e488-4303-b56d-3d3325ec9219}</destination>
+			<destination>{25d8b2d3-db54-483d-a418-ad1afcbba869}</destination>
+		</relationship>
+	</object>
+	<object class="GainEffect" id="{95074009-8eeb-4806-b8f5-6bcc098f2fb9}">
+		<property name="gain">
+			<value>3.5</value>
+		</property>
+	</object>
+	<object class="MixerBusFader" id="{106b92d7-0538-43ca-ade3-0fb01d5330e2}" />
+	<object class="Sidechain" id="{bce580c0-9eca-4a55-a97b-5a0da9f46479}" />
+	<object class="AutomationPoint" id="{eefbaf96-e488-4303-b56d-3d3325ec9219}">
+		<property name="position">
+			<value>0</value>
+		</property>
+		<property name="value">
+			<value>-30</value>
+		</property>
+		<property name="curveShape">
+			<value>-0.162485525</value>
+		</property>
+	</object>
+	<object class="AutomationPoint" id="{25d8b2d3-db54-483d-a418-ad1afcbba869}">
+		<property name="position">
+			<value>1</value>
+		</property>
+		<property name="value">
+			<value>0</value>
+		</property>
+	</object>
+</objects>

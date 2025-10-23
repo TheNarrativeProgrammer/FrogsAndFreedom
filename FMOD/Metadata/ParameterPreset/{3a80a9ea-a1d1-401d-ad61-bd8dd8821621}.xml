@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="ParameterPreset" id="{3a80a9ea-a1d1-401d-ad61-bd8dd8821621}">
+		<property name="name">
+			<value>pogo_ch</value>
+		</property>
+		<relationship name="folder">
+			<destination>{c961b6ff-8a5c-4161-8e54-e9f9b3c0591d}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{9dbcb21e-aadf-40ac-9b26-783487a23f55}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{9dbcb21e-aadf-40ac-9b26-783487a23f55}">
+		<property name="maximum">
+			<value>1.1499999999999999</value>
+		</property>
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+	</object>
+</objects>

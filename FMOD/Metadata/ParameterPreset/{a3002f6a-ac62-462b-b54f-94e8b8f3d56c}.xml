@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="ParameterPreset" id="{a3002f6a-ac62-462b-b54f-94e8b8f3d56c}">
+		<property name="name">
+			<value>AC-HUM-SEL</value>
+		</property>
+		<relationship name="folder">
+			<destination>{4033466f-e7e0-4ba6-9e00-b4f7a6ec094c}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{4300055c-0925-44eb-bf0a-f3a1a5df7fed}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{4300055c-0925-44eb-bf0a-f3a1a5df7fed}">
+		<property name="parameterType">
+			<value>2</value>
+		</property>
+		<property name="maximum">
+			<value>6</value>
+		</property>
+		<property name="enumerationLabels">
+			<value>HUM-1</value>
+			<value>HUM-2</value>
+			<value>HUM-3</value>
+			<value>HUM-4</value>
+			<value>HUM-5</value>
+			<value>HUM-6</value>
+		</property>
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+	</object>
+</objects>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="DAWAsset" id="{774d30c9-055d-4bf3-b940-5054afce5492}">
+		<property name="assetPath">
+			<value>[EDIT] - ProjectFrog - The Steak House.rpp.link/vo_base_jump_layer__1.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>48</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>0.80214583333333334</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{0007398a-8526-4222-84a0-9fc057cc09e5}</destination>
+		</relationship>
+		<relationship name="project">
+			<destination>{4c624530-ee9b-44a3-8b7f-ccab0633928f}</destination>
+		</relationship>
+	</object>
+</objects>

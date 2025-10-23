@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="ParameterPreset" id="{5ec3b007-b477-4450-9c0e-fec6da4d20fd}">
+		<property name="name">
+			<value>vo_pc_state</value>
+		</property>
+		<relationship name="folder">
+			<destination>{ad6a6ab3-fbb4-4341-b789-1ba644583f90}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{f2496e97-02de-45c6-9082-8028373a7a65}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{f2496e97-02de-45c6-9082-8028373a7a65}">
+		<property name="parameterType">
+			<value>2</value>
+		</property>
+		<property name="maximum">
+			<value>5</value>
+		</property>
+		<property name="enumerationLabels">
+			<value>nuttin</value>
+			<value>JUMPING</value>
+			<value>HURTING</value>
+			<value>RALLYING</value>
+			<value>DEATHING</value>
+		</property>
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+	</object>
+</objects>

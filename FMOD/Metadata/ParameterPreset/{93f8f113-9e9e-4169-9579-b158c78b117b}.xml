@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="ParameterPreset" id="{93f8f113-9e9e-4169-9579-b158c78b117b}">
+		<property name="name">
+			<value>ROCKET_TRAIL</value>
+		</property>
+		<relationship name="folder">
+			<destination>{6ea655d8-21f7-455f-8066-5d8651d02063}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{0b33375d-6eb0-424e-a5db-16c6194782d3}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{0b33375d-6eb0-424e-a5db-16c6194782d3}">
+		<property name="parameterType">
+			<value>1</value>
+		</property>
+		<property name="maximum">
+			<value>2</value>
+		</property>
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+	</object>
+</objects>

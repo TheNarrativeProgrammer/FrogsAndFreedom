@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="UiMixerView" id="{cf00b273-49ae-4714-a44a-442e2cd6c821}">
+		<property name="name">
+			<value>VAMix</value>
+		</property>
+		<relationship name="assignedStrips">
+			<destination>{cfe40f71-15c2-4acd-9c32-56c734a18af6}</destination>
+			<destination>{63014bf2-62cb-495c-aa46-1aac1ebd480b}</destination>
+			<destination>{c9605225-d7f6-4142-99b8-ca6f8ee39e80}</destination>
+			<destination>{658e4bd7-6b90-4209-9e56-4c2c3b5b3707}</destination>
+			<destination>{2b05b313-9f5f-4b57-847f-a02ef976322b}</destination>
+			<destination>{a9c197b2-ce06-467e-9965-2011934924ca}</destination>
+			<destination>{dd8abe8d-e242-4b5d-b93d-960c84a431a3}</destination>
+			<destination>{ef8da577-1671-4529-ae4b-e280e812cc1c}</destination>
+			<destination>{a6766761-639f-4d12-a9e7-94c8abeeb123}</destination>
+			<destination>{d396f5b6-faf2-43d0-ac03-ef544416b9a1}</destination>
+			<destination>{074215d8-1945-446e-8284-d46411b699d1}</destination>
+			<destination>{f9011dc2-3f63-448b-9061-d999fabf9649}</destination>
+			<destination>{476015cd-1416-41b2-a55c-aa805bff3790}</destination>
+			<destination>{e7c32529-55f3-4782-b701-b09d0f453d09}</destination>
+			<destination>{4cc202a7-57c8-45d5-af52-17f09ad433db}</destination>
+			<destination>{06981158-711b-4617-8364-c3d715d398a0}</destination>
+			<destination>{e6f6d5f4-4ef2-45bb-bb64-e8470aa7b2c2}</destination>
+			<destination>{f7a299c1-994f-43ec-b20e-f1644abe841c}</destination>
+		</relationship>
+		<relationship name="mixer">
+			<destination>{a411aa95-e250-4143-8c2e-069c398563d5}</destination>
+		</relationship>
+	</object>
+</objects>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="ParameterPreset" id="{f3e2e038-17c0-42f2-bce3-7381f9d85044}">
+		<property name="name">
+			<value>FRACE</value>
+		</property>
+		<relationship name="folder">
+			<destination>{6ea655d8-21f7-455f-8066-5d8651d02063}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{809be966-13ef-41d4-9345-6361dfc5c869}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{809be966-13ef-41d4-9345-6361dfc5c869}">
+		<property name="parameterType">
+			<value>2</value>
+		</property>
+		<property name="maximum">
+			<value>6</value>
+		</property>
+		<property name="enumerationLabels">
+			<value>NONE</value>
+			<value>1</value>
+			<value>2</value>
+			<value>3</value>
+			<value>4</value>
+			<value>5</value>
+		</property>
+		<property name="initialValue">
+			<value>1</value>
+		</property>
+	</object>
+</objects>

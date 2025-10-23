@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="MixerGroup" id="{175c9fbe-5ae8-41f1-a6ae-2c0079f33b39}">
+		<property name="name">
+			<value>SFX</value>
+		</property>
+		<relationship name="automators">
+			<destination>{e666520f-b4d0-447c-a5ea-d35f3e6b86fb}</destination>
+		</relationship>
+		<relationship name="masters">
+			<destination>{4b8c4f14-9db5-48e6-932b-a7fe4423b34a}</destination>
+		</relationship>
+		<relationship name="effectChain">
+			<destination>{763013db-1475-434a-96f3-8d4118522300}</destination>
+		</relationship>
+		<relationship name="panner">
+			<destination>{21913af1-4a9d-46b0-a005-57857a376b99}</destination>
+		</relationship>
+		<relationship name="output">
+			<destination>{6a726f08-28cc-4338-a77f-adfe697f6bec}</destination>
+		</relationship>
+	</object>
+	<object class="Automator" id="{e666520f-b4d0-447c-a5ea-d35f3e6b86fb}">
+		<property name="nameOfPropertyBeingAutomated">
+			<value>volume</value>
+		</property>
+		<relationship name="automationCurves">
+			<destination>{e239aed3-8692-4f8c-8772-ae39fdf387ea}</destination>
+		</relationship>
+	</object>
+	<object class="MixerBusEffectChain" id="{763013db-1475-434a-96f3-8d4118522300}">
+		<relationship name="effects">
+			<destination>{afeef0a9-1219-4f19-8bc6-4c2ab0aa6fca}</destination>
+			<destination>{ae5d8647-2ac0-4b0e-a8bb-e2d0cd79dcf0}</destination>
+			<destination>{7b14253e-5c3f-481e-b3fc-5b423e972314}</destination>
+		</relationship>
+	</object>
+	<object class="MixerBusPanner" id="{21913af1-4a9d-46b0-a005-57857a376b99}" />
+	<object class="AutomationCurve" id="{e239aed3-8692-4f8c-8772-ae39fdf387ea}">
+		<relationship name="parameter">
+			<destination>{23f862d7-a2eb-44ed-a50c-282a9b122b65}</destination>
+		</relationship>
+		<relationship name="automationPoints">
+			<destination>{6940d853-a822-4adf-b093-30398b522c1b}</destination>
+			<destination>{ec8618bf-4bb3-428d-adc0-ca1d6955aa44}</destination>
+		</relationship>
+	</object>
+	<object class="CompressorEffect" id="{afeef0a9-1219-4f19-8bc6-4c2ab0aa6fca}">
+		<property name="threshold">
+			<value>-39.5</value>
+		</property>
+		<property name="releaseTime">
+			<value>300</value>
+		</property>
+		<relationship name="sidechains">
+			<destination>{bce580c0-9eca-4a55-a97b-5a0da9f46479}</destination>
+		</relationship>
+	</object>
+	<object class="MixerBusFader" id="{ae5d8647-2ac0-4b0e-a8bb-e2d0cd79dcf0}" />
+	<object class="MixerSend" id="{7b14253e-5c3f-481e-b3fc-5b423e972314}">
+		<property name="level">
+			<value>0</value>
+		</property>
+		<property name="inputFormat">
+			<value>2</value>
+		</property>
+		<relationship name="mixerReturn">
+			<destination>{3bf59bde-78ae-4a26-8603-424378304b15}</destination>
+		</relationship>
+	</object>
+	<object class="AutomationPoint" id="{6940d853-a822-4adf-b093-30398b522c1b}">
+		<property name="position">
+			<value>0</value>
+		</property>
+		<property name="value">
+			<value>-80</value>
+		</property>
+		<property name="curveShape">
+			<value>-0.178175539</value>
+		</property>
+	</object>
+	<object class="AutomationPoint" id="{ec8618bf-4bb3-428d-adc0-ca1d6955aa44}">
+		<property name="position">
+			<value>1</value>
+		</property>
+		<property name="value">
+			<value>0</value>
+		</property>
+	</object>
+</objects>

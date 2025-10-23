@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="ParameterPreset" id="{45769d8c-57ee-465c-912a-445819781a52}">
+		<property name="name">
+			<value>rocket impact</value>
+		</property>
+		<relationship name="folder">
+			<destination>{6ea655d8-21f7-455f-8066-5d8651d02063}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{ab2308c6-620f-4485-9c2a-7852f4da4900}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{ab2308c6-620f-4485-9c2a-7852f4da4900}">
+		<property name="parameterType">
+			<value>2</value>
+		</property>
+		<property name="maximum">
+			<value>2</value>
+		</property>
+		<property name="enumerationLabels">
+			<value>land</value>
+			<value>air</value>
+		</property>
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+	</object>
+</objects>

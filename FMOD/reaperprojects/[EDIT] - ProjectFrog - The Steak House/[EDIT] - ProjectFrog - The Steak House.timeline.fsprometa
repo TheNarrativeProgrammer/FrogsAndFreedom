@@ -1,0 +1,54 @@
+{
+    "sourceproject": "D:/[Fork]/GD76PG27FP-ProjectFrog/FMOD-2025-05-26-CURRENT/reaperprojects/[EDIT] - ProjectFrog - The Steak House/[EDIT] - ProjectFrog - The Steak House.rpp",
+    "markers": [
+        {
+            "name": "SHOT_1",
+            "position": 0.000000
+        },
+        {
+            "name": "SHOT_2",
+            "position": 1.661548
+        }
+    ],
+    "audiotracks": [
+        {
+            "type": "master",
+            "instruments": [
+
+            ]
+        },
+        {
+            "type": "group",
+            "name": "master",
+            "instruments": [
+
+            ]
+        },
+        {
+            "type": "group",
+            "name": "sfx_wpn",
+            "instruments": [
+                {
+                    "type": "single",
+                    "start": 0.000000,
+                    "end": 5.394694,
+                    "audio": "sfx_wpn_shot_rl_1.wav"
+                }
+            ]
+        },
+        {
+            "type": "group",
+            "name": "GARBAGE CAN",
+            "instruments": [
+
+            ]
+        },
+        {
+            "type": "group",
+            "name": "RECIPES",
+            "instruments": [
+
+            ]
+        }
+    ]
+}

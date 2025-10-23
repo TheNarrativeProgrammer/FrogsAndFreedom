@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="MixerVCA" id="{a17ba10b-6e8d-427a-95b6-70f99574dd15}">
+		<property name="color">
+			<value>Green</value>
+		</property>
+		<property name="name">
+			<value>RTN</value>
+		</property>
+		<relationship name="mixer">
+			<destination>{a411aa95-e250-4143-8c2e-069c398563d5}</destination>
+		</relationship>
+	</object>
+</objects>

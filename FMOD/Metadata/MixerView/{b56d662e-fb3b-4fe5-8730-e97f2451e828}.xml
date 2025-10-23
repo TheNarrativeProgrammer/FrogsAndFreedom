@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="UiMixerView" id="{b56d662e-fb3b-4fe5-8730-e97f2451e828}">
+		<property name="name">
+			<value>SFXMix</value>
+		</property>
+		<relationship name="assignedStrips">
+			<destination>{175c9fbe-5ae8-41f1-a6ae-2c0079f33b39}</destination>
+			<destination>{fd6fc79f-cec8-4a02-a8a8-81e8431d3cce}</destination>
+			<destination>{59e2625d-f5c4-4ec4-b87c-861725524e63}</destination>
+			<destination>{4b73c9fd-78c0-481c-a139-9bb0c9e844c5}</destination>
+			<destination>{8c9c7410-f42f-477f-8924-e27333cc0153}</destination>
+			<destination>{3df862bc-f36d-4984-af1b-7eaf1006c852}</destination>
+			<destination>{e54c6d87-0d30-4f8b-aafe-b5c9d389469b}</destination>
+			<destination>{f081c801-a041-4e9b-97ce-e13002e043a3}</destination>
+			<destination>{9b6d714f-406c-4d94-8a4c-2789f25aba74}</destination>
+			<destination>{41d74823-365d-4e4d-8dba-ae1117687c53}</destination>
+			<destination>{e14e193e-4598-45ae-8cce-7714b1160ae8}</destination>
+			<destination>{f99c93db-7f99-4d5e-ac46-0e3c0d2a3ed8}</destination>
+			<destination>{7f2f0296-0420-41a6-a6fd-6f0a86ca557a}</destination>
+			<destination>{62d41887-4b02-4c1f-ae58-51b2670f7b1b}</destination>
+			<destination>{30d63418-3d7c-45de-85fd-481801530f7f}</destination>
+			<destination>{cf9c3dbc-9b0b-41e0-96bb-c214a04fd217}</destination>
+			<destination>{5c1f3bd5-707d-483f-889f-63d8a22113a3}</destination>
+			<destination>{e9c746dc-b77c-4556-884f-daf9bf2192f4}</destination>
+			<destination>{5cc2fbe1-01b8-4047-b5c9-0ae13cfdfbce}</destination>
+			<destination>{1e952ddd-0b36-41e7-af93-399859a48545}</destination>
+			<destination>{c0269caa-efc3-4149-8a81-3683f22667c0}</destination>
+			<destination>{6d723fc2-f00d-4206-881e-22e5f02b355c}</destination>
+			<destination>{b8423dc7-e9e6-466b-9704-c24985f80a65}</destination>
+			<destination>{c7d453d2-906f-4e0e-bd71-697250eac309}</destination>
+			<destination>{098726d3-8162-46a5-8db2-c14b6a8a781b}</destination>
+			<destination>{6d7f44e8-ee54-46fe-9207-321a6757d211}</destination>
+			<destination>{c708be6d-43b7-44ec-901b-65a06f0112e3}</destination>
+			<destination>{04fa16ab-8177-436d-a991-b39792b9e56a}</destination>
+			<destination>{b9a1dc62-06f3-4e23-be93-a9f942631e0f}</destination>
+			<destination>{31667fc0-0022-4458-9912-e5cf3a1a1f0a}</destination>
+			<destination>{b4f097a9-c508-476c-b60f-b8a952e0f48a}</destination>
+			<destination>{e205a2fc-9c64-42fb-9db0-fea53b23e778}</destination>
+		</relationship>
+		<relationship name="mixer">
+			<destination>{a411aa95-e250-4143-8c2e-069c398563d5}</destination>
+		</relationship>
+	</object>
+</objects>
