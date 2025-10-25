@@ -2,15 +2,12 @@
 
 
 #include "Subsystems/ObjectPoolingSubsystem.h"
-#include "GeometryCollection/GeometryCollectionActor.h"
 #include "AIController.h"
 #include "BrainComponent.h"
 #include "Characters/Frogs/CharacterBaseFrog.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Interfaces/Poolable.h"
-#include "AIController.h"
-#include "UObject/FastReferenceCollector.h"
 
 class ADetourCrowdAIController;
 
@@ -117,90 +114,27 @@ AActor* UObjectPoolingSubsystem::SpawnActorFromPool(TSubclassOf<AActor> poolable
 			FActorSetWrapper* ActorSetWrapper = ActorSetWrapperPtr->Get();
 			ActorSetWrapper->ActorsInGamePlay.Add(pooledActor);
 
-			//SKELETAL MESH - Reactivate Physics, gravity and animation
-			TArray<USkeletalMeshComponent*> SkeletalMeshComponents;
-			pooledActor->GetComponents<USkeletalMeshComponent>(SkeletalMeshComponents);
-
-			for (USkeletalMeshComponent* SkeletalMeshComponent : SkeletalMeshComponents)
-			{
-				if (SkeletalMeshComponent)
-				{
-					SkeletalMeshComponent->SetSimulatePhysics(false);
-					SkeletalMeshComponent->SetEnableGravity(true);
-					SkeletalMeshComponent->SetVisibility(true);
-					SkeletalMeshComponent->SetCollisionEnabled(ECollisionEnabled::Type::QueryAndPhysics);
-					SkeletalMeshComponent->bPauseAnims = false;
-					SkeletalMeshComponent->GlobalAnimRateScale = 1.0f;
-					SkeletalMeshComponent->bNoSkeletonUpdate = false;
-					//the skeletal mesh is occcasionally invisible. This is a fix for it.
-					SkeletalMeshComponent->SetVisibility(true);
-				}
-
-				if (UAnimInstance* AnimInstance = SkeletalMeshComponent->GetAnimInstance())
-				{
-					AnimInstance->Montage_Play(nullptr);
-					
-				}
-			}
-
-			//SKELETAL MESH - Reactivate Physics, gravity and animation
-			TArray<UStaticMeshComponent*> StaticMeshComponents;
-			pooledActor->GetComponents<UStaticMeshComponent>(StaticMeshComponents);
-
-			for (UStaticMeshComponent* StaticMeshComponent : StaticMeshComponents)
-			{
-				if (StaticMeshComponent)
-				{
-					StaticMeshComponent->SetSimulatePhysics(true);
-					StaticMeshComponent->SetEnableGravity(true);
-					StaticMeshComponent->SetVisibility(true);
-				}
-			}
-			
-
-			//stop movement of ai controller
-			if (AController* Controller = pooledActor->GetInstigatorController())
-			{
-				if (AAIController* AIController = Cast<AAIController>(Controller))
-				{
-					//UE_LOG(LogTemp, Warning, TEXT("PROGRAMMER: Actor is possessed by controller and it's logic is started"));
-					AIController->Possess(Cast<APawn>(pooledActor));
-					AIController->SetActorTickEnabled(true);
-					AIController->PrimaryActorTick.bCanEverTick = true;
-					if (AIController->BrainComponent)
-					{
-						AIController->BrainComponent->StartLogic();
-					}
-				}
-			}
-			
-			else if (APawn* pooledPawn = Cast<APawn>(pooledActor) )
-			{
-				if (!pooledPawn->GetController())
-				{
-					//UE_LOG(LogTemp, Warning, TEXT("PROGRAMMER: Actor is was NOT possessed by controller. A default controller was spawned"));
-					//Spawn controller and posses pawn
-					pooledPawn->SpawnDefaultController();
-				}
-				pooledPawn->Restart();
-				
-				
-			}
-
 			pooledActor->SetActorTransform(spawnTransform);
 			pooledActor->SetActorLocation(spawnTransform.GetLocation());
-			pooledActor->SetActorRotation(spawnTransform.GetRotation());
+
+			FQuat SafeQuat = spawnTransform.GetRotation();
+			SafeQuat.Normalize();
+			if (SafeQuat.ContainsNaN())
+			{
+				SafeQuat = FQuat::Identity;
+			}
+			pooledActor->SetActorRotation(SafeQuat);
 			pooledActor->SetActorEnableCollision(true);
 			pooledActor->SetActorTickEnabled(true);
 			//the skeletal mesh is occcasionally invisible. This is a fix for it.
-			pooledActor->GetComponentByClass<USkeletalMeshComponent>()->SetVisibility(true);
+			
 			pooledActor->RegisterAllComponents();
 
 			if (UPrimitiveComponent* RootPrimativeComponent = Cast<UPrimitiveComponent>(pooledActor->GetRootComponent()))
 			{
 				RootPrimativeComponent->SetCollisionEnabled(ECollisionEnabled::Type::QueryAndPhysics);
 			}
-	
+
 			if (UCapsuleComponent* CapsuleComponent = pooledActor->GetComponentByClass<UCapsuleComponent>())
 			{
 				CapsuleComponent->SetCollisionEnabled(ECollisionEnabled::Type::QueryAndPhysics);
@@ -214,9 +148,108 @@ AActor* UObjectPoolingSubsystem::SpawnActorFromPool(TSubclassOf<AActor> poolable
 				{
 					CharacterMovementComponent->SetMovementMode(MOVE_Walking);
 					CharacterMovementComponent->SetComponentTickEnabled(true);
+					CharacterMovementComponent->ResetMoveState();
 				}
 			}
 
+			//SKELETAL MESH - Reactivate Physics, gravity and animation
+			TArray<USkeletalMeshComponent*> SkeletalMeshComponents;
+			pooledActor->GetComponents<USkeletalMeshComponent>(SkeletalMeshComponents);
+
+			if (SkeletalMeshComponents.IsEmpty() == false)
+			{
+				for (USkeletalMeshComponent* SkeletalMeshComponent : SkeletalMeshComponents)
+				{
+					if (SkeletalMeshComponent)
+					{
+						SkeletalMeshComponent->bPauseAnims = false;
+						SkeletalMeshComponent->GlobalAnimRateScale = 1.0f;
+						SkeletalMeshComponent->bNoSkeletonUpdate = false;
+						SkeletalMeshComponent->SetVisibility(true);
+
+						SkeletalMeshComponent->InitAnim(true);
+						SkeletalMeshComponent->RefreshBoneTransforms();
+						SkeletalMeshComponent->TickAnimation(0.0f, false);
+						
+						SkeletalMeshComponent->SetSimulatePhysics(false);
+						SkeletalMeshComponent->SetEnableGravity(true);
+						
+						SkeletalMeshComponent->SetCollisionEnabled(ECollisionEnabled::Type::QueryAndPhysics);
+						
+						//the skeletal mesh is occcasionally invisible. This is a fix for it.
+						SkeletalMeshComponent->SetVisibility(true);
+					}
+
+					if (UAnimInstance* AnimInstance = SkeletalMeshComponent->GetAnimInstance())
+					{
+						AnimInstance->Montage_Play(nullptr);
+					
+					}
+				}
+			}
+			
+
+			//SKELETAL MESH - Reactivate Physics, gravity and animation
+			TArray<UStaticMeshComponent*> StaticMeshComponents;
+			pooledActor->GetComponents<UStaticMeshComponent>(StaticMeshComponents);
+
+			if (StaticMeshComponents.IsEmpty() == false)
+			{
+				for (UStaticMeshComponent* StaticMeshComponent : StaticMeshComponents)
+				{
+					if (StaticMeshComponent)
+					{
+						StaticMeshComponent->SetSimulatePhysics(true);
+						StaticMeshComponent->SetEnableGravity(true);
+						StaticMeshComponent->SetVisibility(true);
+					}
+				}
+			}
+
+			//Billboard Visibility
+			TArray<UMaterialBillboardComponent*> MaterialBillboardComponents;
+			pooledActor->GetComponents<UMaterialBillboardComponent>(MaterialBillboardComponents);
+
+			if (MaterialBillboardComponents.IsEmpty() == false)
+			{
+				for (UMaterialBillboardComponent* MaterialBillboardComponent : MaterialBillboardComponents)
+				{
+					if (MaterialBillboardComponent)
+					{
+						MaterialBillboardComponent->SetVisibility(true);
+					}
+				}
+			}
+			
+			
+
+			if (APawn* pooledPawn = Cast<APawn>(pooledActor))
+			{
+				//stop movement of ai controller
+				if (AController* Controller = pooledPawn->GetController())
+				{
+					//if a controller already exists, then unpossess before spawning default
+					Controller->UnPossess();
+				}
+				if (!pooledPawn->GetController())
+				{
+					pooledPawn->SpawnDefaultController();
+				}
+				if (AController* Controller = pooledPawn->GetController())
+				{
+					
+					if (AAIController* AIController = Cast<AAIController>(Controller))
+					{
+						AIController->SetActorTickEnabled(true);
+						AIController->PrimaryActorTick.bCanEverTick = true;
+						if (AIController)
+						{
+							AIController->BrainComponent->StartLogic();
+						}
+					}
+				}
+			}
+			
 			
 			IPoolable::Execute_OnPoolActorActivated(pooledActor);
 			_mCountActorsInGame++;
@@ -233,7 +266,14 @@ AActor* UObjectPoolingSubsystem::SpawnActorFromPool(TSubclassOf<AActor> poolable
 
 		newActor->SetActorTransform(spawnTransform);
 		newActor->SetActorLocation(spawnTransform.GetLocation());
-		newActor->SetActorRotation(spawnTransform.GetRotation());
+
+		FQuat SafeQuat = spawnTransform.GetRotation();
+		SafeQuat.Normalize();
+		if (SafeQuat.ContainsNaN())
+		{
+			SafeQuat = FQuat::Identity;
+		}
+		newActor->SetActorRotation(SafeQuat);
 		newActor->SetActorEnableCollision(true);
 		newActor->SetActorTickEnabled(true);
 		newActor->RegisterAllComponents();
@@ -244,38 +284,61 @@ AActor* UObjectPoolingSubsystem::SpawnActorFromPool(TSubclassOf<AActor> poolable
 		TArray<USkeletalMeshComponent*> SkeletalMeshComponents;
 		newActor->GetComponents<USkeletalMeshComponent>(SkeletalMeshComponents);
 
-		for (USkeletalMeshComponent* SkeletalMeshComponent : SkeletalMeshComponents)
+		if (SkeletalMeshComponents.IsEmpty() == false)
 		{
-			if (SkeletalMeshComponent)
+			for (USkeletalMeshComponent* SkeletalMeshComponent : SkeletalMeshComponents)
 			{
-				SkeletalMeshComponent->SetSimulatePhysics(false);
-				SkeletalMeshComponent->SetEnableGravity(true);
-				SkeletalMeshComponent->SetVisibility(true);
-				SkeletalMeshComponent->SetCollisionEnabled(ECollisionEnabled::Type::QueryAndPhysics);
-				SkeletalMeshComponent->bPauseAnims = false;
-				SkeletalMeshComponent->GlobalAnimRateScale = 1.0f;
-			}
+				if (SkeletalMeshComponent)
+				{
+					SkeletalMeshComponent->SetSimulatePhysics(false);
+					SkeletalMeshComponent->SetEnableGravity(true);
+					SkeletalMeshComponent->SetVisibility(true);
+					SkeletalMeshComponent->SetCollisionEnabled(ECollisionEnabled::Type::QueryAndPhysics);
+					SkeletalMeshComponent->bPauseAnims = false;
+					SkeletalMeshComponent->GlobalAnimRateScale = 1.0f;
+				}
 
-			if (UAnimInstance* AnimInstance = SkeletalMeshComponent->GetAnimInstance())
-			{
-				AnimInstance->Montage_Play(nullptr);
+				if (UAnimInstance* AnimInstance = SkeletalMeshComponent->GetAnimInstance())
+				{
+					AnimInstance->Montage_Play(nullptr);
 					
+				}
 			}
 		}
+		
 
 		//SKELETAL MESH - Reactivate Physics, gravity and animation
 		TArray<UStaticMeshComponent*> StaticMeshComponents;
 		newActor->GetComponents<UStaticMeshComponent>(StaticMeshComponents);
 
-		for (UStaticMeshComponent* StaticMeshComponent : StaticMeshComponents)
+		if (StaticMeshComponents.IsEmpty() == false)
 		{
-			if (StaticMeshComponent)
+			for (UStaticMeshComponent* StaticMeshComponent : StaticMeshComponents)
 			{
-				StaticMeshComponent->SetSimulatePhysics(true);
-				StaticMeshComponent->SetEnableGravity(true);
-				StaticMeshComponent->SetVisibility(true);
+				if (StaticMeshComponent)
+				{
+					StaticMeshComponent->SetSimulatePhysics(true);
+					StaticMeshComponent->SetEnableGravity(true);
+					StaticMeshComponent->SetVisibility(true);
+				}
 			}
 		}
+		
+		//Billboard Visibility
+		TArray<UMaterialBillboardComponent*> MaterialBillboardComponents;
+		newActor->GetComponents<UMaterialBillboardComponent>(MaterialBillboardComponents);
+
+		if (MaterialBillboardComponents.IsEmpty() == false)
+		{
+			for (UMaterialBillboardComponent* MaterialBillboardComponent : MaterialBillboardComponents)
+			{
+				if (MaterialBillboardComponent)
+				{
+					MaterialBillboardComponent->SetVisibility(true);
+				}
+			}
+		}
+		
 		
 	//_mdActorsInGamePlay.FindOrAdd(poolableClass).ActorsInPoolOrLevel.Add(newActor);
 	TUniquePtr<FActorSetWrapper>* ActorSetWrapperPtr = _mdActorsInGamePlay.Find(poolableClass);
@@ -289,32 +352,34 @@ AActor* UObjectPoolingSubsystem::SpawnActorFromPool(TSubclassOf<AActor> poolable
 		FActorSetWrapper* ActorSetWrapper = ActorSetWrapperPtr->Get();
 		ActorSetWrapper->ActorsInGamePlay.Add(newActor);
 
-		if (APawn* pooledPawn = Cast<APawn>(newActor) )
+		if (APawn* newPawn = Cast<APawn>(newActor) )
 		{
-			if (!pooledPawn->GetController())
+			if (!newPawn->GetController())
 			{
 				//UE_LOG(LogTemp, Warning, TEXT("PROGRAMMER: Actor is was NOT possessed by controller. A default controller was spawned"));
 				//Spawn controller and posses pawn
-				pooledPawn->SpawnDefaultController();
+				newPawn->SpawnDefaultController();
 			}
-			pooledPawn->Restart();
-		}
-		//stop movement of ai controller
-		if (AController* Controller = newActor->GetInstigatorController())
-		{
-			if (AAIController* AIController = Cast<AAIController>(Controller))
+			newPawn->Restart();
+
+			//stop movement of ai controller
+			if (AController* Controller = newPawn->GetController())
 			{
-				//UE_LOG(LogTemp, Warning, TEXT("PROGRAMMER: Actor is possessed by controller and it's logic is started"));
-				AIController->Possess(Cast<APawn>(newActor));
-				if (AIController->BrainComponent)
+				if (AAIController* AIController = Cast<AAIController>(Controller))
 				{
-					AIController->BrainComponent->StartLogic();
+					//UE_LOG(LogTemp, Warning, TEXT("PROGRAMMER: Actor is possessed by controller and it's logic is started"));
+					AIController->Possess(Cast<APawn>(newActor));
+					if (AIController->BrainComponent)
+					{
+						AIController->BrainComponent->StartLogic();
+					}
 				}
 			}
 		}
+		
 	}
 	//the skeletal mesh is occcasionally invisible. This is a fix for it.
-	newActor->GetComponentByClass<USkeletalMeshComponent>()->SetVisibility(true);
+	
 	IPoolable::Execute_OnPoolActorActivated(newActor);
 	_mCountActorsInGame++;
 	return newActor;
@@ -355,22 +420,7 @@ void UObjectPoolingSubsystem::ReturnToPool(AActor* actorToReturn)
 	
 	//_mdActorPools.FindOrAdd(actorToReturn->GetClass())->ActorsInPool.Enqueue(actorToReturn);
 
-	//stop movement of ai controller
-	if (AController* Controller = actorToReturn->GetInstigatorController())
-	{
-		if (AAIController* AIController = Cast<AAIController>(Controller))
-		{
-			AIController->StopMovement();
-			AIController->SetActorTickEnabled(false);
-			AIController->PrimaryActorTick.bCanEverTick = false;
-
-			if (AIController->BrainComponent)
-			{
-				AIController->BrainComponent->StopLogic(TEXT("Brain Stopped. Returned to pool"));
-			}
-			//AIController->UnPossess();
-		}
-	}
+	
 
 	
 
@@ -378,16 +428,17 @@ void UObjectPoolingSubsystem::ReturnToPool(AActor* actorToReturn)
 	actorToReturn->GetWorldTimerManager().ClearAllTimersForObject(actorToReturn);
 
 	//Lookup pool transform from map. Set Transform, location, lifespan and disable collision and tick. Call interface function for deactivation
-	FTransform poolTransform = FTransform::Identity;
+	
 	if (_mdPoolTransform.Contains(actorToReturn->GetClass()))
 	{
-		poolTransform = _mdPoolTransform.FindOrAdd(actorToReturn->GetClass());
+		FTransform& poolTransform = _mdPoolTransform.FindOrAdd(actorToReturn->GetClass());
+		poolTransform.NormalizeRotation();
+		actorToReturn->SetActorTransform(poolTransform);
+		actorToReturn->SetActorLocation(poolTransform.GetLocation());
 	}
 	
-	actorToReturn->SetActorTransform(poolTransform);
-	actorToReturn->SetActorLocation(poolTransform.GetLocation());
+	
 	actorToReturn->SetActorEnableCollision(false);
-	actorToReturn->SetActorTickEnabled(false);
 	//actorToReturn->SetActorHiddenInGame(true);
 
 	if (UPrimitiveComponent* RootPrimativeComponent = Cast<UPrimitiveComponent>(actorToReturn->GetRootComponent()))
@@ -404,6 +455,29 @@ void UObjectPoolingSubsystem::ReturnToPool(AActor* actorToReturn)
 
 	if (ACharacter* Character = Cast<ACharacter>(actorToReturn))
 	{
+		//stop movement of ai controller
+		if (AController* Controller = Character->GetController())
+		{
+			if (AAIController* AIController = Cast<AAIController>(Controller))
+			{
+				AIController->StopMovement();
+
+				if (AIController->BrainComponent)
+				{
+					AIController->BrainComponent->StopLogic(TEXT("Paused Brain on REturn to pool"));
+				}
+				AIController->UnPossess();
+				AIController->SetActorTickEnabled(false);
+				AIController->PrimaryActorTick.bCanEverTick = false;
+				
+			}
+			else
+			{
+				Controller->UnPossess();
+				Controller->SetActorTickEnabled(false);
+				Controller->PrimaryActorTick.bCanEverTick = false;
+			}
+		}
 		if (UCharacterMovementComponent* CharacterMovementComponent = Character->GetCharacterMovement())
 		{
 			CharacterMovementComponent->StopMovementImmediately();
@@ -419,51 +493,74 @@ void UObjectPoolingSubsystem::ReturnToPool(AActor* actorToReturn)
 	TArray<USkeletalMeshComponent*> SkeletalMeshComponents;
 	actorToReturn->GetComponents<USkeletalMeshComponent>(SkeletalMeshComponents);
 
-	for (USkeletalMeshComponent* SkeletalMeshComponent : SkeletalMeshComponents)
+	if (SkeletalMeshComponents.IsEmpty() == false)
 	{
-		if (!IsValid(SkeletalMeshComponent))
+		for (USkeletalMeshComponent* SkeletalMeshComponent : SkeletalMeshComponents)
 		{
-			continue;
-		}
-		if (SkeletalMeshComponent)
-		{
-			//disable physics and gravity
-			SkeletalMeshComponent->SetSimulatePhysics(false);
-			SkeletalMeshComponent->SetEnableGravity(false);
-			SkeletalMeshComponent->SetVisibility(false);
-			SkeletalMeshComponent->SetCollisionEnabled(ECollisionEnabled::Type::NoCollision);
-
-			//stop animation
-			SkeletalMeshComponent->GlobalAnimRateScale = 0.0f;
-			SkeletalMeshComponent->bPauseAnims = true;
-			SkeletalMeshComponent->bNoSkeletonUpdate = true;
-
-			if (UAnimInstance* AnimInstance = SkeletalMeshComponent->GetAnimInstance())
+			if (!SkeletalMeshComponent)
 			{
-				AnimInstance->StopAllMontages(0.0f);
-				//AnimInstance->Montage_Stop(0.0f);
+				continue;
+			}
+			if (SkeletalMeshComponent)
+			{
+				//disable physics and gravity
+				SkeletalMeshComponent->SetSimulatePhysics(false);
+				SkeletalMeshComponent->SetEnableGravity(false);
+				SkeletalMeshComponent->SetVisibility(false);
+				SkeletalMeshComponent->SetCollisionEnabled(ECollisionEnabled::Type::NoCollision);
+
+				//stop animation
+				SkeletalMeshComponent->GlobalAnimRateScale = 0.0f;
+				SkeletalMeshComponent->bPauseAnims = true;
+				
+
+				if (UAnimInstance* AnimInstance = SkeletalMeshComponent->GetAnimInstance())
+				{
+					AnimInstance->StopAllMontages(0.0f);
+					//AnimInstance->Montage_Stop(0.0f);
+				}
 			}
 		}
 	}
+	
 
 	//STATIC MESH - Disable Physics and Gravity
 	TArray<UStaticMeshComponent*> StaticMeshComponents;
 	actorToReturn->GetComponents<UStaticMeshComponent>(StaticMeshComponents);
 
-	for (UStaticMeshComponent* StaticMeshComponent : StaticMeshComponents)
+	if (StaticMeshComponents.IsEmpty() == false)
 	{
-		if (!IsValid(StaticMeshComponent))
+		for (UStaticMeshComponent* StaticMeshComponent : StaticMeshComponents)
 		{
-			continue;
-		}
-		if (StaticMeshComponent)
-		{
-			StaticMeshComponent->SetSimulatePhysics(false);
-			StaticMeshComponent->SetEnableGravity(false);
-			StaticMeshComponent->SetVisibility(false);
-			StaticMeshComponent->SetCollisionEnabled(ECollisionEnabled::Type::NoCollision);
+			if (!StaticMeshComponent)
+			{
+				continue;
+			}
+			if (StaticMeshComponent)
+			{
+				StaticMeshComponent->SetSimulatePhysics(false);
+				StaticMeshComponent->SetEnableGravity(false);
+				StaticMeshComponent->SetVisibility(false);
+				StaticMeshComponent->SetCollisionEnabled(ECollisionEnabled::Type::NoCollision);
+			}
 		}
 	}
+
+	//Billboard Visibility
+	TArray<UMaterialBillboardComponent*> MaterialBillboardComponents;
+	actorToReturn->GetComponents<UMaterialBillboardComponent>(MaterialBillboardComponents);
+
+	if (MaterialBillboardComponents.IsEmpty() == false)
+	{
+		for (UMaterialBillboardComponent* MaterialBillboardComponent : MaterialBillboardComponents)
+		{
+			if (MaterialBillboardComponent)
+			{
+				MaterialBillboardComponent->SetVisibility(false);
+			}
+		}
+	}
+	
 
 	
 
