@@ -44,6 +44,8 @@ AGeneratorBase::AGeneratorBase()
 	// SceneComponentEnmenyAttackLocationRight->SetupAttachment(StaticMeshComponent);
 
 	//Populate Array
+	SceneComponentJumpOffLocation = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComponentJumpOffLocation"));
+	SceneComponentJumpOffLocation->SetupAttachment(StaticMeshComponent);
 	
 
 	GameplayTagContainer.AddTag(FGameplayTag::RequestGameplayTag(FName("Environment.Generator")));

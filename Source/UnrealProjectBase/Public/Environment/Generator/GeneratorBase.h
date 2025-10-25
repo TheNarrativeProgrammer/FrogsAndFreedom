@@ -60,6 +60,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	UHealthComponent* GetHealthComponent();
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
+	USceneComponent* SceneComponentJumpOffLocation;
+
 	
 
 	UPROPERTY(BlueprintCallable, BlueprintAssignable)
