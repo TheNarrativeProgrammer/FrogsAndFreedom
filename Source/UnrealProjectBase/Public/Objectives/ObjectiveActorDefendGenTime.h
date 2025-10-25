@@ -43,7 +43,7 @@ public:
 	void CompleteObjectiveBroadcast_Implementation() override;
 	
 	UFUNCTION()
-	void SetIsTimerFinished();
+	void OnTimerFinishedCompleteObjective();
 
 	UFUNCTION()
 	void UpdateTimeRemainingAndBroadcastToUI(float InTimeRemaning);

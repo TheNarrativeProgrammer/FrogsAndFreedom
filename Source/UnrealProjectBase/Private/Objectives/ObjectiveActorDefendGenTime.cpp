@@ -31,8 +31,6 @@ bool AObjectiveActorDefendGenTime::IsObjectiveCompleted_Implementation() const
 
 FText AObjectiveActorDefendGenTime::GetObjectiveDisplayText_Implementation() const
 {
-	if (_mIsTimerFinished == false)
-	{
 	#define LOCTEXT_NAMESPACE "ObjectiveActorDefendGenTime"
 			int TimeRemainingAtInt = std::clamp(static_cast<int>(_mTimeRemaining), 0, 240);
 			FFormatNamedArguments Args;
@@ -46,9 +44,7 @@ FText AObjectiveActorDefendGenTime::GetObjectiveDisplayText_Implementation() con
 
 			return OutputText;
 	#undef LOCTEXT_NAMESPACE
-	}
 
-	return FText::FromString("");
 }
 
 void AObjectiveActorDefendGenTime::StartObjective_Implementation()
@@ -95,7 +91,7 @@ void AObjectiveActorDefendGenTime::CompleteObjectiveBroadcast_Implementation()
 	Super::CompleteObjectiveBroadcast_Implementation();
 }
 
-void AObjectiveActorDefendGenTime::SetIsTimerFinished()
+void AObjectiveActorDefendGenTime::OnTimerFinishedCompleteObjective()
 {
 	_mIsTimerFinished = true;
 	IfCompleteTriggerSubObjectivesAndWave();
