@@ -75,17 +75,26 @@ void AGeneratorTimerManager::InitializeAndStartTimer()
 
 void AGeneratorTimerManager::TurnPowerOn()
 {
-	if (DelegateBindingComponentGenTimer->GameStateEventManager)
+	if (DelegateBindingComponentGenTimer)
 	{
-		DelegateBindingComponentGenTimer->GameStateEventManager->OnAllForceFieldActivatedTurnPowerOnDelegate.Broadcast();
+		if (DelegateBindingComponentGenTimer->GameStateEventManager)
+		{
+			DelegateBindingComponentGenTimer->GameStateEventManager->
+				OnAllForceFieldActivatedTurnPowerOnDelegate.Broadcast();
+		}
 	}
+	
 }
 
 void AGeneratorTimerManager::TurnPowerOff()
 {
-	if (DelegateBindingComponentGenTimer->GameStateEventManager)
+	if (DelegateBindingComponentGenTimer)
 	{
-		DelegateBindingComponentGenTimer->GameStateEventManager->OnForceFieldDeactivatedTurnPowerOffDelegate.Broadcast();
+		if (DelegateBindingComponentGenTimer->GameStateEventManager)
+		{
+			DelegateBindingComponentGenTimer->GameStateEventManager->
+				OnForceFieldDeactivatedTurnPowerOffDelegate.Broadcast();
+		}
 	}
 }
 
@@ -104,7 +113,8 @@ void AGeneratorTimerManager::BroadcastObjectiveCompleteGeneratorTimer()
 	GetWorldTimerManager().ClearTimer(TimerHandleDelegateBroadcastTimeUpdateGeneratorTimer);
 	if (DelegateBindingComponentGenTimer->GameStateEventManager)
 	{
-		DelegateBindingComponentGenTimer->GameStateEventManager->OnGeneratorTimerManagerTimerFinishedDelegate.Broadcast();
+		DelegateBindingComponentGenTimer->GameStateEventManager->
+			OnGeneratorTimerManagerTimerFinishedDelegate.Broadcast();
 	}
 }
 
@@ -123,12 +133,10 @@ float AGeneratorTimerManager::GetElaspedTime() const
 	if (GetWorldTimerManager().TimerExists(TimerHandleEncounterDurationGeneratorTimer))
 	{
 		float TimeElasped = GetWorldTimerManager().GetTimerElapsed(TimerHandleEncounterDurationGeneratorTimer);
-		//UE_LOG(LogTemp, Warning, TEXT("Timer Is set"));
 		return TimeElasped;
 	}
 	else
 	{
-		//UE_LOG(LogTemp, Warning, TEXT("Timer doesn't exist within Computer Generator Activator"));
 		return 0;
 	}
 }

@@ -22,7 +22,7 @@ void UDelegateBindingComponentObjTimer::BindDelegates()
 				ObjectiveActorDefendGenTimeOwner, &AObjectiveActorDefendGenTime::UpdateTimeRemainingAndBroadcastToUI);
 			
 			GameStateEventManager->OnGeneratorTimerManagerTimerFinishedDelegate.AddUniqueDynamic(
-				ObjectiveActorDefendGenTimeOwner, &AObjectiveActorDefendGenTime::SetIsTimerFinished);
+				ObjectiveActorDefendGenTimeOwner, &AObjectiveActorDefendGenTime::OnTimerFinishedCompleteObjective);
 		}
 	}
 }

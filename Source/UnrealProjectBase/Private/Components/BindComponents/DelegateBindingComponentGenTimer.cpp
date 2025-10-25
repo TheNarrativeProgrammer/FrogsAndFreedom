@@ -16,13 +16,11 @@ void UDelegateBindingComponentGenTimer::BindDelegates()
 	Super::BindDelegates();
 	if (GameStateEventManager)
 	{
-		if (AGeneratorTimerManager* GeneratorTimerManagerOwner = Cast<AGeneratorTimerManager>(GetOwner()))
+		if (AGeneratorTimerManager* GeneratorTimerManagerOwner =
+			Cast<AGeneratorTimerManager>(GetOwner()))
 		{
 			GameStateEventManager->OnGameOverClearAllActiveTimersDelegate.AddUniqueDynamic(
 				GeneratorTimerManagerOwner, &AGeneratorTimerManager::OnGameOverClearTimer);
-			
-			// GameStateEventManager->OnTimerObjectiveCompleteUpdateUIDelegate.AddUniqueDynamic(
-			// 	GeneratorTimerManagerOwner, &AGeneratorTimerManager::SetIsTimerObjectiveComplete);
 		}
 	}
 }
