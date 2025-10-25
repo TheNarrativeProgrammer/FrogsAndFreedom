@@ -239,18 +239,23 @@ void AAIControllerMobileFrogBase::OnActorReturnToPoolUnbindFromBehaviourDelegate
 FVector AAIControllerMobileFrogBase::FindReachablePointWhenOffNav_Implementation()
 {
 	APawn* OwningPawn = GetPawn();
+	if (!OwningPawn) return FVector::ZeroVector;
+	
 	if (UNavigationSystemV1* NavSystem = FNavigationSystem::GetCurrent<UNavigationSystemV1>(GetWorld()))
 	{
 		FNavLocation FoundLocation;
-		
 		float radiusOfSearch = 200;
 		
-		bool IsFound = NavSystem->GetRandomPointInNavigableRadius(OwningPawn->GetActorLocation(), radiusOfSearch, FoundLocation);
-
-		if (IsFound == true)
+		if (OwningPawn)
 		{
-			return FoundLocation.Location;
+			bool IsFound = NavSystem->GetRandomPointInNavigableRadius(OwningPawn->GetActorLocation(), radiusOfSearch, FoundLocation);
+
+			if (IsFound == true)
+			{
+				return FoundLocation.Location;
+			}
 		}
+		
 	}
 
 	
