@@ -16,9 +16,10 @@ void UDelegateBindingComponentCordMgmr::BindDelegates()
 	{
 		if (APowerCordManager* PowerCordManagerOwner = Cast<APowerCordManager>(GetOwner()))
 		{
-			GameStateEventManager->OnAllForceFieldActivatedTurnPowerOnDelegate.AddUniqueDynamic(PowerCordManagerOwner, &APowerCordManager::TurPowerCordsOn);
-			GameStateEventManager->OnForceFieldDeactivatedTurnPowerOffDelegate.AddUniqueDynamic(PowerCordManagerOwner, &APowerCordManager::TurnPowerCordsOff);
-			
+			GameStateEventManager->OnAllForceFieldActivatedTurnPowerOnDelegate.AddUniqueDynamic(
+				PowerCordManagerOwner, &APowerCordManager::TurPowerCordsOn);
+			GameStateEventManager->OnForceFieldDeactivatedTurnPowerOffDelegate.AddUniqueDynamic(
+				PowerCordManagerOwner, &APowerCordManager::TurnPowerCordsOff);
 		}
 	}
 }

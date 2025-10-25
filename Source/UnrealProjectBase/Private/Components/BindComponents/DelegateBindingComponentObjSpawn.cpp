@@ -18,8 +18,10 @@ void UDelegateBindingComponentObjSpawn::BindDelegates()
 	{
 		if (AObjectiveActorSpawnersActive* ObjectiveActorSpawnersActiveOwner = Cast<AObjectiveActorSpawnersActive>(GetOwner()))
 		{
-			GameStateEventManager->OnActorSpawnerBaseMachineDeathDelegate.AddUniqueDynamic(ObjectiveActorSpawnersActiveOwner, &AObjectiveActorSpawnersActive::BroadcastUIUpdateEvent);
-			GameStateEventManager->OnActorSpawnerBaseMachineDeathDelegate.AddUniqueDynamic(ObjectiveActorSpawnersActiveOwner, &AObjectiveActorSpawnersActive::IfCompleteTriggerSubObjectivesAndWave);
+			GameStateEventManager->OnActorSpawnerBaseMachineDeathDelegate.AddUniqueDynamic(
+				ObjectiveActorSpawnersActiveOwner, &AObjectiveActorSpawnersActive::BroadcastUIUpdateEvent);
+			GameStateEventManager->OnActorSpawnerBaseMachineDeathDelegate.AddUniqueDynamic(
+				ObjectiveActorSpawnersActiveOwner, &AObjectiveActorSpawnersActive::IfCompleteTriggerSubObjectivesAndWave);
 		}
 	}
 	
