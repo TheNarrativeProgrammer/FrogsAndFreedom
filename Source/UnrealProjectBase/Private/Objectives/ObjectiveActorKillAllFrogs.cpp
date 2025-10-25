@@ -31,10 +31,10 @@ bool AObjectiveActorKillAllFrogs::IsObjectiveCompleted_Implementation() const
 void AObjectiveActorKillAllFrogs::StartObjective_Implementation()
 {
 	Super::StartObjective_Implementation();
-	if (AGameStateEventManagerBase* GameStateEventManager = Cast<AGameStateEventManagerBase>(UGameplayStatics::GetGameState(GetWorld())))
-	{
-		GameStateEventManager->OnActorStateChangeUpdateUIDelegate.Broadcast();
-	}
+	// if (AGameStateEventManagerBase* GameStateEventManager = Cast<AGameStateEventManagerBase>(UGameplayStatics::GetGameState(GetWorld())))
+	// {
+	// 	GameStateEventManager->OnActorStateChangeUpdateUIDelegate.Broadcast();
+	// }
 }
 
 void AObjectiveActorKillAllFrogs::CompleteObjectiveBroadcast_Implementation()
@@ -88,15 +88,18 @@ void AObjectiveActorKillAllFrogs::IncreaseCountTotalEnemiesSpawned()
 void AObjectiveActorKillAllFrogs::IncreaseCountEnemiesKilled()
 {
 	_mCountEnemiesKilled++;
-	if (DelegateBindComponentObjKillAll)
-	{
-	DelegateBindComponentObjKillAll->GameStateEventManager->OnActorStateChangeUpdateUIDelegate.Broadcast();
-	}
-
+	
 	if (_mCountEnemiesKilled >= _mCountTotalEnemiesSpawned && IsObjectiveCompleted() == false && IsObjectiveStarted() == true)
 	{
 		SetAreAllFrogsDead(true);
 		IfCompleteTriggerSubObjectivesAndWave();
+	}
+	else if (IsObjectiveStarted() == true)
+	{
+		if (DelegateBindComponentObjKillAll)
+		{
+			DelegateBindComponentObjKillAll->GameStateEventManager->OnActorStateChangeUpdateUIDelegate.Broadcast();
+		}
 	}
 }
 
