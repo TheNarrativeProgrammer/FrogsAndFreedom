@@ -62,9 +62,4 @@ void AObjectiveActorReachPoint::OnOverlapObjectiveComplete_Implementation(
 			SetHasPlayerReachedPoint(true);
 			IfCompleteTriggerSubObjectivesAndWave();
 		}
-	if (AGameStateEventManagerBase* GameStateEventManager = Cast<AGameStateEventManagerBase>
-		(UGameplayStatics::GetGameState(GetWorld())))
-	{
-		GameStateEventManager->OnActorStateChangeUpdateUIDelegate.Broadcast();
-	}
 }
