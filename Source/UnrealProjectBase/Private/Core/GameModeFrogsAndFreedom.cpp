@@ -9,27 +9,25 @@
 
 void AGameModeFrogsAndFreedom::ReturnToMainMenuHost()
 {
+	UWorld* World = GetWorld();
+	if (!World) return;
 	
-	
-	if (AGameStateEventManagerBase* GameStateEventManagerBase = Cast<AGameStateEventManagerBase>(GetWorld()->GetGameState()))
+	if (AGameStateEventManagerBase* GameStateEventManagerBase =
+		Cast<AGameStateEventManagerBase>(World->GetGameState()))
 	{
 		GameStateEventManagerBase->OnGameOverClearAllActiveTimersDelegate.Broadcast();
-		UDialogueSubsystem* DialogueSubsystem = GetGameInstance()->GetSubsystem<UDialogueSubsystem>();
-		if (DialogueSubsystem)
-		{
-			DialogueSubsystem->OnGameOverClearTimer();
-		}
+	}
+		
+	if (UDialogueSubsystem* DialogueSubsystem =
+		GetGameInstance()->GetSubsystem<UDialogueSubsystem>())
+	{
+		DialogueSubsystem->OnGameOverClearTimer();
 	}
 	
 	FInputModeUIOnly InputMode;
-	GetWorld()->GetFirstPlayerController()->SetInputMode(InputMode);
-	GetWorld()->GetFirstPlayerController()->bShowMouseCursor = true;
-
-	
-	//UGameplayStatics::OpenLevel(GetWorld(), TEXT("MainMenu"));
+	World->GetFirstPlayerController()->SetInputMode(InputMode);
+	World->GetFirstPlayerController()->bShowMouseCursor = true;
 	GEngine->ForceGarbageCollection(true);
-
-	//GetGameInstance()->ReturnToMainMenu();
 	Super::ReturnToMainMenuHost();
 }
 
