@@ -82,8 +82,15 @@ void UDialogueSubsystem::IterateDialogueQue()
 			if (IsSuccessfulRow)
 			{
 				CurrentDialogueTextDataOfRow = CurrentDialogueOfRow.DialogueTextData;
-			
 				_mIsDialogueCurrentlyPlaying = true;
+				if (_mIsDialogueBoxVisible == false)
+				{
+					SetIsDialogueBoxVisible(true);
+					if (AGameStateEventManagerBase* GameStateEventManagerBase = Cast<AGameStateEventManagerBase>(GetWorld()->GetGameState()))
+					{
+						GameStateEventManagerBase->OnDialogueStartDelegate.Broadcast();
+					}
+				}
 				PlayDialogue();
 				IterateDialogueText();
 			}
@@ -94,6 +101,7 @@ void UDialogueSubsystem::IterateDialogueQue()
 	{
 		if (AGameStateEventManagerBase* GameStateEventManagerBase = Cast<AGameStateEventManagerBase>(GetWorld()->GetGameState()))
 		{
+			SetIsDialogueBoxVisible(false);
 			GameStateEventManagerBase->OnDialogueFinishedDelegate.Broadcast();
 		}
 	}
@@ -134,6 +142,11 @@ void UDialogueSubsystem::OnDialogueFinishedIterate()
 		else
 		{
 			_mIsDialogueCurrentlyPlaying = false;
+			if (AGameStateEventManagerBase* GameStateEventManagerBase = Cast<AGameStateEventManagerBase>(GetWorld()->GetGameState()))
+			{
+				SetIsDialogueBoxVisible(false);
+				GameStateEventManagerBase->OnDialogueFinishedDelegate.Broadcast();
+			}
 		}
 	}
 }
@@ -167,6 +180,22 @@ void UDialogueSubsystem::PlayDialogue()
 		
 	}
 	
+}
+
+void UDialogueSubsystem::SetIsDialogueBoxVisible(bool InIsDialogueBoxVisible)
+{
+	_mIsDialogueBoxVisible = InIsDialogueBoxVisible;
+}
+
+bool UDialogueSubsystem::ShouldCreateSubsystem(UObject* Outer) const
+{
+	Super::ShouldCreateSubsystem(Outer);
+	return true;
+}
+
+void UDialogueSubsystem::Initialize(FSubsystemCollectionBase& Collection)
+{
+	Super::Initialize(Collection);
 }
 
 void UDialogueSubsystem::SetDialogueTable(UDataTable* InDialogueTable)

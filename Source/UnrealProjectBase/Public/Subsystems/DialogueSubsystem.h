@@ -24,6 +24,7 @@ class UNREALPROJECTBASE_API UDialogueSubsystem : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
 
+
 protected:
 
 	TQueue<FDialogueData> DialogueQueue;
@@ -37,6 +38,9 @@ protected:
 	
 	UPROPERTY()
 	bool _mIsDialogueCurrentlyPlaying = false;
+
+	UPROPERTY()
+	bool _mIsDialogueBoxVisible = false;
 	
 	UPROPERTY(BlueprintReadWrite)
 	UDataTable* DialogueTable;
@@ -65,8 +69,16 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void PlayDialogue();
 
+	UFUNCTION()
+	void SetIsDialogueBoxVisible(bool InIsDialogueBoxVisible);
+
+
 	
 public:
+	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
+	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+	
+	
 	UFUNCTION(BlueprintCallable)
 	void SetDialogueTable (UDataTable* InDialogueTable);
 	
