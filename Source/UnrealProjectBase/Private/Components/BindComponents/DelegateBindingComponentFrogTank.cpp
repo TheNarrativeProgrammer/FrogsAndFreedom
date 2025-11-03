@@ -16,11 +16,4 @@ void UDelegateBindingComponentFrogTank::BindDelegateFromBP()
 void UDelegateBindingComponentFrogTank::BindDelegates()
 {
 	Super::BindDelegates();
-	if (GameStateEventManager)
-	{
-		if (ACharacterBaseFrogTank* ACharacterBaseFrogTankOwner = Cast<ACharacterBaseFrogTank>(GetOwner()))
-		{
-			//GameStateEventManager->OnCharacterBaseFrogTankSpawnedLocationDelegate.AddUniqueDynamic(ACharacterBaseFrogTankOwner, &ACharacterBaseFrogTank::Set);
-		}
-	}
 }
