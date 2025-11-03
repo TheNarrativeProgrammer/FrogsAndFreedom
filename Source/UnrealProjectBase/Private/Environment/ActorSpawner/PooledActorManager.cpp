@@ -28,10 +28,10 @@ void APooledActorManager::BeginPlay()
 	if (GameStateEventManager)
 	{
 		//Spawning Delegates
-		GameStateEventManager->OnActorSpawnerBaseMachineInitalizedDelegate.AddUniqueDynamic(this, &APooledActorManager::IncreaseMachineCount);
-		GameStateEventManager->OnActorSpawnerBaseInitalizedSelfRefDelegate.AddUniqueDynamic(this, &APooledActorManager::OnInitializedAddActorSpawnerBaseToArray);
-		GameStateEventManager->OnActorSpawnerBaseMachineDeathSelfRefDelegate.AddUniqueDynamic(this, &APooledActorManager::RemoveDeadMachineFromArray);
-		GameStateEventManager->OnActorSpawnerBaseMachineDeathDelegate.AddUniqueDynamic(this, &APooledActorManager::DecreaseMachineCount);
+		//GameStateEventManager->OnActorSpawnerBaseMachineInitalizedDelegate.AddUniqueDynamic(this, &APooledActorManager::IncreaseMachineCount);
+		//GameStateEventManager->OnActorSpawnerBaseInitalizedSelfRefDelegate.AddUniqueDynamic(this, &APooledActorManager::OnInitializedAddActorSpawnerBaseToArray);
+		//GameStateEventManager->OnActorSpawnerBaseMachineDeathSelfRefDelegate.AddUniqueDynamic(this, &APooledActorManager::RemoveDeadMachineFromArray);
+		//GameStateEventManager->OnActorSpawnerBaseMachineDeathDelegate.AddUniqueDynamic(this, &APooledActorManager::DecreaseMachineCount);
 
 		
 		//Enemy Delegates
@@ -233,40 +233,7 @@ void APooledActorManager::PopulateArrayWithActorsOfClass(TSubclassOf<AActorSpawn
 	// }
 }
 
-void APooledActorManager::OnInitializedAddActorSpawnerBaseToArray(AActor* Actor)
-{
-	// if (AActorSpawnerBaseFrogMachine* ActorSpawnerBaseFrogMachine = Cast<AActorSpawnerBaseFrogMachine>(Actor))
-	// {
-	// 	eActorTypeToSpawn ActorTypeToSpawn = ActorSpawnerBaseFrogMachine->GetSpawnType();
-	//
-	// 	switch (ActorTypeToSpawn)
-	// 	{
-	// 	case eActorTypeToSpawn::Flusher:
-	// 		{
-	// 			_maActorSpawnerBaseFrogMachinesFlusher.Add(Actor);
-	// 			break;
-	// 		}
-	// 	case eActorTypeToSpawn::Pinner:
-	// 		{
-	// 			_maActorSpawnerBaseFrogMachinesPinner.Add(Actor);
-	// 			break;
-	// 		}
-	// 	default:
-	// 		{
-	// 			break;
-	// 		}
-	// 	}
-	// 	if (ActorSpawnerBaseFrogMachine->GetCanTankSpawnHere() == true)
-	// 	{
-	// 		_maActorSpawnerBaseFrogMachinesTank.Add(Actor);
-	// 	}
-	// }
-	// if (AActorSpawnerBaseVent* ActorSpawnerBaseVent = Cast<AActorSpawnerBaseVent>(Actor))
-	// {
-	// 	_maActorSpawnerBaseVent.Add(Actor);
-	// }
-	
-}
+
 
 // void APooledActorManager::RegisterListenersToHealthOfActorSpawners()
 // {
@@ -363,16 +330,16 @@ void APooledActorManager::OnInitializedAddActorSpawnerBaseToArray(AActor* Actor)
 // 	_mRemainingMachineInLevel = _mTotalMachineInLevel;
 // }
 
-void APooledActorManager::IncreaseMachineCount()
-{
-	_mTotalMachineInLevel ++;
-	_mRemainingMachineInLevel = _mTotalMachineInLevel;
-}
+// void APooledActorManager::IncreaseMachineCount()
+// {
+// 	_mTotalMachineInLevel ++;
+// 	_mRemainingMachineInLevel = _mTotalMachineInLevel;
+// }
 
-void APooledActorManager::DecreaseMachineCount()
-{
-	_mRemainingMachineInLevel--;
-}
+// void APooledActorManager::DecreaseMachineCount()
+// {
+// 	_mRemainingMachineInLevel--;
+// }
 
 // void APooledActorManager::SendInitialBroadcast()
 // {
@@ -380,32 +347,6 @@ void APooledActorManager::DecreaseMachineCount()
 // 	MachineCountDelegate.Broadcast(_mTotalMachineInLevel, _mRemainingMachineInLevel);
 // }
 
-void APooledActorManager::RemoveDeadMachineFromArray(AActor* Actor)
-{
-	//if (AActorSpawnerBaseFrogMachine* ActorSpawnerBaseFrogMachine = Cast<AActorSpawnerBaseFrogMachine>(Actor))
-	
-		//eActorTypeToSpawn ActorTypeToSpawn = ActorSpawnerBaseFrogMachine->GetSpawnType();
-
-	// 	switch (ActorTypeToSpawn)
-	// 	{
-	// 	case eActorTypeToSpawn::Flusher:
-	// 		{
-	// 			_maActorSpawnerBaseFrogMachinesFlusher.Remove(Actor);
-	// 			break;
-	// 		}
-	// 	case eActorTypeToSpawn::Pinner:
-	// 		{
-	// 			_maActorSpawnerBaseFrogMachinesPinner.Remove(Actor);
-	// 			break;
-	// 		}
-	// 	default:
-	// 		{
-	// 			UE_LOG(LogTemp, Warning, TEXT("Vent or machine with no type passed to RemoveDeadMachineFromArray in PooledActorManager"));
-	// 			break;
-	// 		}
-	// 	}
-	// }
-}
 
 // void APooledActorManager::InitalizePool(const FPoolOfClassData& poolOfClassData)
 // {

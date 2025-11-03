@@ -374,8 +374,8 @@ public:
 	void PopulateArrayWithActorsOfClass(TSubclassOf<AActorSpawnerBase> classToSearchFor, TArray<FActorSpawnerBaseData>& inArrayToPopulate);
 
 	//REPLACE PopulateArrayWithActorsOfClass
-	UFUNCTION(BlueprintCallable)
-	void OnInitializedAddActorSpawnerBaseToArray(AActor* Actor);
+	// UFUNCTION(BlueprintCallable)
+	// void OnInitializedAddActorSpawnerBaseToArray(AActor* Actor);
 
 	//REPLACE RegisterListenersToHealthOfActorSpawners AND 
 
@@ -407,12 +407,12 @@ public:
 	// void InitializeDelegateVariables();
 
 	//REPLACES InitializeDelegateVariables. Incrumenets count each time machine is spawned
-	UFUNCTION(BlueprintCallable)
-	void IncreaseMachineCount();
+	// UFUNCTION(BlueprintCallable)
+	// void IncreaseMachineCount();
 
 	//REPLACES UpdateMachineCount
-	UFUNCTION(BlueprintCallable)
-	void DecreaseMachineCount();
+	// UFUNCTION(BlueprintCallable)
+	// void DecreaseMachineCount();
 
 	/*SENDINITIALBROADCAST --> send a first broadcast of totals for MachineCountDelegate. Use to initialize UI*/
 	// UFUNCTION(BlueprintCallable)
@@ -427,8 +427,7 @@ public:
 	
 
 	//REPLACES RemoveInactiveMachineFromArray
-	UFUNCTION()
-	void RemoveDeadMachineFromArray(AActor* Actor);
+
 
 	//FUNCTIONS - when machine count changes
 	/*REMOVEINACTIVEMACHINEFROMARRAY --> called when ActorSpawnBaseMachine's health is depleated. Delegate send a ptr to
