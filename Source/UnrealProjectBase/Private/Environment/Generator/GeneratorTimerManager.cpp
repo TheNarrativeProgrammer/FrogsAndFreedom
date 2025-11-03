@@ -16,7 +16,7 @@ void AGeneratorTimerManager::OnBeginplayBroadcastActorInitializationDelegates_Im
 {
 	IDelegateBindBroadcastable::OnBeginplayBroadcastActorInitializationDelegates_Implementation();
 	GetWorldTimerManager().ClearAllTimersForObject(this);
-	DelegateBindingComponentGenTimer->GameStateEventManager->OnGeneratorTimerManagerInitializedDelegate.Broadcast();
+	//DelegateBindingComponentGenTimer->GameStateEventManager->OnGeneratorTimerManagerInitializedDelegate.Broadcast();
 }
 
 
