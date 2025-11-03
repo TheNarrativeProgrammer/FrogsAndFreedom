@@ -55,7 +55,7 @@ void AObjectiveActorDefendGenTime::StartObjective_Implementation()
 		if (DelegateBindingComponentGenTimer->GameStateEventManager)
 		{
 			DelegateBindingComponentGenTimer->GameStateEventManager->
-				OnTimerChangeUpdateUIDelegate.Broadcast();
+				OnTimerChangeUpdateUIDelegate.Broadcast(this);
 		}
 		if (GeneratorTimerManager)
 		{
@@ -94,6 +94,18 @@ void AObjectiveActorDefendGenTime::CompleteObjectiveBroadcast_Implementation()
 void AObjectiveActorDefendGenTime::OnTimerFinishedCompleteObjective()
 {
 	_mIsTimerFinished = true;
+	if (SubObjectives.IsEmpty() == false)
+	{
+		if (DelegateBindingComponentGenTimer)
+		{
+			if (DelegateBindingComponentGenTimer->GameStateEventManager)
+			{
+				SetIsCompletionTextVisible(true);
+				DelegateBindingComponentGenTimer->GameStateEventManager->
+					OnActorObjectiveCompleteUpdateUIDelegate.Broadcast();
+			}
+		}
+	}
 	IfCompleteTriggerSubObjectivesAndWave();
 }
 
@@ -104,7 +116,8 @@ void AObjectiveActorDefendGenTime::UpdateTimeRemainingAndBroadcastToUI(float InT
 	{
 		if (DelegateBindingComponentGenTimer->GameStateEventManager)
 		{
-			DelegateBindingComponentGenTimer->GameStateEventManager->OnTimerChangeUpdateUIDelegate.Broadcast();
+			DelegateBindingComponentGenTimer->GameStateEventManager->
+				OnTimerChangeUpdateUIDelegate.Broadcast(this);
 		}
 	}
 }

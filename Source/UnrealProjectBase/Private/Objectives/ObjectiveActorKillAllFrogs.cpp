@@ -73,13 +73,16 @@ void AObjectiveActorKillAllFrogs::IncreaseCountTotalEnemiesSpawned()
 			DelegateBindComponentObjKillAll->GameStateEventManager->OnActorStateChangeUpdateUIDelegate.Broadcast();
 		}
 
-		if (_mCountEnemiesKilled < (_mCountTotalEnemiesSpawned * 0.9) && _mAreAllFrogsDead == true)
+		if (_mCountEnemiesKilled < (_mCountTotalEnemiesSpawned * 1.2) && _mAreAllFrogsDead == true)
 		{
 			SetAreAllFrogsDead(false);
+			SetIsFreed(false);
+			SetIsCompletionTextVisible(true);
 			if (DelegateBindComponentObjKillAll)
 			{
-				DelegateBindComponentObjKillAll->GameStateEventManager->OnActorObjectiveCompletionReversedUpdateUIDelegate.Broadcast();
-				SetIsCompletionTextVisible(false);
+				DelegateBindComponentObjKillAll->GameStateEventManager->
+					OnActorObjectiveCompletionReversedUpdateUIDelegate.Broadcast(this);
+				
 			}
 		}
 	}
@@ -89,7 +92,7 @@ void AObjectiveActorKillAllFrogs::IncreaseCountEnemiesKilled()
 {
 	_mCountEnemiesKilled++;
 	
-	if (_mCountEnemiesKilled >= _mCountTotalEnemiesSpawned && IsObjectiveCompleted() == false && IsObjectiveStarted() == true)
+	if (_mCountEnemiesKilled >= _mCountTotalEnemiesSpawned * 0.9 && IsObjectiveCompleted() == false && IsObjectiveStarted() == true)
 	{
 		SetAreAllFrogsDead(true);
 		IfCompleteTriggerSubObjectivesAndWave();

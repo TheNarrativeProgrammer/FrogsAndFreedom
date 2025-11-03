@@ -12,7 +12,8 @@
 class AGeneratorBase;
 class UDelegateBindingComponentObjGenOn;
 UCLASS()
-class UNREALPROJECTBASE_API AObjectiveActorTurnOnAllGenerator : public AObjectiveActorBase
+class UNREALPROJECTBASE_API AObjectiveActorTurnOnAllGenerator
+	: public AObjectiveActorBase
 {
 	GENERATED_BODY()
 public:
@@ -20,6 +21,7 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, Category="Components")
 	UDelegateBindingComponentObjGenOn* DelegateBindingComponentObjGenOn;
+	
 protected:
 	UPROPERTY(Transient)
 	bool _IsFirstIterationComplete = false;

@@ -50,6 +50,9 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category="Completion Display Text Toggle")
 	uint8 _mIsCompletionTextVisible : 1;
 
+	UPROPERTY(BlueprintReadOnly, Category="Completion Display Text Toggle")
+	uint8 _mIsFreed : 1;
+
 	//Subobjectives
 	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category="Sub Objectives to Start On This Objective Complete")
 	TSet<AObjectiveActorBase*> SubObjectives;
@@ -74,7 +77,7 @@ public:
 
 	UPROPERTY()
 	bool _mIsAutoCompleteObjective = false;
-
+	
 	UFUNCTION(BlueprintCallable)
 	void SetIsAutoCompleteObjective(bool InIsAutoCompleteObjective);
 
@@ -85,6 +88,9 @@ public:
 
 	UFUNCTION()
 	void IncreaseCountOfPreObjectivesCompleted();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void SetIsFreed(bool InIsFreed);
 	
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void StartObjective();
@@ -97,6 +103,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	bool IsObjectiveStarted() const;
+
+	UFUNCTION(BlueprintCallable)
+	bool IsObjectivedFreed() const;
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	bool IsObjectiveCompleted() const;

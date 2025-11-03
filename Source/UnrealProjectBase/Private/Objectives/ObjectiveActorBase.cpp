@@ -37,6 +37,11 @@ void AObjectiveActorBase::IncreaseCountOfPreObjectivesCompleted()
 	_mCountNumberOfPreObjectivesCompleted++;
 }
 
+void AObjectiveActorBase::SetIsFreed_Implementation(bool InIsFreed)
+{
+	_mIsFreed = InIsFreed;
+}
+
 void AObjectiveActorBase::StopObjective_Implementation()
 {
 	_mHasObjectiveStarted = false;
@@ -76,6 +81,11 @@ bool AObjectiveActorBase::IsObjectiveStarted() const
 	return _mHasObjectiveStarted;
 }
 
+bool AObjectiveActorBase::IsObjectivedFreed() const
+{
+	return _mIsFreed;
+}
+
 bool AObjectiveActorBase::IsObjectiveCompleted_Implementation() const
 {
 	return _mHasObjectiveStarted;
@@ -89,9 +99,11 @@ void AObjectiveActorBase::TriggerWave(const FGameplayTagContainer& InWaveToTrigg
 	}
 	if (AGameModeBase* Gamemode = UGameplayStatics::GetGameMode(GetWorld()))
 	{
-		if (UEncounterManagerComponent* EncounterManagerComponent = Cast<UEncounterManagerComponent>( Gamemode->GetComponentByClass(UEncounterManagerComponent::StaticClass())))
+		if (UEncounterManagerComponent* EncounterManagerComponent = Cast<UEncounterManagerComponent>(
+			Gamemode->GetComponentByClass(UEncounterManagerComponent::StaticClass())))
 		{
-			if(EncounterManagerComponent->CurrentActiveWave.MatchesTagExact(FGameplayTag::RequestGameplayTag(FName("Wave.1"), false)))
+			if(EncounterManagerComponent->CurrentActiveWave.MatchesTagExact(
+				FGameplayTag::RequestGameplayTag(FName("Wave.1"), false)))
 			{
 				if (InWaveToTriggerOnObjectiveComplete.HasTag(FGameplayTag::RequestGameplayTag(FName("Wave.1"))))
 				{
@@ -99,12 +111,14 @@ void AObjectiveActorBase::TriggerWave(const FGameplayTagContainer& InWaveToTrigg
 					{
 						return;
 					}
-					FEncounterWaveData EncounterWaveData = EncounterManagerComponent->CurrentlyActiveEncounterTrigger->EncounterData->GetWaveData(FGameplayTag::RequestGameplayTag(FName("Wave.1"), false));
+					FEncounterWaveData EncounterWaveData = EncounterManagerComponent->
+						CurrentlyActiveEncounterTrigger->EncounterData->GetWaveData(
+						FGameplayTag::RequestGameplayTag(FName("Wave.1"), false));
 
 					if (EncounterWaveData.WaveTrigger == EWaveTrigger::Objective)
 					{
-						EncounterManagerComponent->SetActiveWave(FGameplayTag::RequestGameplayTag(FName("Wave.1")));
-						EncounterManagerComponent->OnObjectiveCompleteStartSpawningWave(FGameplayTag::RequestGameplayTag(FName("Wave.1")));
+						EncounterManagerComponent->OnObjectiveCompleteStartSpawningWave(
+							FGameplayTag::RequestGameplayTag(FName("Wave.1")));
 						return;
 					}
 				}
@@ -121,11 +135,10 @@ void AObjectiveActorBase::TriggerWave(const FGameplayTagContainer& InWaveToTrigg
 			{
 				 if (EncounterManagerComponent->NextWaveInQue == InWaveToTriggerOnObjectiveComplete.GetByIndex(1))
 				{
-					EncounterManagerComponent->SetActiveWave(InWaveToTriggerOnObjectiveComplete.First());
+					EncounterManagerComponent->SetActiveWave(InWaveToTriggerOnObjectiveComplete.GetByIndex(1));
 					EncounterManagerComponent->OnObjectiveCompleteStartSpawningWave(InWaveToTriggerOnObjectiveComplete.GetByIndex(1));
 				}
 			}
-			
 		}
 	}
 }
@@ -212,6 +225,7 @@ void AObjectiveActorBase::StopSubObjectives() const
 void AObjectiveActorBase::StartObjective_Implementation()
 {
 	_mHasObjectiveStarted = true;
+	SetIsFreed(false);
 	SetIsCompletionTextVisible(true);
 }
 
@@ -224,6 +238,7 @@ FText AObjectiveActorBase::GetObjectiveDisplayText_Implementation() const
 void AObjectiveActorBase::BeginPlay()
 {
 	Super::BeginPlay();
+	SetIsFreed(false);
 	SetIsCompletionTextVisible(true);
 	//ObjectiveEventCompletedToggleCompletionTextDelegate.AddUniqueDynamic(this, &AObjectiveActorBase::SetIsCompletionTextVisible);
 	

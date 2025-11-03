@@ -10,7 +10,8 @@
 
 AObjectiveActorTurnOnAllGenerator::AObjectiveActorTurnOnAllGenerator()
 {
-	DelegateBindingComponentObjGenOn = CreateDefaultSubobject<UDelegateBindingComponentObjGenOn>(TEXT("DelegateBindingComponent"));
+	DelegateBindingComponentObjGenOn = CreateDefaultSubobject<
+		UDelegateBindingComponentObjGenOn>(TEXT("DelegateBindingComponent"));
 }
 
 void AObjectiveActorTurnOnAllGenerator::SetIsFirstIterationComplete()
@@ -61,11 +62,12 @@ void AObjectiveActorTurnOnAllGenerator::BroadcastCompletionReverseredEvent()
 
 		if (CountActiveForceFields == _msGeneratorActorsInLevel.Num() - 1)
 		{
+			SetIsFreed(false);
+			SetIsCompletionTextVisible(true);
 			StopSubObjectives();
 			SetIsFirstIterationComplete();
 			DelegateBindingComponentObjGenOn->GameStateEventManager->
-				OnActorObjectiveCompletionReversedUpdateUIDelegate.Broadcast();
-			SetIsCompletionTextVisible(false);
+				OnActorObjectiveCompletionReversedUpdateUIDelegate.Broadcast(this);
 		}
 	}
 }
