@@ -123,20 +123,27 @@ void AEncounterTrigger::IfAllObjectivesCompeleteThenBroadcast()
 	//All objectives complete
 	if (_mCountCompletedObjectives >= _mCountTotalObjectives)
 	{
-		DelegateBindComponentEncountrTrg->GameStateEventManager->OnAllObectivesCompleteDelegate.Broadcast();
+		DelegateBindComponentEncountrTrg->GameStateEventManager->
+			OnAllObectivesCompleteDelegate.Broadcast();
 	}
 	//Objectives influencing spawn stopping complete
-	if (_mCountTotalObjectivesInfluencingSpawnStopping > 0 &&
-		_mCountCompletedObjectivesInfluencingSpawnStopping >= _mCountTotalObjectivesInfluencingSpawnStopping && _mHasSpawnStopped == false)
+	if (_mCountTotalObjectivesInfluencingSpawnStopping > 0
+		&& _mCountCompletedObjectivesInfluencingSpawnStopping >=
+			_mCountTotalObjectivesInfluencingSpawnStopping
+		&& _mHasSpawnStopped == false)
 	{
 		_mHasSpawnStopped = true;
-		DelegateBindComponentEncountrTrg->GameStateEventManager->OnAllObjectiveInfluencingSpawningCompleteDelegate.Broadcast();
+		DelegateBindComponentEncountrTrg->GameStateEventManager->
+			OnAllObjectiveInfluencingSpawningCompleteDelegate.Broadcast();
 	}
 	//Objectives influencing door complete
-	if (_mCountCompletedObjectivesInfluencingDoorOpening >= _mCountTotalObjectivesInfluencingDoorOpening && _mIsDoorOpened == false)
+	if (_mCountCompletedObjectivesInfluencingDoorOpening >=
+			_mCountTotalObjectivesInfluencingDoorOpening
+		&& _mIsDoorOpened == false)
 	{
 		_mIsDoorOpened = true;
-		DelegateBindComponentEncountrTrg->GameStateEventManager->OnAllObjectiveInfluencingDoorOpeningCompleteDelegate.Broadcast();
+		DelegateBindComponentEncountrTrg->GameStateEventManager->
+			OnAllObjectiveInfluencingDoorOpeningCompleteDelegate.Broadcast();
 	}
 	
 }
@@ -173,12 +180,16 @@ void AEncounterTrigger::BeginPlay()
 	SetCountOfTotalObjectives();
 }
 
-void AEncounterTrigger::OnEncounterBegin_Implementation(UPrimitiveComponent* OverlappedComponent,
-	AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,const FHitResult& SweepResult)
+void AEncounterTrigger::OnEncounterBegin_Implementation(
+	UPrimitiveComponent* OverlappedComponent,AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
+	bool bFromSweep,const FHitResult& SweepResult)
 {
 		if (OtherActor->Implements<UPlayerCharacterable>())
 		{
-			TriggerBox->OnComponentBeginOverlap.RemoveDynamic(this, &AEncounterTrigger::OnEncounterBegin);
+			TriggerBox->OnComponentBeginOverlap.RemoveDynamic(
+				this, &AEncounterTrigger::OnEncounterBegin);
+			
 			RegisterWithEncounterManager();
 		}
 }
@@ -187,7 +198,8 @@ void AEncounterTrigger::RegisterWithEncounterManager()
 {
 	if (AGameModeBase* GameMode  = GetWorld()->GetAuthGameMode())
 	{
-		if (UEncounterManagerComponent* EncounterManager = GameMode->FindComponentByClass<UEncounterManagerComponent>())
+		if (UEncounterManagerComponent* EncounterManager =
+			GameMode->FindComponentByClass<UEncounterManagerComponent>())
 		{
 			EncounterManager->RegisterEncounter(this);
 		}
