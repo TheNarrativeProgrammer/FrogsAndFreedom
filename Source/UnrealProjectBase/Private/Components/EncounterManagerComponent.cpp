@@ -36,7 +36,9 @@ UEncounterManagerComponent::UEncounterManagerComponent()
 
 void UEncounterManagerComponent::OnObjectiveCompleteStartSpawningWave(const FGameplayTag WaveToSpawn)
 {
-	if (CurrentlyActiveEncounterTrigger == nullptr || IsValid(CurrentlyActiveEncounterTrigger) == false || !CurrentlyActiveEncounterTrigger)
+	if (CurrentlyActiveEncounterTrigger == nullptr
+		|| IsValid(CurrentlyActiveEncounterTrigger) == false
+		|| !CurrentlyActiveEncounterTrigger)
 	{
 		return;
 	}
@@ -50,8 +52,6 @@ void UEncounterManagerComponent::OnObjectiveCompleteStartSpawningWave(const FGam
 			PopulateArraysInPatrolRouteManager();
 		}
 	}
-	
-	
 }
 
 void UEncounterManagerComponent::SetActiveWave(const FGameplayTag ActiveWave)
@@ -103,7 +103,7 @@ void UEncounterManagerComponent::SetNextWaveInQue()
 
 void UEncounterManagerComponent::SetCanWaveSpawnForEncounterData()
 {
-	if (CurrentlyActiveEncounterTrigger == nullptr || IsValid(CurrentlyActiveEncounterTrigger) == false || !CurrentlyActiveEncounterTrigger)
+	if (!CurrentlyActiveEncounterTrigger)
 	{
 		return;
 	}
@@ -152,7 +152,10 @@ void UEncounterManagerComponent::PopulateArraysInPatrolRouteManager()
 {
 	if (AGameModeBase* GameMode = UGameplayStatics::GetGameMode(GetWorld()))
 	{
-		if (UPatrolRouteManagerComponent* PatrolRouteManagerComponent = Cast<UPatrolRouteManagerComponent>(GameMode->GetComponentByClass(UPatrolRouteManagerComponent::StaticClass())))
+		if (UPatrolRouteManagerComponent* PatrolRouteManagerComponent =
+			Cast<UPatrolRouteManagerComponent>(
+			GameMode->GetComponentByClass(
+				UPatrolRouteManagerComponent::StaticClass())))
 		{
 			PatrolRouteManagerComponent->RunEqsFindPatrolRoutes();
 		}
@@ -168,9 +171,11 @@ void UEncounterManagerComponent::RegisterEncounter(AEncounterTrigger* InEncounte
 		SetActiveWave(CurrentlyActiveEncounterTrigger->DefaultWave);
 		if (IsValid(CurrentlyActiveEncounterTrigger))
 		{
-			EncounterTimeBetweenSpawns = CurrentlyActiveEncounterTrigger->EncounterData->GetWaveData(CurrentActiveWave).TimeDelayBetweenIndividualActorSpawn;
+			EncounterTimeBetweenSpawns = CurrentlyActiveEncounterTrigger->EncounterData->
+			GetWaveData(CurrentActiveWave).TimeDelayBetweenIndividualActorSpawn;
 			
-			for (auto& EncounterWaveData : CurrentlyActiveEncounterTrigger->EncounterData->EncounterWaveData)
+			for (auto& EncounterWaveData :
+				CurrentlyActiveEncounterTrigger->EncounterData->EncounterWaveData)
 			{
 				EncounterWaveData.CanWaveSpawn = false;
 				EncounterWaveData.HasWaveSpawned = false;
@@ -180,7 +185,8 @@ void UEncounterManagerComponent::RegisterEncounter(AEncounterTrigger* InEncounte
 			PopulateArraysInPatrolRouteManager();
 			RunEqsFindActorSpawners();
 			
-			if (AGameStateEventManagerBase* GameState = Cast<AGameStateEventManagerBase>( UGameplayStatics::GetGameState(GetWorld())))
+			if (AGameStateEventManagerBase* GameState = Cast<AGameStateEventManagerBase>(
+				UGameplayStatics::GetGameState(GetWorld())))
 			{
 				GameStateEventManager = GameState;
 				if (GameStateEventManager)
@@ -404,22 +410,15 @@ void UEncounterManagerComponent::ResetObjectiveComplete()
 	_mIsAllObjectiveInfluencingSpawningComplete = false;
 }
 
-void UEncounterManagerComponent::SetStartingSpawnValuesAndTriggerTimer()
+void UEncounterManagerComponent::SetStartingSpawnValues()
 {
-	if (CurrentlyActiveEncounterTrigger == nullptr || IsValid(CurrentlyActiveEncounterTrigger) == false || !CurrentlyActiveEncounterTrigger)
+	if (!CurrentlyActiveEncounterTrigger)
 	{
 		return;
 	}
-
-	//In tutorial, the only objective is to kill all frogs. This broadcast event when all frogs are dead.
-	if (_mCurrentCharatersInLevel <= 0 && _mTotalCharatersSpawnedInAllWaves >= 1 && _mIsAllObjectiveInfluencingSpawningComplete == true)
-	{
-		GameStateEventManager->OnCharacterBaseFrogAllFrogsDeadDelegate.Broadcast();
-	}
-
-	//If all objectives that influence spawning are complete, then stop spawning. This is all objectives with
-	//ObjectiveSpawnUntilComplete interface. The door and kill count objective don't have this interface.
-	if (_mIsAllObjectiveComplete == true || _mIsAllObjectiveInfluencingSpawningComplete == true)
+	
+	if (_mIsAllObjectiveComplete == true
+		|| _mIsAllObjectiveInfluencingSpawningComplete == true)
 	{
 		return;
 	}
@@ -435,10 +434,13 @@ void UEncounterManagerComponent::SetStartingSpawnValuesAndTriggerTimer()
 	}
 	
 	SetCanWaveSpawnForEncounterData();
-
+	TriggerSpawnTimer();
 	
-
 	
+}
+
+void UEncounterManagerComponent::TriggerSpawnTimer()
+{
 	if (CurrentlyActiveEncounterTrigger->EncounterData->GetWaveData(CurrentActiveWave).CanWaveSpawn == true
 		&& CurrentlyActiveEncounterTrigger->EncounterData->GetWaveData(CurrentActiveWave).HasWaveSpawned == false
 		&& _misSpawning == false)
@@ -449,7 +451,8 @@ void UEncounterManagerComponent::SetStartingSpawnValuesAndTriggerTimer()
 		
 		TotalActorsToSpawn = 0;
 		int32 InitialPopulation  = 0;
-		for (TPair<FGameplayTag, FEncounterSpawnData> Pair  : CurrentlyActiveEncounterTrigger->EncounterData->GetWaveData(CurrentActiveWave).EncounterSpawnMap)
+		for (TPair<FGameplayTag, FEncounterSpawnData> Pair  :
+			CurrentlyActiveEncounterTrigger->EncounterData->GetWaveData(CurrentActiveWave).EncounterSpawnMap)
 		{
 			InitialPopulation += Pair.Value.QuantitySpawnedInWave;
 		}
@@ -464,10 +467,6 @@ void UEncounterManagerComponent::SetStartingSpawnValuesAndTriggerTimer()
 			return;
 		}
 		
-		
-		
-		
-		
 		for (auto& GameplayTagMMapKey : _maEnemyGameplayTags)
 		{
 			if (CurrentlyActiveEncounterTrigger->EncounterData->GetWaveData(CurrentActiveWave).EncounterSpawnMap.Contains(GameplayTagMMapKey) == false)
@@ -476,12 +475,12 @@ void UEncounterManagerComponent::SetStartingSpawnValuesAndTriggerTimer()
 			}
 			FEncounterSpawnData& EncounterSpawnData = *CurrentlyActiveEncounterTrigger->EncounterData->GetRefToWaveData(CurrentActiveWave).EncounterSpawnMap.Find(GameplayTagMMapKey);
 			
-			
 			SetGameplayTagValue(EncounterSpawnData, GameplayTagMMapKey);
-			
 			SetNumberOfBatches(EncounterSpawnData, TotalActorsToSpawn);
 
-			if (EncounterSpawnData.GameplayTagFrog.MatchesTagExact(GameplayTagTank) && EncounterSpawnData.BatchQuantity > 0 && _mIsInitialSpawn == true)
+			if (EncounterSpawnData.GameplayTagFrog.MatchesTagExact(GameplayTagTank)
+				&& EncounterSpawnData.BatchQuantity > 0
+				&& _mIsInitialSpawn == true)
 			{
 				TransformSpawnLocationOfBatch = GetTransformActorSpawner(EncounterSpawnData, 0);
 				EncounterSpawnDataCurrentBatch = EncounterSpawnData;
@@ -489,7 +488,8 @@ void UEncounterManagerComponent::SetStartingSpawnValuesAndTriggerTimer()
 				SetClassOfBatch(EncounterSpawnData);
 				_mIsTankInWave = true;
 			}
-			else if (EncounterSpawnData.GameplayTagFrog.MatchesTagExact(GameplayTagFlusher) && EncounterSpawnData.BatchQuantity > 0
+			else if (EncounterSpawnData.GameplayTagFrog.MatchesTagExact(GameplayTagFlusher)
+				&& EncounterSpawnData.BatchQuantity > 0
 				&& _mIsTankInWave == false)
 			{
 				TransformSpawnLocationOfBatch = GetTransformActorSpawner(EncounterSpawnData, 0);
@@ -507,19 +507,14 @@ void UEncounterManagerComponent::SetStartingSpawnValuesAndTriggerTimer()
 				EncounterSpawnDataCurrentBatch = EncounterSpawnData;
 				_mEnemyTagIterator = 2;
 				SetClassOfBatch(EncounterSpawnData);
-				
-			}
-			
-			else
-			{
-				
 			}
 		}
 		_mIsInitialSpawn = false;
 
 		if (EncounterSpawnDataCurrentBatch.BatchQuantity > 0 && EncounterSpawnDataCurrentBatch.BatchSize > 0)
 		{
-			if (CurrentlyActiveEncounterTrigger->EncounterData->GetWaveData(CurrentActiveWave).WaveTag == FGameplayTag::RequestGameplayTag(FName("Wave.1")))
+			if (CurrentlyActiveEncounterTrigger->EncounterData->GetWaveData(CurrentActiveWave).WaveTag ==
+				FGameplayTag::RequestGameplayTag(FName("Wave.1")))
 			{
 				if (GameStateEventManager)
 				{
@@ -555,12 +550,13 @@ void UEncounterManagerComponent::OnEnemyDeathStartWaveIfWaveTriggerTypeIsPopulat
 	{
 		if (_mCurrentCharatersInLevel <= CurrentlyActiveEncounterTrigger->EncounterData->GetWaveData(CurrentActiveWave).MinPopulationToTriggerSpawningNextWave)
 		{
-			SetStartingSpawnValuesAndTriggerTimer();
+			SetStartingSpawnValues();
 		}
 	}
 }
 
-void UEncounterManagerComponent::OnEqsCompleteStartFirstSpawn(bool InIsEqsSpawnerLocationComplete, bool InIsEqsRouteLocationComplete)
+void UEncounterManagerComponent::OnEqsCompleteStartFirstSpawn(
+	bool InIsEqsSpawnerLocationComplete, bool InIsEqsRouteLocationComplete)
 {
 	if (InIsEqsSpawnerLocationComplete == true)
 	{
@@ -571,11 +567,11 @@ void UEncounterManagerComponent::OnEqsCompleteStartFirstSpawn(bool InIsEqsSpawne
 		_mIsEqsRouteLocationComplete = true;
 	}
 
-	if (_mIsEqsSpawnerLocationComplete == true && _mIsEqsRouteLocationComplete == true)
+	if (_mIsEqsSpawnerLocationComplete == true &&
+		_mIsEqsRouteLocationComplete == true)
 	{
-		SetStartingSpawnValuesAndTriggerTimer();
+		SetStartingSpawnValues();
 	}
-	
 }
 
 void UEncounterManagerComponent::CheckSpawnValuesAndProcessIterations()
@@ -809,7 +805,6 @@ void UEncounterManagerComponent::SpawnActorFromBatch()
 				//if spawned Actor is a tank, pass a ptr of the Tank to the ActorSpawner. This is used to determine if force field applied
 				if (ACharacterBaseFrogTank* CharacterBaseFrogTank = Cast<ACharacterBaseFrogTank>(pooledActor))
 				{
-					//todo try to docouple OnSetTankSetForceFieldLocation(); this is temp solution
 					ActorSpawnerBaseFrogMachineMostRecentTankPlaced->SetActorIDTankAtThisSpawner(CharacterBaseFrogTank->GetUniqueID());
 					ActorSpawnerBaseFrogMachineMostRecentTankPlaced->OnSetTankSetForceFieldLocation();
 					//ActorSpawnerBaseFrogMachineMostRecentTankPlaced->SetTankLocation(CharacterBaseFrogTank->GetTransform());

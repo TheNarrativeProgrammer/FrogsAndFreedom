@@ -259,7 +259,10 @@ protected:
 
 	//Function - Spawn batches
 	UFUNCTION(BlueprintCallable)
-	void SetStartingSpawnValuesAndTriggerTimer();
+	void SetStartingSpawnValues();
+
+	UFUNCTION(BlueprintCallable)
+	void TriggerSpawnTimer();
 
 	UFUNCTION()
 	void OnEnemyDeathStartWaveIfWaveTriggerTypeIsPopulationBaseAndPopulationLow();
