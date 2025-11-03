@@ -95,8 +95,7 @@ protected:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void OnBeginplayBroadcastActorInitializationDelegates();
 
-	UFUNCTION(BlueprintCallable)
-	void OnHealthChanageSnedHealthInfo(float CurrentHealth, float OldHealth);
+	
 
 	//PROPERIES - enemy attack location
 	UPROPERTY()
