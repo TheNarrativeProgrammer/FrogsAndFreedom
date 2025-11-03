@@ -21,6 +21,10 @@ void UDelegateBindComponentGenerator::BindDelegates()
 			GameStateEventManager->OnEncounterStartedDelegate.AddUniqueDynamic(
 				GeneratorBaseOwner,
 				&AGeneratorBase::OnEncounterStartBroadcastActorInitializationDelegates);
+
+			GameStateEventManager->OnGeneratorTimerManagerTimerFinishedDelegate.AddUniqueDynamic(
+				GeneratorBaseOwner,
+				&AGeneratorBase::OnObjectiveTimerCompleteStopSoundTimer);
 		}
 	}
 }
