@@ -181,8 +181,11 @@ bool AGeneratorBase::GetIsForceFieldActive()
 	return _mIsForceFieldActive;
 }
 
-
-
+void AGeneratorBase::OnObjectiveTimerCompleteStopSoundTimer()
+{
+	GetWorld()->GetTimerManager().PauseTimer(GeneratorSoundTimerHandle);
+	GetWorld()->GetTimerManager().ClearTimer(GeneratorSoundTimerHandle);
+}
 
 
 // Called every frame

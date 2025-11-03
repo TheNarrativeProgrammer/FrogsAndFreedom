@@ -102,7 +102,8 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void OnBeginplayBroadcastActorInitializationDelegates();
 
-	
+	UFUNCTION()
+	void OnObjectiveTimerCompleteStopSoundTimer();
 
 	//FUNCTIONS - Interactable interface
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
