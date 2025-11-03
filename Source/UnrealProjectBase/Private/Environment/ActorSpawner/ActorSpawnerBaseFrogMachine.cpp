@@ -67,13 +67,13 @@ void AActorSpawnerBaseFrogMachine::OnEncounterStartBroadcastActorInitializationD
 void AActorSpawnerBaseFrogMachine::OnBeginplayBroadcastActorInitializationDelegates_Implementation()
 {
 	IDelegateBindBroadcastable::OnBeginplayBroadcastActorInitializationDelegates_Implementation();
-	if (AGameStateEventManagerBase* GameState = Cast<AGameStateEventManagerBase>(UGameplayStatics::GetGameState(GetWorld())))
-	{
-		if(DelegateBindComponentSpawner->GameStateEventManager)
-		{
-			DelegateBindComponentSpawner->GameStateEventManager->OnActorSpawnerBaseMachineInitalizedDelegate.Broadcast();
-		}
-	}
+	// if (AGameStateEventManagerBase* GameState = Cast<AGameStateEventManagerBase>(UGameplayStatics::GetGameState(GetWorld())))
+	// {
+	// 	if(DelegateBindComponentSpawner->GameStateEventManager)
+	// 	{
+	// 		DelegateBindComponentSpawner->GameStateEventManager->OnActorSpawnerBaseMachineInitalizedDelegate.Broadcast();
+	// 	}
+	// }
 }
 
 
