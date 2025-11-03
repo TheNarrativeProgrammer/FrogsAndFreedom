@@ -94,8 +94,9 @@ public:
 	
 	//PROPERTY - used with IGenericTeamAgentInterface 
 	UPROPERTY(BlueprintReadWrite)
-	class ACharacterBase* CharacterBaseOwner;
+	ACharacterBase* CharacterBaseOwner;
 
+	
 	virtual FVector FindReachablePointWhenOffNav_Implementation() override;
 
 	virtual void ResetStateToPassive_Implementation() override;

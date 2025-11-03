@@ -244,7 +244,7 @@ FVector AAIControllerMobileFrogBase::FindReachablePointWhenOffNav_Implementation
 	if (UNavigationSystemV1* NavSystem = FNavigationSystem::GetCurrent<UNavigationSystemV1>(GetWorld()))
 	{
 		FNavLocation FoundLocation;
-		float radiusOfSearch = 200;
+		float radiusOfSearch = 1000;
 		
 		if (OwningPawn)
 		{
@@ -258,8 +258,8 @@ FVector AAIControllerMobileFrogBase::FindReachablePointWhenOffNav_Implementation
 		
 	}
 
-	
-	return OwningPawn->GetActorLocation();
+	FVector AltLocation = OwningPawn->GetActorLocation() + OwningPawn->GetActorForwardVector() * 100.f;
+	return AltLocation;
 }
 
 void AAIControllerMobileFrogBase::ResetStateToPassive_Implementation()
