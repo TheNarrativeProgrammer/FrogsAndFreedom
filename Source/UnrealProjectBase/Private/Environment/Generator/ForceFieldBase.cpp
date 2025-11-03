@@ -13,6 +13,7 @@ AForceFieldBase::AForceFieldBase()
 	//Create default subobjects
 	SceneComponentRoot = CreateDefaultSubobject<USceneComponent>("SceneComponentRo");
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>("HealthComponent");
+	HealthComponent->bShouldBroadcastIDOnDeath = true;
 	CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>("SphereComponentForceField");
 	NiagaraComponentForceField = CreateDefaultSubobject<UNiagaraComponent>("NiagaraComponentForceField");
 	
@@ -134,7 +135,8 @@ void AForceFieldBase::OnHealthChangeSendIdAndHealth(uint32 ActorId, float NewHea
 {
 	if (DelegateBindComponentForceField->GameStateEventManager)
 	{
-		DelegateBindComponentForceField->GameStateEventManager->OnForceFieldHealthChangeIDHealthDelegate.Broadcast(ActorId, HealthComponent->GetCurrentHealth(), HealthComponent->GetMaxHealth());
+		DelegateBindComponentForceField->GameStateEventManager->OnForceFieldHealthChangeIDHealthDelegate.Broadcast(
+			ActorId, HealthComponent->GetCurrentHealth(), HealthComponent->GetMaxHealth());
 	}
 }
 
@@ -194,7 +196,8 @@ void AForceFieldBase::SetIsActiveOnEncounterBegin(bool InIsActiveOnEncounterBegi
 	if (InIsActiveOnEncounterBegin == true)
 	{
 		ActivateComponents();
-		DelegateBindComponentForceField->GameStateEventManager->OnGeneratorActiveOnEncounterStartSendForceFieldIDDelegate.Broadcast(GetUniqueID());
+		// DelegateBindComponentForceField->GameStateEventManager->
+		// 	OnGeneratorActiveOnEncounterStartSendForceFieldIDDelegate.Broadcast(GetUniqueID());
 	}
 	else
 	{
