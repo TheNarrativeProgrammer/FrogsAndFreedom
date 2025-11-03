@@ -14,10 +14,12 @@ void UDelegateBindComponentEncountrTrg::BindDelegates()
 	Super::BindDelegates();
 	if (GameStateEventManager)
 	{
-		if (AEncounterTrigger* EncounterTriggerOwner = Cast<AEncounterTrigger>(GetOwner()))
+		if (AEncounterTrigger* EncounterTriggerOwner =
+			Cast<AEncounterTrigger>(GetOwner()))
 		{
 			GameStateEventManager->OnSingleObectiveCompleteDelegate.AddUniqueDynamic(
-				EncounterTriggerOwner, &AEncounterTrigger::IfAllObjectivesCompeleteThenBroadcast);
+				EncounterTriggerOwner,
+				&AEncounterTrigger::IfAllObjectivesCompeleteThenBroadcast);
 		}
 	}
 }

@@ -16,9 +16,12 @@ void UDelegateBindComponentSpawner::BindDelegates()
 	{
 		if (AActorSpawnerBaseFrogMachine* ActorSpawnerBaseFrogMachineOwner = Cast<AActorSpawnerBaseFrogMachine>(GetOwner()))
 		{
-			GameStateEventManager->OnCharacterBaseFrogTankDeathIDDelegate.AddUniqueDynamic(ActorSpawnerBaseFrogMachineOwner, &AActorSpawnerBaseFrogMachine::OnTankDeathCheckIDMatches);
-			GameStateEventManager->OnCharacterBaseFrogTankSpawnedLocationDelegate.AddUniqueDynamic(ActorSpawnerBaseFrogMachineOwner, &AActorSpawnerBaseFrogMachine::SetTankLocation);
-			GameStateEventManager->OnEncounterStartedDelegate.AddUniqueDynamic(ActorSpawnerBaseFrogMachineOwner, &AActorSpawnerBaseFrogMachine::OnEncounterStartBroadcastActorInitializationDelegates);
+			GameStateEventManager->OnCharacterBaseFrogTankDeathIDDelegate.AddUniqueDynamic(
+				ActorSpawnerBaseFrogMachineOwner, &AActorSpawnerBaseFrogMachine::OnTankDeathCheckIDMatches);
+			GameStateEventManager->OnCharacterBaseFrogTankSpawnedLocationDelegate.AddUniqueDynamic(
+				ActorSpawnerBaseFrogMachineOwner, &AActorSpawnerBaseFrogMachine::SetTankLocation);
+			GameStateEventManager->OnEncounterStartedDelegate.AddUniqueDynamic(
+				ActorSpawnerBaseFrogMachineOwner, &AActorSpawnerBaseFrogMachine::OnEncounterStartBroadcastActorInitializationDelegates);
 		}
 	}
 }

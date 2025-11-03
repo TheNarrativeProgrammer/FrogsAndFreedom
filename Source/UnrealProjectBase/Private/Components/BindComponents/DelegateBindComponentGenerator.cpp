@@ -15,12 +15,12 @@ void UDelegateBindComponentGenerator::BindDelegates()
 	{
 		if (AGeneratorBase* GeneratorBaseOwner = Cast<AGeneratorBase>(GetOwner()))
 		{
-			GameStateEventManager->OnComputerGeneratorLeverPullDelegate.AddUniqueDynamic(GeneratorBaseOwner, &AGeneratorBase::OnLeverPullRestoreHealthOfForceField);
-			GameStateEventManager->OnComputerGeneratorLeverPullDelegate.AddUniqueDynamic(GeneratorBaseOwner, &AGeneratorBase::SetSoundTimer);
-			GameStateEventManager->OnForceFieldBaseDeathIDDelegate.AddUniqueDynamic(GeneratorBaseOwner, &AGeneratorBase::CheckForceFieldIDMatchesThisOwner);
-			GameStateEventManager->OnEncounterStartedDelegate.AddUniqueDynamic(GeneratorBaseOwner, &AGeneratorBase::OnEncounterStartBroadcastActorInitializationDelegates);
+			GameStateEventManager->OnForceFieldBaseDeathIDDelegate.AddUniqueDynamic(
+				GeneratorBaseOwner, &AGeneratorBase::CheckForceFieldIDMatchesThisOwner);
 			
-			
+			GameStateEventManager->OnEncounterStartedDelegate.AddUniqueDynamic(
+				GeneratorBaseOwner,
+				&AGeneratorBase::OnEncounterStartBroadcastActorInitializationDelegates);
 		}
 	}
 }

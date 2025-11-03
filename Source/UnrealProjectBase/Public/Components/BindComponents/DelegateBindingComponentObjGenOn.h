@@ -10,13 +10,11 @@
  * 
  */
 UCLASS()
-class UNREALPROJECTBASE_API UDelegateBindingComponentObjGenOn : public UDelegateBindingComponent
+class UNREALPROJECTBASE_API UDelegateBindingComponentObjGenOn
+	: public UDelegateBindingComponent
 {
 	GENERATED_BODY()
-
 public:
 	virtual void BindDelegateFromBP();
-	
 	virtual void BindDelegates();
-	
 };

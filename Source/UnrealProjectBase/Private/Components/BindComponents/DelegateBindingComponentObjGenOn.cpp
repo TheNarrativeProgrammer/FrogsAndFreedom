@@ -17,16 +17,20 @@ void UDelegateBindingComponentObjGenOn::BindDelegates()
 			Cast<AObjectiveActorTurnOnAllGenerator>(GetOwner()))
 		{
 			GameStateEventManager->OnGeneratorInteractDelegate.AddUniqueDynamic(
-				ObjectiveActorTurnOnAllGeneratorOwner, &AObjectiveActorTurnOnAllGenerator::BroadcastUIUpdateEvent);
+				ObjectiveActorTurnOnAllGeneratorOwner,
+				&AObjectiveActorTurnOnAllGenerator::BroadcastUIUpdateEvent);
 			
 			GameStateEventManager->OnGeneratorInteractDelegate.AddUniqueDynamic(
-				ObjectiveActorTurnOnAllGeneratorOwner, &AObjectiveActorTurnOnAllGenerator::IfCompleteTriggerSubObjectivesAndWave);
+				ObjectiveActorTurnOnAllGeneratorOwner,
+				&AObjectiveActorTurnOnAllGenerator::IfCompleteTriggerSubObjectivesAndWave);
 			
 			GameStateEventManager->FOnForceFieldDeathDelegate.AddUniqueDynamic(
-				ObjectiveActorTurnOnAllGeneratorOwner, &AObjectiveActorTurnOnAllGenerator::BroadcastCompletionReverseredEvent);
+				ObjectiveActorTurnOnAllGeneratorOwner,
+				&AObjectiveActorTurnOnAllGenerator::BroadcastCompletionReverseredEvent);
 			
 			GameStateEventManager->OnGeneratorTimerManagerTimerFinishedDelegate.AddUniqueDynamic(
-				ObjectiveActorTurnOnAllGeneratorOwner, &AObjectiveActorTurnOnAllGenerator::OnTimerFinishedSetToTrue);
+				ObjectiveActorTurnOnAllGeneratorOwner,
+				&AObjectiveActorTurnOnAllGenerator::OnTimerFinishedSetToTrue);
 		}
 	}
 }
