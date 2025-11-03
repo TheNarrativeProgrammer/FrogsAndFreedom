@@ -33,8 +33,10 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Health Stats")
 	float MaxHealth;
-
-public:	
+public:
+	UPROPERTY(EditDefaultsOnly, Category = "Health Stats")
+	bool bShouldBroadcastIDOnDeath = false;
+	
 	// Sets default values for this component's properties
 	UHealthComponent();
 

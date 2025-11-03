@@ -32,7 +32,6 @@ void UHealthComponent::InitializeComponent()
 	Super::InitializeComponent();
 	if (AActor* Owner = GetOwner())
 	{
-		//GEngine->AddOnScreenDebugMessage(INDEX_NONE, 10.0f, FColor::Black,TEXT("initialized components"));
 		Owner->OnTakeAnyDamage.AddUniqueDynamic(this, &UHealthComponent::TakeDamage);
 		OnHealthChangedDelegate.Broadcast(OldHealth, CurrentHealth);
 	}
@@ -94,15 +93,15 @@ void UHealthComponent::TakeDamage(AActor* DamagedActor, float Damage, const UDam
 	CurrentHealth = FMath::Clamp(CurrentHealth - Damage, 0.0f, MaxHealth);
 
 	OnHealthChangedDelegate.Broadcast(CurrentHealth, OldHealth);
-	OnHealthChangedSendHealthAndIDDelegate.Broadcast(GetOwner()->GetUniqueID(), CurrentHealth, OldHealth);
-	
+
+	if (bShouldBroadcastIDOnDeath)
+	{
+		OnHealthChangedSendHealthAndIDDelegate.Broadcast(GetOwner()->GetUniqueID(), CurrentHealth, OldHealth);
+	}
 	
 	if (CurrentHealth <= 0.0f)
 	{
-		//GEngine->AddOnScreenDebugMessage(INDEX_NONE, 5, FColor::Black, "Health zero");
 		OnHealthDepletedDelegate.Broadcast();
-		OnHealthDepletedSelfRefDelegate.Broadcast(GetOwner());
-		OnHealthDepleatedDecrementCountDelegate.Broadcast(-1);
 	}
 	
 }
