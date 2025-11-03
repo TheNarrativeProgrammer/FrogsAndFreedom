@@ -32,7 +32,7 @@ void AComputerGeneratorActivator::BeginPlay()
 void AComputerGeneratorActivator::OnBeginplayBroadcastActorInitializationDelegates_Implementation()
 {
 	IDelegateBindBroadcastable::OnBeginplayBroadcastActorInitializationDelegates_Implementation();
-	DelegateBindComponentComputer->GameStateEventManager->OnComputerGeneratorActivatorInitializedDelegate.Broadcast();
+	// DelegateBindComponentComputer->GameStateEventManager->OnComputerGeneratorActivatorInitializedDelegate.Broadcast();
 }
 
 
@@ -132,7 +132,7 @@ void AComputerGeneratorActivator::OnEncounterStartBroadcastActorInitializationDe
 	IDelegateBindBroadcastable::OnEncounterStartBroadcastActorInitializationDelegates_Implementation();
 	if (DelegateBindComponentComputer->GameStateEventManager)
 	{
-		DelegateBindComponentComputer->GameStateEventManager->OnEncounterStartComputerGeneratorActivatorInitializeDelegate.Broadcast();
+		//DelegateBindComponentComputer->GameStateEventManager->OnEncounterStartComputerGeneratorActivatorInitializeDelegate.Broadcast();
 	}
 	
 }
@@ -157,10 +157,10 @@ void AComputerGeneratorActivator::OnHealthDepletedOfGeneratorForcceFieldChangeCo
 
 void AComputerGeneratorActivator::OnLeverPullRestoreForceField()
 {
-	if (DelegateBindComponentComputer->GameStateEventManager)
-	{
-		DelegateBindComponentComputer->GameStateEventManager->OnComputerGeneratorLeverPullDelegate.Broadcast();
-	}
+	// if (DelegateBindComponentComputer->GameStateEventManager)
+	// {
+	// 	DelegateBindComponentComputer->GameStateEventManager->OnComputerGeneratorLeverPullDelegate.Broadcast();
+	// }
 }
 
 // void AComputerGeneratorActivator::UpdateGeneratorData()
@@ -196,17 +196,17 @@ void AComputerGeneratorActivator::OpenDoorToNextLevel()
 	GetWorldTimerManager().ClearTimer(TimerHandleEncounterDuration);
 	GetWorldTimerManager().ClearTimer(TimerHandleDelegateBroadcastTimeUpdate);
 
-	if (DelegateBindComponentComputer->GameStateEventManager)
-	{
-		DelegateBindComponentComputer->GameStateEventManager->OnComputerGeneratorActivatorTimerFinishedDelegate.Broadcast();
-	}
+	// if (DelegateBindComponentComputer->GameStateEventManager)
+	// {
+	// 	DelegateBindComponentComputer->GameStateEventManager->OnComputerGeneratorActivatorTimerFinishedDelegate.Broadcast();
+	// }
 	
 	//OnGeneratorTimerFinishedDelegate.Broadcast();
 }
 
 void AComputerGeneratorActivator::BroadcastOnSecondElaspedSendTimeRemainingDelegate()
 {
-	DelegateBindComponentComputer->GameStateEventManager->OnComputerGeneratorActivatorSecondElaspedDelegate.Broadcast(GetRemainingTime());
+	//DelegateBindComponentComputer->GameStateEventManager->OnComputerGeneratorActivatorSecondElaspedDelegate.Broadcast(GetRemainingTime());
 }
 
 float AComputerGeneratorActivator::GetElaspedTime() const
