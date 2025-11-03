@@ -47,7 +47,7 @@ USTRUCT(BlueprintType)
 struct FEncounterWaveData
 {
 	GENERATED_BODY()
-
+public:
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, meta=(Categories="Wave"))
 	FGameplayTag WaveTag;
 
@@ -60,7 +60,8 @@ struct FEncounterWaveData
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Method Of Starting Wave")
 	TEnumAsByte<EWaveTrigger> WaveTrigger = EWaveTrigger::EncounterStart;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Encounter")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Encounter",
+		meta=(EditCondition="IsWaveTriggerFrogPopulation", EditConditionHides))
 	int32 MinPopulationToTriggerSpawningNextWave = 0;
 
 	UPROPERTY()
@@ -69,8 +70,7 @@ struct FEncounterWaveData
 	UPROPERTY()
 	bool CanWaveSpawn = false;
 	
-	
-
+	bool IsWaveTriggerFrogPopulation() const {return WaveTrigger == FrogPopulation;}
 	
 };
 
@@ -102,6 +102,8 @@ public:
 
 	UFUNCTION()
 	bool IsWaveInMap(const FGameplayTag WaveTag);
+
+	
 
 	
 #if WITH_EDITOR

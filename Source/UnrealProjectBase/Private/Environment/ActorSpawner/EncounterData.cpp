@@ -74,16 +74,12 @@ EDataValidationResult UEncounterData::IsDataValid(class FDataValidationContext& 
 			if (EncounterData.BatchSize <= 0 || EncounterData.QuantitySpawnedInWave <= 0)
 			{
 				ResultBatchSize = EDataValidationResult::Invalid;
-				//UE_LOG(LogTemp, Error, TEXT("BatchSize and QuantitySpawnedInWave can't be less than 1"));
+				UE_LOG(LogTemp, Error, TEXT("BatchSize and QuantitySpawnedInWave can't be less than 1"));
 			}
 		}
 	}
-	
-	// FGameplayTagContainer GameplayTagContainerFlusherPinner;
-	// GameplayTagContainerFlusherPinner.AddTag(FGameplayTag::RequestGameplayTag("Character.Enemy.Type.Flusher"));
-	// GameplayTagContainerFlusherPinner.AddTag(FGameplayTag::RequestGameplayTag("Character.Enemy.Type.Pinner"));
 	return ResultSuper;
-
+#endif
 
 
 
@@ -187,5 +183,5 @@ EDataValidationResult UEncounterData::IsDataValid(class FDataValidationContext& 
 	//
 	// return Result;
 }
-#endif
+
 
