@@ -41,7 +41,18 @@ public IAttackTokenGiverable
 public:	
 	AGeneratorBase();
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	TObjectPtr<UDelegateBindComponentGenerator> DelegateBindComponentGenerator;
+	
+	UFUNCTION()
+	void CheckForceFieldIDMatchesThisOwner(int32 InForceField);
 
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void OnEncounterStartBroadcastActorInitializationDelegates();
+
+	UFUNCTION(BlueprintCallable)
+	void SetSoundTimer();
+	
 	//Functions - inherited from IGameplayerTagAssetInterface
 	void GetOwnedGameplayTags(FGameplayTagContainer& TagContainer) const;
 
@@ -74,8 +85,7 @@ public:
 	UPROPERTY()
 	TObjectPtr<UPawnNoiseEmitterComponent> NoiseEmitterComponent;
 
-	UFUNCTION()
-	void CheckForceFieldIDMatchesThisOwner(int32 InForceField);
+	
 
 	UFUNCTION(BlueprintCallable)
 	bool GetIsForceFieldActive();
@@ -92,8 +102,7 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void OnBeginplayBroadcastActorInitializationDelegates();
 
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void OnEncounterStartBroadcastActorInitializationDelegates();
+	
 
 	//FUNCTIONS - Interactable interface
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
@@ -111,11 +120,13 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	UFUNCTION()
+	void SpawnAndSaveIdOfForceField();
+
 	
 
 	//PROPERTIES - components
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
-	TObjectPtr<UDelegateBindComponentGenerator> DelegateBindComponentGenerator;
+	
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	UHealthComponent* HealthComponent;
@@ -198,11 +209,7 @@ public:
 	float TimeBetweenNoises = 5.0f;
 	
 
-	UFUNCTION(BlueprintCallable)
-	void OnLeverPullRestoreHealthOfForceField();
-
-	UFUNCTION(BlueprintCallable)
-	void SetSoundTimer();
+	
 
 	UFUNCTION(BlueprintCallable)
 	void PlayNoise();
@@ -219,5 +226,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void OnGameOverClearTimer();
+
+	UFUNCTION(BlueprintCallable)
+	void OnLeverPullRestoreHealthOfForceField();
 	
 };

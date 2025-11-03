@@ -10,11 +10,12 @@
 // Sets default values
 AGeneratorBase::AGeneratorBase()
 {
-	//changing from actor to pawn
-	//AutoPossessAI = EAutoPossessAI::Disabled;
 	PrimaryActorTick.bCanEverTick = false;
+	DelegateBindComponentGenerator = CreateDefaultSubobject<
+		UDelegateBindComponentGenerator>(TEXT("DelegateBindComponentGenerator"));
 
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponentGenerator"));
+	HealthComponent->bShouldBroadcastIDOnDeath = true;
 	NoiseEmitterComponent = CreateDefaultSubobject<UPawnNoiseEmitterComponent>(TEXT("NoiseEmitterComponent"));
 	NoiseEmitterComponent->bAutoActivate = true;
 	
@@ -25,7 +26,7 @@ AGeneratorBase::AGeneratorBase()
 	// SceneComponentEnmenyAttackLocationBottom = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComponentEnemyAttackLocationBottom"));
 	// SceneComponentEnmenyAttackLocationLeft = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComponentEnemyAttackLocationLeft"));
 	// SceneComponentEnmenyAttackLocationRight = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComponentEnemyAttackLocationRight"));
-	DelegateBindComponentGenerator = CreateDefaultSubobject<UDelegateBindComponentGenerator>(TEXT("DelegateBindComponentGenerator"));
+	
 	AttackTokenGiverableComponent = CreateDefaultSubobject<UAttackTokenGiverComponent>(TEXT("AttackTokenGiverComponent"));
 
 	SetRootComponent(StaticMeshComponent);
@@ -65,8 +66,10 @@ void AGeneratorBase::OnInteract_Implementation()
 		{
 			SetIsForceFieldActive(true);
 			SetSoundTimer();
-			DelegateBindComponentGenerator->GameStateEventManager->OnGeneratorInteractSendForceFieldIDDelegate.Broadcast(_mForceFieldID);
-			DelegateBindComponentGenerator->GameStateEventManager->OnGeneratorInteractDelegate.Broadcast();
+			DelegateBindComponentGenerator->GameStateEventManager->
+				OnGeneratorInteractSendForceFieldIDDelegate.Broadcast(_mForceFieldID);
+			DelegateBindComponentGenerator->GameStateEventManager->
+				OnGeneratorInteractDelegate.Broadcast();
 		}
 	}
 }
@@ -90,43 +93,26 @@ void AGeneratorBase::InteractMessageOff_Implementation()
 void AGeneratorBase::BeginPlay()
 {
 	Super::BeginPlay();
-	//moved to Binding delegate on Encounter Start
-	
+	SpawnAndSaveIdOfForceField();
+	GetWorld()->GetTimerManager().ClearAllTimersForObject(this);
+	OnBeginplayBroadcastActorInitializationDelegates();
+}
 
-	if (NoiseEmitterComponent->IsActive())
-	{
-		//UE_LOG(LogTemp, Warning, TEXT("Noise emitter is active"));
-	}
-
+void AGeneratorBase::SpawnAndSaveIdOfForceField()
+{
 	if (ForceFieldClass)
 	{
 		FActorSpawnParameters SpawnParameters;
 		if (AActor* Actor = GetWorld()->SpawnActor<AForceFieldBase>(ForceFieldClass, GetActorLocation(), GetActorRotation(), SpawnParameters))
 		{
 			SetForceFieldID((Actor->GetUniqueID()));
-			//Activate or deactivate ForceField
 			if (AForceFieldBase* FoceForceFieldBase = Cast<AForceFieldBase>(Actor))
 			{
 				FoceForceFieldBase->SetIsActiveOnEncounterBegin(_mIsShieldActiveOnEncounterStart);
 			}
 			SetIsForceFieldActive(_mIsShieldActiveOnEncounterStart);
 		}
-		
-		//GetWorld()->SpawnActor<AForceFieldBase>(ForceFieldClass, GetActorLocation(), GetActorRotation(), SpawnParameters);
-		//RegisterListenersForHealthOfForceFields();
 	}
-	else
-	{
-		//LogTemp, Warning, TEXT("No class of force field is set within Generator BP"));
-	}
-
-	// PopulateEnemyAttackLocationsArray(SceneComponentEnmenyAttackLocationTop);
-	// PopulateEnemyAttackLocationsArray(SceneComponentEnmenyAttackLocationBottom);
-	// PopulateEnemyAttackLocationsArray(SceneComponentEnmenyAttackLocationLeft);
-	// PopulateEnemyAttackLocationsArray(SceneComponentEnmenyAttackLocationRight);
-
-	GetWorld()->GetTimerManager().ClearAllTimersForObject(this);
-	OnBeginplayBroadcastActorInitializationDelegates();
 }
 
 
@@ -147,7 +133,8 @@ void AGeneratorBase::OnEncounterStartBroadcastActorInitializationDelegates_Imple
 	IDelegateBindBroadcastable::OnEncounterStartBroadcastActorInitializationDelegates_Implementation();
 	if (DelegateBindComponentGenerator->GameStateEventManager)
 	{
-		DelegateBindComponentGenerator->GameStateEventManager->OnEncounterStartGeneratorInitializeDelegate.Broadcast();
+		DelegateBindComponentGenerator->GameStateEventManager->
+			OnEncounterStartGeneratorInitializeDelegate.Broadcast();
 	}
 	if (_mIsForceFieldActive == true)
 	{
@@ -160,32 +147,13 @@ void AGeneratorBase::OnEncounterStartBroadcastActorInitializationDelegates_Imple
 void AGeneratorBase::OnBeginplayBroadcastActorInitializationDelegates_Implementation()
 {
 	IDelegateBindBroadcastable::OnBeginplayBroadcastActorInitializationDelegates_Implementation();
-	if (DelegateBindComponentGenerator->GameStateEventManager)
-	{
-		DelegateBindComponentGenerator->GameStateEventManager->OnGeneratorInitializedDelegate.Broadcast();
-	}
+	// if (DelegateBindComponentGenerator->GameStateEventManager)
+	// {
+	// 	DelegateBindComponentGenerator->GameStateEventManager->OnGeneratorInitializedDelegate.Broadcast();
+	// }
 }
 
 
-// void AGeneratorBase::RegisterListenersForHealthOfForceFields()
-// {
-// 	ForceField->GetHealthComponent()->OnHealthDepletedDelegate.AddUniqueDynamic(this, &AGeneratorBase::BroadcastHealthDepletedOfForceField);
-// }
-//
-// void AGeneratorBase::BroadcastHealthDepletedOfForceField()
-// {
-// 	OnHealthDepetedForceFieldDelegate.Broadcast();
-// }
-
-// void AGeneratorBase::PopulateEnemyAttackLocationsArray(FVector EnemyAttackLocation)
-// {
-// 	_maEnemyAttackLocations.Add(EnemyAttackLocation);
-// }
-//
-// TArray<FVector>& AGeneratorBase::GetEnemyAttackLocations()
-// {
-// 	return _maEnemyAttackLocations;
-// }
 
 
 
@@ -203,11 +171,9 @@ void AGeneratorBase::CheckForceFieldIDMatchesThisOwner(int32 InForceField)
 {
 	if (InForceField == _mForceFieldID)
 	{
-		//This future behaviour is specific to the generator 
+		GetWorld()->GetTimerManager().PauseTimer(GeneratorSoundTimerHandle);
+		SetIsForceFieldActive(false);
 	}
-	//behaviour is agnostic of which generators
-	GetWorld()->GetTimerManager().PauseTimer(GeneratorSoundTimerHandle);
-	SetIsForceFieldActive(false);
 }
 
 bool AGeneratorBase::GetIsForceFieldActive()
