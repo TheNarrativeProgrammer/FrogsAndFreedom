@@ -150,14 +150,16 @@ void ACharacterBasePlayer::BeginPlay()
     //Add moppping context
         if (APlayerController* PC = Cast<APlayerController>(Controller)) 
         {
-            if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PC->GetLocalPlayer())) 
+            if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(
+                PC->GetLocalPlayer())) 
             {
                 Subsystem->AddMappingContext(DefaultMappingContext, 0);
             }
         }
     if (DelegateBindingComponentPlayer)
     {
-        DelegateBindingComponentPlayer->GameStateEventManager->OnRequestPlayerHealthDelegate.AddUniqueDynamic(this, &ACharacterBasePlayer::OnHealthRequestSendHealth);
+        DelegateBindingComponentPlayer->GameStateEventManager->OnRequestPlayerHealthDelegate.AddUniqueDynamic(
+            this, &ACharacterBasePlayer::OnHealthRequestSendHealth);
     }
 
     if (HealthComponent)
@@ -172,10 +174,6 @@ void ACharacterBasePlayer::BeginPlay()
     // PopulateEnemyAttackLocationsArray(SceneComponentEnemyAttackLocationRight);
 }
 
-void ACharacterBasePlayer::OnHealthChanageSnedHealthInfo(float CurrentHealth, float OldHealth)
-{
-    DelegateBindingComponentPlayer->GameStateEventManager->OnHealthChangePlayerSendHealthDataDelegate.Broadcast(CurrentHealth, OldHealth, HealthComponent->GetMaxHealth());
-}
 
 void ACharacterBasePlayer::OnBeginplayBroadcastActorInitializationDelegates_Implementation()
 {
@@ -251,12 +249,15 @@ void ACharacterBasePlayer::OnEndOverlapForInteractableToggleMessageOff(UPrimitiv
 
 void ACharacterBasePlayer::OnHealthChangeSendHealth(float NewHealth, float OldHealth)
 {
-    DelegateBindingComponentPlayer->GameStateEventManager->OnHealthChangePlayerSendHealthDataDelegate.Broadcast(NewHealth, OldHealth, HealthComponent->GetMaxHealth());
+    DelegateBindingComponentPlayer->GameStateEventManager->
+        OnHealthChangePlayerSendHealthDataDelegate.Broadcast(
+        NewHealth, OldHealth, HealthComponent->GetMaxHealth());
 }
 
 void ACharacterBasePlayer::OnHealthRequestSendHealth()
 {
-    DelegateBindingComponentPlayer->GameStateEventManager->OnRequestHealthSendHealthDelegate.Broadcast(HealthComponent->GetCurrentHealth(), HealthComponent->GetMaxHealth());
+    DelegateBindingComponentPlayer->GameStateEventManager->OnRequestHealthSendHealthDelegate.Broadcast(
+        HealthComponent->GetCurrentHealth(), HealthComponent->GetMaxHealth());
 }
 
 //IEnemey
