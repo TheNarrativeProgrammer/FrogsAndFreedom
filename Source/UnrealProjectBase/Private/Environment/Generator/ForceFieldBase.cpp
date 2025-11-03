@@ -64,8 +64,8 @@ void AForceFieldBase::BeginPlay()
 		this, &AForceFieldBase::OnHealthChangeSendIdAndHealth);
 	HealthComponent->OnHealthDepletedDelegate.AddUniqueDynamic(
 		this, &AForceFieldBase::Death);
-	HealthComponent->OnHealthChangedDelegate.AddUniqueDynamic(
-		this, &AForceFieldBase::OnHealthChangeSendHealth);
+	// HealthComponent->OnHealthChangedDelegate.AddUniqueDynamic(
+	// 	this, &AForceFieldBase::OnHealthChangeSendHealth);
 	
 	NiagaraComponentForceField->SetVariableFloat(FName("Radius"), RadiusNiagara);
 	
@@ -96,10 +96,10 @@ void AForceFieldBase::BeginPlay()
 void AForceFieldBase::OnBeginplayBroadcastActorInitializationDelegates_Implementation()
 {
 	IDelegateBindBroadcastable::OnBeginplayBroadcastActorInitializationDelegates_Implementation();
-	if (DelegateBindComponentForceField->GameStateEventManager)
-	{
-		DelegateBindComponentForceField->GameStateEventManager->OnForceFieldInitalizedDelegate.Broadcast();
-	}
+	// if (DelegateBindComponentForceField->GameStateEventManager)
+	// {
+	// 	DelegateBindComponentForceField->GameStateEventManager->OnForceFieldInitalizedDelegate.Broadcast();
+	// }
 }
 
 void AForceFieldBase::Death()
@@ -109,10 +109,10 @@ void AForceFieldBase::Death()
 	DelegateBindComponentForceField->GameStateEventManager->FOnForceFieldDeathDelegate.Broadcast();
 }
 
-void AForceFieldBase::OnHealthChangeSendHealth(float CurrentHealth, float OldHealth)
-{
-	DelegateBindComponentForceField->GameStateEventManager->OnForceFieldHealthChangeDelegate.Broadcast(CurrentHealth, OldHealth);
-}
+// void AForceFieldBase::OnHealthChangeSendHealth(float CurrentHealth, float OldHealth)
+// {
+// 	DelegateBindComponentForceField->GameStateEventManager->OnForceFieldHealthChangeDelegate.Broadcast(CurrentHealth, OldHealth);
+// }
 
 
 

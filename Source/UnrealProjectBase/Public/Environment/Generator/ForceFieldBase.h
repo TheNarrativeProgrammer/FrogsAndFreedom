@@ -77,8 +77,8 @@ protected:
 	UFUNCTION()
 	void Death();
 
-	UFUNCTION()
-	void OnHealthChangeSendHealth(float CurrentHealth, float OldHealth);
+	// UFUNCTION()
+	// void OnHealthChangeSendHealth(float CurrentHealth, float OldHealth);
 
 	
 
