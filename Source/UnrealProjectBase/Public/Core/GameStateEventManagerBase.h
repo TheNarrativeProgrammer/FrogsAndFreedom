@@ -6,166 +6,132 @@
 #include "GameFramework/GameState.h"
 #include "GameStateEventManagerBase.generated.h"
 
-/**
- * 
- */
+class AObjectiveActorBase;
 class UEncounterObjective;
 //Spawners (machines and vents)
-//DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FMachineCountSigature1, int, TotalMachineInLevel, int, RemainingMachinesInLevel);
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnActorSpawnerBaseMachineInitalizedSignature);
-
+// DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnActorSpawnerBaseMachineInitalizedSignature);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnActorSpawnerBaseMachineDeathSignature);
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnActorSpawnerBaseInitalizedSelfRefSignature, AActor*, ActorSpawnedRef);
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnActorSpawnerBaseMachineDeathSelfRefSignature, AActor*, ActorSpawnedRef);
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnActorSpawnerTankSpawnedSignature, int32, SpawnerID);
-
+// DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnActorSpawnerBaseInitalizedSelfRefSignature,
+// 	AActor*, ActorSpawnedRef);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnActorSpawnerBaseMachineDeathSelfRefSignature,
+	AActor*, ActorSpawnedRef);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnActorSpawnerTankSpawnedSignature,
+	int32, SpawnerID);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnEncounterStartActorSpawnerBaseMachineInitialSignature);
 
 //Enemies
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCharacterBaseFrogSpawnedFromPoolSignature);
-
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWaveOneStartSpawningSignature);
-
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCharacterBaseFrogDeathSignature);
-
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCharacterBaseFrogAllFrogsDeadSignature);
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCharacterBaseFrogSpawnedFromPoolSelfRefSignature, AActor*, ActorSpawnedRef);
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCharacterBaseFrogDeathSelfRefSignature, AActor*, ActorSpawnedRef);
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCharacterBaseFrogTankDeathIDSignature, int32, ActorUniqueID);
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnCharacterBaseFrogTankSpawnedLocationSignature, FTransform, InTankLocation, uint32, ActorID);
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnCharacterBaseFrogTankMoveLocationSignature, FTransform, InTankLocation, uint32, ActorID);
-
-//ForceField
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnForceFieldInitalizedSignature);
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnForceFieldHealthChangeSignature, float, CurrentHealth, float, OldHealth);
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnForceFieldHealthChangeIDHealthSignature, int32, ActorUniqueID, float, CurrentHealth, float, OldHealth);
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnForceFieldDeathSignature);
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnForceFieldBaseDeathIDSignature, int32, ActorUniqueID);
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnEncounterStartForceFieldInitalizedIDHealthSignature, int32, ActorUniqueID, float, CurrentHealth, float, MaxHealth);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCharacterBaseFrogSpawnedFromPoolSelfRefSignature,
+	AActor*, ActorSpawnedRef);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCharacterBaseFrogDeathSelfRefSignature,
+	AActor*, ActorSpawnedRef);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCharacterBaseFrogTankDeathIDSignature,
+	int32, ActorUniqueID);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnCharacterBaseFrogTankSpawnedLocationSignature,
+	FTransform, InTankLocation, uint32, ActorID);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnCharacterBaseFrogTankMoveLocationSignature,
+	FTransform, InTankLocation, uint32, ActorID);
 
 //ComputerGeneratorActivator
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnComputerGeneratorActivatorInitializedSignature);
+// DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnComputerGeneratorActivatorInitializedSignature);
+// DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnComputerGeneratorActivatorTimerFinishedSignature);
+// DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnComputerGeneratorActivatorSecondElaspedSignature,
+// 	float, TimeRemaining);
+// DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnComputerGeneratorLeverPullSignature);
+// DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnEncounterStartComputerGeneratorActivatorInitializeSignature);
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnComputerGeneratorActivatorTimerFinishedSignature);
+//ForceField
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnForceFieldBaseDeathIDSignature, int32, ActorUniqueID);
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnComputerGeneratorActivatorSecondElaspedSignature, float, TimeRemaining);
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnComputerGeneratorLeverPullSignature);
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnEncounterStartComputerGeneratorActivatorInitializeSignature);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnForceFieldInitalizedSignature);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnForceFieldHealthChangeSignature,
+	float, CurrentHealth, float, OldHealth);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnForceFieldHealthChangeIDHealthSignature,
+	int32, ActorUniqueID, float, CurrentHealth, float, OldHealth);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnForceFieldDeathSignature);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnEncounterStartForceFieldInitalizedIDHealthSignature,
+	int32, ActorUniqueID, float, CurrentHealth, float, MaxHealth);
 
 //GeneratorTimerManager
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGeneratorTimerManagerInitializedSignature);
-
+// DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGeneratorTimerManagerInitializedSignature);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGeneratorTimerManagerTimerFinishedSignature);
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGeneratorTimerManagerSecondElaspedSignature, float, TimeRemaining);
-
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGeneratorTimerManagerSecondElaspedSignature,
+	float, TimeRemaining);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGeneratorTimerManagerTimerPausedSignature);
-
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGeneratorTimerManagerTimerStartSignature);
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGeneratorTimerManagerTimerStarSendTotalTimeSignature, float, TotalTime);
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnEncounterStartGeneratorTimerManagernitializeSignature);
-
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGeneratorTimerManagerTimerStarSendTotalTimeSignature,
+	float, TotalTime);
+// DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnEncounterStartGeneratorTimerManagernitializeSignature);
 
 //Generator
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGeneratorInitializedSignature);
-
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGeneratorInteractSendForceFieldIDSignature,
+	int32, ActorUniqueID);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGeneratorInteractSignature);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnEncounterStartGeneratorInitializeSignature);
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGeneratorInteractSendForceFieldIDSignature, int32, ActorUniqueID);
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGeneratorInteractSignature);
-
-
+// DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGeneratorInitializedSignature);
 
 //PooledActorManager
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPooledActorManagerInitializedSignature);
 
 //Player
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnBeginPlaySendPlayerHealthSignature, float, CurrentHealth, float, MaxHealth);
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnHealthChangePlayerSendHealthDataSignature, float, CurrentHealth, float, OldHealth, float, MaxHealth);
-
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnBeginPlaySendPlayerHealthSignature,
+	float, CurrentHealth, float, MaxHealth);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnHealthChangePlayerSendHealthDataSignature,
+	float, CurrentHealth, float, OldHealth, float, MaxHealth);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnRequestPlayerHealthSignature);
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnRequestHealthSendHealthSignature, float, CurrentHealth, float, MaxHealth);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnRequestHealthSendHealthSignature,
+	float, CurrentHealth, float, MaxHealth);
 
 //Encounter
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnEncounterStartedSignature);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEncounterStartedSendEncounterObjectiveDataSignature, UEncounterObjective*, ObjectiveData);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnEncounterEndedSignature);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnActorSpawnedSendTransformOfSpawnPointSignature, FTransform, SpawnTransform);
 
+// DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEncounterStartedSendEncounterObjectiveDataSignature,
+// 	UEncounterObjective*, ObjectiveData);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnEncounterEndedSignature);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnActorSpawnedSendTransformOfSpawnPointSignature,
+	FTransform, SpawnTransform);
 //Objectives
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnObectivesCompleteSignature);
-
 //Level Reset
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnLevelLoadResetDataSignature);
-
 //Power cords
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnForceFieldDeactivatedTurnPowerOffSignature);
-
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnAllForceFieldActivatedTurnPowerOnSignature);
-
 //UI Update
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnActorStateChangeUpdateUISignature);
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnTimerChangeUpdateUISignature);
-
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTimerChangeUpdateUISignature,
+	AObjectiveActorBase*, ObjectiveActorBase);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnActorObjectiveCompleteUpdateUISignature);
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnActorObjectiveCompletionReversedUpdateUISignature);
-
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnActorObjectiveCompletionReversedUpdateUISignature,
+	AObjectiveActorBase*, ObjectiveActorBase);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnTimerObjectiveCompleteUpdateUISignature);
-
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnIteractEndOverlapUpdateUISignature);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnHideTutorialMessageUpdateUISignature);
 //Match State
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameOverClearAllActiveTimersSignature);
-
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGamePausedSignature);
-
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameUnPausedSignature);
-
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameOverStopBusSignature);
-
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnBusesStopSignature);
-
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnBusesUnpausedSignature);
 
 //Dialogue
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDialogueFinishedSignature);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDialogueStartSignature);
 
 UCLASS()
-class UNREALPROJECTBASE_API AGameStateEventManagerBase : public AGameState
+class UNREALPROJECTBASE_API AGameStateEventManagerBase
+	: public AGameState
 {
 	GENERATED_BODY()
 
 	public:
-	//PROPERTTY - delegates
-	/*MACHINECOUNTDELEGATE --> send info on the total ActorSpawnerBaseFrogMachines in level.
-	 *called when the level loads and when the health of a machine reaches 0.
-	 * send the total machines when level loaded and the remaining active mahcines currently in level (active mean health above 0) */
-	// UPROPERTY(Blueprintable, BlueprintAssignable, Category = "Delegates")
-	// FMachineCountSigature1 MachineCountDelegate1;
-
-	UPROPERTY(BlueprintCallable, Blueprintable, BlueprintAssignable, Category = "Delegates Spawners")
-	FOnActorSpawnerBaseMachineInitalizedSignature OnActorSpawnerBaseMachineInitalizedDelegate;
+	// UPROPERTY(BlueprintCallable, Blueprintable, BlueprintAssignable, Category = "Delegates Spawners")
+	// FOnActorSpawnerBaseMachineInitalizedSignature OnActorSpawnerBaseMachineInitalizedDelegate;
 
 	UPROPERTY(BlueprintCallable, Blueprintable, BlueprintAssignable, Category = "Delegates Spawners")
 	FOnEncounterStartActorSpawnerBaseMachineInitialSignature OnEncounterStartActorSpawnerBaseMachineInitialDelegate;
@@ -173,8 +139,8 @@ class UNREALPROJECTBASE_API AGameStateEventManagerBase : public AGameState
 	UPROPERTY(BlueprintCallable, Blueprintable, BlueprintAssignable, Category = "Delegates Spawners")
 	FOnActorSpawnerBaseMachineDeathSignature OnActorSpawnerBaseMachineDeathDelegate;
 
-	UPROPERTY(BlueprintCallable, Blueprintable, BlueprintAssignable, Category = "Delegates Spawners")
-	FOnActorSpawnerBaseInitalizedSelfRefSignature OnActorSpawnerBaseInitalizedSelfRefDelegate;
+	// UPROPERTY(BlueprintCallable, Blueprintable, BlueprintAssignable, Category = "Delegates Spawners")
+	// FOnActorSpawnerBaseInitalizedSelfRefSignature OnActorSpawnerBaseInitalizedSelfRefDelegate;
 
 	UPROPERTY(BlueprintCallable, Blueprintable, BlueprintAssignable, Category = "Delegates Spawners")
 	FOnActorSpawnerBaseMachineDeathSelfRefSignature OnActorSpawnerBaseMachineDeathSelfRefDelegate;
@@ -210,13 +176,15 @@ class UNREALPROJECTBASE_API AGameStateEventManagerBase : public AGameState
 
 	//ForceField
 	UPROPERTY(BlueprintCallable, Blueprintable, BlueprintAssignable, Category = "Delegates ForceField")
+	FOnForceFieldBaseDeathIDSignature OnForceFieldBaseDeathIDDelegate;
+	
+	UPROPERTY(BlueprintCallable, Blueprintable, BlueprintAssignable, Category = "Delegates ForceField")
 	FOnForceFieldInitalizedSignature OnForceFieldInitalizedDelegate;
 
 	UPROPERTY(BlueprintCallable, Blueprintable, BlueprintAssignable, Category = "Delegates ForceField")
 	FOnForceFieldHealthChangeSignature OnForceFieldHealthChangeDelegate;
 
-	UPROPERTY(BlueprintCallable, Blueprintable, BlueprintAssignable, Category = "Delegates ForceField")
-	FOnForceFieldBaseDeathIDSignature OnForceFieldBaseDeathIDDelegate;
+	
 
 	UPROPERTY(BlueprintCallable, Blueprintable, BlueprintAssignable, Category = "Delegates ForceField")
 	FOnForceFieldDeathSignature FOnForceFieldDeathDelegate;
@@ -228,20 +196,20 @@ class UNREALPROJECTBASE_API AGameStateEventManagerBase : public AGameState
 	FOnForceFieldHealthChangeIDHealthSignature OnForceFieldHealthChangeIDHealthDelegate;
 
 	//ComputerGeneratorActivator
-	UPROPERTY(BlueprintCallable, Blueprintable, BlueprintAssignable, Category = "Delegates Computer Generator Activator")
-	FOnComputerGeneratorActivatorTimerFinishedSignature OnComputerGeneratorActivatorTimerFinishedDelegate;
+	// UPROPERTY(BlueprintCallable, Blueprintable, BlueprintAssignable, Category = "Delegates Computer Generator Activator")
+	// FOnComputerGeneratorActivatorTimerFinishedSignature OnComputerGeneratorActivatorTimerFinishedDelegate;
 
-	UPROPERTY(BlueprintCallable, Blueprintable, BlueprintAssignable, Category = "Delegates Computer Generator Activator")
-	FOnComputerGeneratorActivatorSecondElaspedSignature OnComputerGeneratorActivatorSecondElaspedDelegate;
+	// UPROPERTY(BlueprintCallable, Blueprintable, BlueprintAssignable, Category = "Delegates Computer Generator Activator")
+	// FOnComputerGeneratorActivatorSecondElaspedSignature OnComputerGeneratorActivatorSecondElaspedDelegate;
 
-	UPROPERTY(BlueprintCallable, Blueprintable, BlueprintAssignable, Category = "Delegates Computer Generator Activator")
-	FOnComputerGeneratorLeverPullSignature OnComputerGeneratorLeverPullDelegate;
+	// UPROPERTY(BlueprintCallable, Blueprintable, BlueprintAssignable, Category = "Delegates Computer Generator Activator")
+	// FOnComputerGeneratorLeverPullSignature OnComputerGeneratorLeverPullDelegate;
 
-	UPROPERTY(BlueprintCallable, Blueprintable, BlueprintAssignable, Category = "Delegates Computer Generator Activator")
-	FOnComputerGeneratorActivatorInitializedSignature OnComputerGeneratorActivatorInitializedDelegate;
+	// UPROPERTY(BlueprintCallable, Blueprintable, BlueprintAssignable, Category = "Delegates Computer Generator Activator")
+	// FOnComputerGeneratorActivatorInitializedSignature OnComputerGeneratorActivatorInitializedDelegate;
 
-	UPROPERTY(BlueprintCallable, Blueprintable, BlueprintAssignable, Category = "Delegates Computer Generator Activator")
-	FOnEncounterStartComputerGeneratorActivatorInitializeSignature OnEncounterStartComputerGeneratorActivatorInitializeDelegate;
+	// UPROPERTY(BlueprintCallable, Blueprintable, BlueprintAssignable, Category = "Delegates Computer Generator Activator")
+	// FOnEncounterStartComputerGeneratorActivatorInitializeSignature OnEncounterStartComputerGeneratorActivatorInitializeDelegate;
 	
 	
 	//Generator Time Manager
@@ -261,30 +229,22 @@ class UNREALPROJECTBASE_API AGameStateEventManagerBase : public AGameState
 	FOnGeneratorTimerManagerTimerStarSendTotalTimeSignature OnGeneratorTimerManagerTimerStarSendTotalTimeDelegate;
 	
 
-	UPROPERTY(BlueprintCallable, Blueprintable, BlueprintAssignable, Category = "Delegates Generator Timer Manager")
-	FOnGeneratorTimerManagerInitializedSignature OnGeneratorTimerManagerInitializedDelegate;
+	// UPROPERTY(BlueprintCallable, Blueprintable, BlueprintAssignable, Category = "Delegates Generator Timer Manager")
+	// FOnGeneratorTimerManagerInitializedSignature OnGeneratorTimerManagerInitializedDelegate;
 
-	UPROPERTY(BlueprintCallable, Blueprintable, BlueprintAssignable, Category = "Delegates Generator Timer Manager")
-	FOnEncounterStartGeneratorTimerManagernitializeSignature OnEncounterStartGeneratorTimerManagernitializeDelegate;
+	// UPROPERTY(BlueprintCallable, Blueprintable, BlueprintAssignable, Category = "Delegates Generator Timer Manager")
+	// FOnEncounterStartGeneratorTimerManagernitializeSignature OnEncounterStartGeneratorTimerManagernitializeDelegate;
 	
-
 	//Generator
-	UPROPERTY(BlueprintCallable, Blueprintable, BlueprintAssignable, Category = "Delegates Computer Generator Activator")
-	FOnGeneratorInitializedSignature OnGeneratorInitializedDelegate;
-
-	UPROPERTY(BlueprintCallable, Blueprintable, BlueprintAssignable, Category = "Delegates Computer Generator Activator")
-	FOnEncounterStartGeneratorInitializeSignature OnEncounterStartGeneratorInitializeDelegate;
-
 	UPROPERTY(BlueprintCallable, Blueprintable, BlueprintAssignable, Category = "Delegates Computer Generator Activator")
 	FOnGeneratorInteractSendForceFieldIDSignature OnGeneratorInteractSendForceFieldIDDelegate;
 
 	UPROPERTY(BlueprintCallable, Blueprintable, BlueprintAssignable, Category = "Delegates Computer Generator Activator")
-	FOnGeneratorInteractSendForceFieldIDSignature OnGeneratorActiveOnEncounterStartSendForceFieldIDDelegate;
-
-	UPROPERTY(BlueprintCallable, Blueprintable, BlueprintAssignable, Category = "Delegates Computer Generator Activator")
 	FOnGeneratorInteractSignature OnGeneratorInteractDelegate;
 	
-
+	UPROPERTY(BlueprintCallable, Blueprintable, BlueprintAssignable, Category = "Delegates Computer Generator Activator")
+	FOnEncounterStartGeneratorInitializeSignature OnEncounterStartGeneratorInitializeDelegate;
+	
 	//pooled actor manager
 	UPROPERTY(BlueprintCallable, Blueprintable, BlueprintAssignable, Category = "Delegates Computer Generator Activator")
 	FOnPooledActorManagerInitializedSignature OnPooledActorManagerInitializedDelegate;
@@ -309,9 +269,7 @@ class UNREALPROJECTBASE_API AGameStateEventManagerBase : public AGameState
 	//Encounter
 	UPROPERTY(BlueprintCallable, Blueprintable, BlueprintAssignable, Category = "Delegates Encouner")
 	FOnEncounterStartedSignature OnEncounterStartedDelegate;
-
-	UPROPERTY(BlueprintCallable, Blueprintable, BlueprintAssignable, Category = "Delegates Encouner")
-	FOnEncounterStartedSendEncounterObjectiveDataSignature OnEncounterStartedSendEncounterObjectiveDataDelegate;
+	
 
 	UPROPERTY(BlueprintCallable, Blueprintable, BlueprintAssignable, Category = "Delegates Encouner")
 	FOnEncounterEndedSignature FOnEncounterEndedDelegate;
@@ -341,14 +299,6 @@ class UNREALPROJECTBASE_API AGameStateEventManagerBase : public AGameState
 	UPROPERTY(BlueprintCallable, Blueprintable, BlueprintAssignable, Category = "Objectives")
 	FOnObectivesCompleteSignature OnSingleObectiveCompletionReversedDelegate;
 
-	
-
-	UPROPERTY(BlueprintCallable, Blueprintable, BlueprintAssignable, Category = "Objectives")
-	FOnObectivesCompleteSignature OnOtherObectivesCompleteDelegateTest;
-
-	UPROPERTY(BlueprintCallable, Blueprintable, BlueprintAssignable, Category = "Objectives")
-	FOnObectivesCompleteSignature OnOtherObectivesCompleteDelegateTest2;
-
 	//Power cords
 	UPROPERTY(BlueprintCallable, Blueprintable, BlueprintAssignable, Category = "Delegate Power Cords")
 	FOnForceFieldDeactivatedTurnPowerOffSignature OnForceFieldDeactivatedTurnPowerOffDelegate;
@@ -373,6 +323,12 @@ class UNREALPROJECTBASE_API AGameStateEventManagerBase : public AGameState
 	FOnTimerObjectiveCompleteUpdateUISignature OnTimerObjectiveCompleteUpdateUIDelegate;
 
 	UPROPERTY(BlueprintCallable, Blueprintable, BlueprintAssignable, Category = "Delegate UI")
+	FOnIteractEndOverlapUpdateUISignature OnIteractEndOverlapUpdateUIDelegate;
+
+	UPROPERTY(BlueprintCallable, Blueprintable, BlueprintAssignable, Category = "Delegate UI")
+	FOnHideTutorialMessageUpdateUISignature OnHideTutorialMessageUpdateUIDelegate;
+	
+	UPROPERTY(BlueprintCallable, Blueprintable, BlueprintAssignable, Category = "Delegate UI")
 	FOnGameOverClearAllActiveTimersSignature OnGameOverClearAllActiveTimersDelegate;
 
 	UPROPERTY(BlueprintCallable, Blueprintable, BlueprintAssignable, Category = "Delegate UI")
@@ -394,17 +350,17 @@ class UNREALPROJECTBASE_API AGameStateEventManagerBase : public AGameState
 	UPROPERTY(BlueprintCallable, Blueprintable, BlueprintAssignable, Category = "Delegate UI")
 	FOnBusesStopSignature OnBusesStopDelegate;
 
-
 	//dialgoue
 
 	UPROPERTY(BlueprintCallable, Blueprintable, BlueprintAssignable, Category = "Delegate Dialogue")
 	FOnDialogueFinishedSignature OnDialogueFinishedDelegate;
 
+	UPROPERTY(BlueprintCallable, Blueprintable, BlueprintAssignable, Category = "Delegate Dialogue")
+	FOnDialogueStartSignature OnDialogueStartDelegate;
+
 	UFUNCTION()
 	virtual void HandleMatchHasEnded() override;
-
 	
-
 	 UPROPERTY(BlueprintAssignable, BlueprintReadWrite, Category = "Events")
 	 FOnPooledActorManagerInitializedSignature MatchEnded;
 
@@ -414,6 +370,11 @@ class UNREALPROJECTBASE_API AGameStateEventManagerBase : public AGameState
 	UFUNCTION(BlueprintCallable)
 	bool GetHasPlayerWon();
 
+	// UPROPERTY(BlueprintCallable, Blueprintable, BlueprintAssignable, Category = "Delegates Computer Generator Activator")
+	// FOnGeneratorInteractSendForceFieldIDSignature OnGeneratorActiveOnEncounterStartSendForceFieldIDDelegate;
+
+	// UPROPERTY(BlueprintCallable, Blueprintable, BlueprintAssignable, Category = "Delegates Computer Generator Activator")
+	// FOnGeneratorInitializedSignature OnGeneratorInitializedDelegate;
 
 protected:
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Events")
