@@ -20,9 +20,12 @@ void ADoorProgressFloodLights::BeginPlay()
 
 void ADoorProgressFloodLights::AddLightToLightDatas(UStaticMeshComponent* StaticMeshComponentLight)
 {
-	FLightData LightData;
-	LightData.StaticMeshComponentLight = StaticMeshComponentLight;
-	_aLightDatas.AddUnique(LightData);
+	if (StaticMeshComponentLight)
+	{
+		FLightData LightData;
+		LightData.StaticMeshComponentLight = StaticMeshComponentLight;
+		_aLightDatas.AddUnique(LightData);
+	}
 }
 
 void ADoorProgressFloodLights::AssignTimeToTurnOnLight(float TimeLengthObjectiveGeneratorDefence)
@@ -48,7 +51,8 @@ void ADoorProgressFloodLights::CheckIfLightCanTurnOn(float RemainingTime)
 	TurnOnLight(_aLightDatas[indexToCheck].StaticMeshComponentLight, indexToCheck);
 }
 
-void ADoorProgressFloodLights::TurnOnLight_Implementation(UStaticMeshComponent* StaticMeshComponentLight,
+void ADoorProgressFloodLights::TurnOnLight_Implementation(
+	UStaticMeshComponent* StaticMeshComponentLight,
 	int32 IndexToTurnOn)
 {
 	_aLightDatas[IndexToTurnOn].IsTurnedOn = true;

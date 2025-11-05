@@ -20,24 +20,19 @@ struct FLightData
 	UPROPERTY(BlueprintReadOnly, Category="Light Properties")
 	float TimeToTurnOnLight = 0.0f;
 
-	FORCEINLINE bool operator ==(const FLightData& Other) const
+	FORCEINLINE bool operator == (const FLightData& Other) const
 	{
 		return StaticMeshComponentLight == Other.StaticMeshComponentLight;
 	}
 };
 UCLASS()
-class UNREALPROJECTBASE_API ADoorProgressFloodLights : public AActor
+class UNREALPROJECTBASE_API ADoorProgressFloodLights
+	: public AActor
 {
 	GENERATED_BODY()
-	
 public:	
-	// Sets default values for this actor's properties
 	ADoorProgressFloodLights();
-
-	
-
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Door")
