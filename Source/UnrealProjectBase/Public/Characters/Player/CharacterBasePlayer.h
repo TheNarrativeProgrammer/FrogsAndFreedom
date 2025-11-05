@@ -33,14 +33,14 @@ class USceneComponent;
 class UAttackTokenGiverComponent;
 
 UCLASS()
-class UNREALPROJECTBASE_API ACharacterBasePlayer : public ACharacterBase,
+class UNREALPROJECTBASE_API ACharacterBasePlayer
+	: public ACharacterBase,
 public IEnemyDamageable,
 public IDelegateBindBroadcastable,
 public IAttackTokenGiverable,
 public IPlayerCharacterable,
 public IPowerupBlastRadiusable,
 public IPowerupFireRateable
-
 {
 	GENERATED_BODY()
 

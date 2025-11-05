@@ -14,6 +14,9 @@
 
 ACharacterBasePlayer::ACharacterBasePlayer()
 {
+    DelegateBindingComponentPlayer = CreateDefaultSubobject<
+        UDelegateBindingComponentPlayer>(TEXT("DelegateBindingComponentPlayer"));
+    
     RocketLauncher = CreateDefaultSubobject<URocketLauncherComponent>(TEXT("RocketLauncherComponent"));
     BoxComponentInteraction = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComponentInteraction"));
     //SceneComponentEnemyAttackLocationLeft = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComponentEnemyAttackLocationLeft"));
@@ -22,7 +25,7 @@ ACharacterBasePlayer::ACharacterBasePlayer()
     //SceneComponentPinnerAimLocation = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComponentPinnerAimLocation"));
 
     
-    DelegateBindingComponentPlayer = CreateDefaultSubobject<UDelegateBindingComponentPlayer>(TEXT("DelegateBindingComponentPlayer"));
+    
     AIPerceptionStimuliSourceComponent = CreateDefaultSubobject<UAIPerceptionStimuliSourceComponent>(TEXT("AIPerceptionStimuliSourceComponent"));
 
 
@@ -143,29 +146,27 @@ void ACharacterBasePlayer::OnGameOverStopAllExecptMusicBuses_Implementation()
 void ACharacterBasePlayer::BeginPlay()
 {
     Super::BeginPlay();
-    //bind OnbeginOverlap delegate to custom overlap function.
-    BoxComponentInteraction->OnComponentBeginOverlap.AddUniqueDynamic(this, &ACharacterBasePlayer::OnBeginOverlapForInteractableToggleMessageOn);
+    
+    if (HealthComponent)
+    {
+        HealthComponent->OnHealthChangedDelegate.AddDynamic(
+            this, &ACharacterBasePlayer::OnHealthChangeSendHealth);
+    }
+    
+    BoxComponentInteraction->OnComponentBeginOverlap.AddUniqueDynamic(
+        this, &ACharacterBasePlayer::OnBeginOverlapForInteractableToggleMessageOn);
 
     
-    //Add moppping context
         if (APlayerController* PC = Cast<APlayerController>(Controller)) 
         {
-            if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(
+            if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<
+                UEnhancedInputLocalPlayerSubsystem>(
                 PC->GetLocalPlayer())) 
             {
                 Subsystem->AddMappingContext(DefaultMappingContext, 0);
             }
         }
-    if (DelegateBindingComponentPlayer)
-    {
-        DelegateBindingComponentPlayer->GameStateEventManager->OnRequestPlayerHealthDelegate.AddUniqueDynamic(
-            this, &ACharacterBasePlayer::OnHealthRequestSendHealth);
-    }
-
-    if (HealthComponent)
-    {
-        HealthComponent->OnHealthChangedDelegate.AddDynamic(this, &ACharacterBasePlayer::OnHealthChangeSendHealth);
-    }
+    
     
     OnBeginplayBroadcastActorInitializationDelegates();
 
@@ -219,12 +220,6 @@ void ACharacterBasePlayer::OnBeginOverlapForInteractableToggleMessageOn(UPrimiti
         OverlapActorInteractable = OtherActor;
         FRotator CurrentRotation = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)->GetCapsuleComponent()->GetComponentRotation().GetInverse();
         IInteractable::Execute_InteractMessageOn(OtherActor, CurrentRotation);
-        // if (UCapsuleComponent* CapsuleComponentOtherActor = OverlapActorInteractable->FindComponentByClass<UCapsuleComponent>())
-        // {
-        //     FRotator CurrentRotation = CapsuleComponentOtherActor->GetComponentRotation();
-        //     IInteractable::Execute_InteractMessageOn(OtherActor, CurrentRotation);
-        // }
-       
     }
 }
 
@@ -256,7 +251,8 @@ void ACharacterBasePlayer::OnHealthChangeSendHealth(float NewHealth, float OldHe
 
 void ACharacterBasePlayer::OnHealthRequestSendHealth()
 {
-    DelegateBindingComponentPlayer->GameStateEventManager->OnRequestHealthSendHealthDelegate.Broadcast(
+    DelegateBindingComponentPlayer->GameStateEventManager->
+        OnRequestHealthSendHealthDelegate.Broadcast(
         HealthComponent->GetCurrentHealth(), HealthComponent->GetMaxHealth());
 }
 
