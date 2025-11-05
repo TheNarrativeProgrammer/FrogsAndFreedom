@@ -13,7 +13,6 @@ AForceFieldBase::AForceFieldBase()
 	//Create default subobjects
 	SceneComponentRoot = CreateDefaultSubobject<USceneComponent>("SceneComponentRo");
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>("HealthComponent");
-	HealthComponent->bShouldBroadcastIDOnDeath = true;
 	CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>("SphereComponentForceField");
 	NiagaraComponentForceField = CreateDefaultSubobject<UNiagaraComponent>("NiagaraComponentForceField");
 	
@@ -60,16 +59,20 @@ void AForceFieldBase::BeginPlay()
 	Super::BeginPlay();
 	_mForceFieldID = GetUniqueID();
 
-	HealthComponent->OnHealthChangedSendHealthAndIDDelegate.AddUniqueDynamic(
+	if (HealthComponent)
+	{
+		HealthComponent->OnHealthChangedDelegate.AddUniqueDynamic(
 		this, &AForceFieldBase::OnHealthChangeSendIdAndHealth);
-	HealthComponent->OnHealthDepletedDelegate.AddUniqueDynamic(
-		this, &AForceFieldBase::Death);
-	// HealthComponent->OnHealthChangedDelegate.AddUniqueDynamic(
-	// 	this, &AForceFieldBase::OnHealthChangeSendHealth);
 	
-	NiagaraComponentForceField->SetVariableFloat(FName("Radius"), RadiusNiagara);
+		HealthComponent->OnHealthDepletedDelegate.AddUniqueDynamic(
+			this, &AForceFieldBase::Death);
+	}
+
+	if (NiagaraComponentForceField)
+	{
+		NiagaraComponentForceField->SetVariableFloat(FName("Radius"), RadiusNiagara);
+	}
 	
-	OnBeginplayBroadcastActorInitializationDelegates();
 }
 
 
@@ -96,10 +99,6 @@ void AForceFieldBase::BeginPlay()
 void AForceFieldBase::OnBeginplayBroadcastActorInitializationDelegates_Implementation()
 {
 	IDelegateBindBroadcastable::OnBeginplayBroadcastActorInitializationDelegates_Implementation();
-	// if (DelegateBindComponentForceField->GameStateEventManager)
-	// {
-	// 	DelegateBindComponentForceField->GameStateEventManager->OnForceFieldInitalizedDelegate.Broadcast();
-	// }
 }
 
 void AForceFieldBase::Death()
@@ -131,12 +130,18 @@ void AForceFieldBase::OnEncounterStartBroadcastActorInitializationDelegates_Impl
 
 
 
-void AForceFieldBase::OnHealthChangeSendIdAndHealth(uint32 ActorId, float NewHealth, float OldHealth)
+void AForceFieldBase::OnHealthChangeSendIdAndHealth(
+	float NewHealth, float OldHealth)
 {
-	if (DelegateBindComponentForceField->GameStateEventManager)
+	if (DelegateBindComponentForceField)
 	{
-		DelegateBindComponentForceField->GameStateEventManager->OnForceFieldHealthChangeIDHealthDelegate.Broadcast(
-			ActorId, HealthComponent->GetCurrentHealth(), HealthComponent->GetMaxHealth());
+		if (DelegateBindComponentForceField->GameStateEventManager)
+		{
+			DelegateBindComponentForceField->GameStateEventManager->
+				OnForceFieldHealthChangeIDHealthDelegate.Broadcast(
+				_mForceFieldID, HealthComponent->GetCurrentHealth(),
+				HealthComponent->GetMaxHealth());
+		}
 	}
 }
 

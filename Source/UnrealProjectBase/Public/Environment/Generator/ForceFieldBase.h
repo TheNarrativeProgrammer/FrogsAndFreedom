@@ -77,11 +77,6 @@ protected:
 	UFUNCTION()
 	void Death();
 
-	// UFUNCTION()
-	// void OnHealthChangeSendHealth(float CurrentHealth, float OldHealth);
-
-	
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	TObjectPtr<UDelegateBindComponentForceField> DelegateBindComponentForceField;
 
@@ -135,7 +130,7 @@ public:
 	
 
 	UFUNCTION()
-	void OnHealthChangeSendIdAndHealth(uint32 ActorId, float NewHealth, float OldHealth);
+	void OnHealthChangeSendIdAndHealth(float NewHealth, float OldHealth);
 	
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
