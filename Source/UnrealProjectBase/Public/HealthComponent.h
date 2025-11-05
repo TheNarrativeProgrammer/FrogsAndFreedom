@@ -11,7 +11,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnHealthDepletedSignature);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHealthDepletedSelfRefSignature, AActor*, selfRef);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHealthDepleatedDecrementCountSignature, int32, NegatedQuantityRemoveFromGamePlay);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnHealthChangedSignature, float, NewHealth, float, OldHealth);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnHealthChangedSendHealthAndIDSignature, uint32, ActorUniqueID, float, NewHealth, float, OldHealth);
+
 
 
 
@@ -34,8 +34,8 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Health Stats")
 	float MaxHealth;
 public:
-	UPROPERTY(EditDefaultsOnly, Category = "Health Stats")
-	bool bShouldBroadcastIDOnDeath = false;
+	// UPROPERTY(EditDefaultsOnly, Category = "Health Stats")
+	// bool bShouldBroadcastIDOnDeath = false;
 	
 	// Sets default values for this component's properties
 	UHealthComponent();
@@ -54,12 +54,7 @@ public:
 
 	UPROPERTY(BlueprintAssignable, BlueprintReadWrite, Category = "Default")
 	FOnHealthRestoredToDefaultSignature OnHealthRestoredToDefaultDelegate;
-
-	UPROPERTY(BlueprintAssignable, BlueprintReadWrite, Category = "Default")
-	FOnHealthChangedSendHealthAndIDSignature OnHealthChangedSendHealthAndIDDelegate;
-
 	
-
 	UFUNCTION(BlueprintCallable)
 	void TakeDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser);
 
