@@ -15,7 +15,7 @@ AGeneratorBase::AGeneratorBase()
 		UDelegateBindComponentGenerator>(TEXT("DelegateBindComponentGenerator"));
 
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponentGenerator"));
-	HealthComponent->bShouldBroadcastIDOnDeath = true;
+	
 	NoiseEmitterComponent = CreateDefaultSubobject<UPawnNoiseEmitterComponent>(TEXT("NoiseEmitterComponent"));
 	NoiseEmitterComponent->bAutoActivate = true;
 	
@@ -95,7 +95,6 @@ void AGeneratorBase::BeginPlay()
 	Super::BeginPlay();
 	SpawnAndSaveIdOfForceField();
 	GetWorld()->GetTimerManager().ClearAllTimersForObject(this);
-	OnBeginplayBroadcastActorInitializationDelegates();
 }
 
 void AGeneratorBase::SpawnAndSaveIdOfForceField()
@@ -103,7 +102,8 @@ void AGeneratorBase::SpawnAndSaveIdOfForceField()
 	if (ForceFieldClass)
 	{
 		FActorSpawnParameters SpawnParameters;
-		if (AActor* Actor = GetWorld()->SpawnActor<AForceFieldBase>(ForceFieldClass, GetActorLocation(), GetActorRotation(), SpawnParameters))
+		if (AActor* Actor = GetWorld()->SpawnActor<AForceFieldBase>(
+			ForceFieldClass, GetActorLocation(), GetActorRotation(), SpawnParameters))
 		{
 			SetForceFieldID((Actor->GetUniqueID()));
 			if (AForceFieldBase* FoceForceFieldBase = Cast<AForceFieldBase>(Actor))
@@ -147,10 +147,6 @@ void AGeneratorBase::OnEncounterStartBroadcastActorInitializationDelegates_Imple
 void AGeneratorBase::OnBeginplayBroadcastActorInitializationDelegates_Implementation()
 {
 	IDelegateBindBroadcastable::OnBeginplayBroadcastActorInitializationDelegates_Implementation();
-	// if (DelegateBindComponentGenerator->GameStateEventManager)
-	// {
-	// 	DelegateBindComponentGenerator->GameStateEventManager->OnGeneratorInitializedDelegate.Broadcast();
-	// }
 }
 
 
@@ -183,7 +179,6 @@ bool AGeneratorBase::GetIsForceFieldActive()
 
 void AGeneratorBase::OnObjectiveTimerCompleteStopSoundTimer()
 {
-	GetWorld()->GetTimerManager().PauseTimer(GeneratorSoundTimerHandle);
 	GetWorld()->GetTimerManager().ClearTimer(GeneratorSoundTimerHandle);
 }
 
@@ -204,7 +199,8 @@ void AGeneratorBase::SetSoundTimer()
 {
 	if (GetWorld()->GetTimerManager().IsTimerActive(GeneratorSoundTimerHandle) == false)
 	{
-		GetWorld()->GetTimerManager().SetTimer(GeneratorSoundTimerHandle, this, &AGeneratorBase::PlayNoise, TimeBetweenNoises, true);
+		GetWorld()->GetTimerManager().SetTimer(GeneratorSoundTimerHandle,
+			this, &AGeneratorBase::PlayNoise, TimeBetweenNoises, true);
 		PlayNoise();
 	}
 	else
