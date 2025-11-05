@@ -28,8 +28,6 @@ void APooledActorManager::BeginPlay()
 	if (GameStateEventManager)
 	{
 		//Spawning Delegates
-		//GameStateEventManager->OnActorSpawnerBaseMachineInitalizedDelegate.AddUniqueDynamic(this, &APooledActorManager::IncreaseMachineCount);
-		//GameStateEventManager->OnActorSpawnerBaseInitalizedSelfRefDelegate.AddUniqueDynamic(this, &APooledActorManager::OnInitializedAddActorSpawnerBaseToArray);
 		//GameStateEventManager->OnActorSpawnerBaseMachineDeathSelfRefDelegate.AddUniqueDynamic(this, &APooledActorManager::RemoveDeadMachineFromArray);
 		//GameStateEventManager->OnActorSpawnerBaseMachineDeathDelegate.AddUniqueDynamic(this, &APooledActorManager::DecreaseMachineCount);
 
@@ -38,8 +36,6 @@ void APooledActorManager::BeginPlay()
 		GameStateEventManager->OnCharacterBaseFrogSpawnedFromPoolDelegate.AddUniqueDynamic(this, &APooledActorManager::IncreaseCurrentCharactersInLevel);
 		GameStateEventManager->OnCharacterBaseFrogDeathDelegate.AddUniqueDynamic(this, &APooledActorManager::DecreaseCurrentCharactersInLevel);
 		GameStateEventManager->OnCharacterBaseFrogDeathDelegate.AddUniqueDynamic(this, &APooledActorManager::CheckCharacterQuantityAndTriggerSpawn);
-		//self ref to call initial spawn functions after others have initialized
-		//GameStateEventManager->OnPooledActorManagerInitializedDelegate.AddUniqueDynamic(this, &APooledActorManager::CallLevelStartFunctions);
 	}
 	SetEnemyRatios();
 	CheckForZeroDivisionAdjustSpawnBatchSize();
@@ -51,9 +47,8 @@ void APooledActorManager::BeginPlay()
 
 	AsyncTask(ENamedThreads::GameThread, [this]()
 	{
-		//GameStateEventManager->OnPooledActorManagerInitializedDelegate.Broadcast();
+		
 	});
-	//CallLevelStartFunctions();
 }
 
 
