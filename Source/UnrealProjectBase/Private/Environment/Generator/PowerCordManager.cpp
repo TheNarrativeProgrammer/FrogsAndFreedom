@@ -8,16 +8,16 @@
 // Sets default values
 APowerCordManager::APowerCordManager()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
-	DelegateBindingComponentCordMgmr = CreateDefaultSubobject<UDelegateBindingComponentCordMgmr>("DelegateBindingComponentCordMgmr");
-
+	DelegateBindingComponentCordMgmr = CreateDefaultSubobject<
+		UDelegateBindingComponentCordMgmr>("DelegateBindingComponentCordMgmr");
 }
 
-void APowerCordManager::TurPowerCordsOn()
+void APowerCordManager::TurnPowerCordsOn()
 {
 	for (APowerCord* PowerCord : _msPowerCordsInLevel)
 	{
+		if (!PowerCord) continue;
 		PowerCord->TurnPowerCordsOn();
 	}
 }
@@ -26,6 +26,7 @@ void APowerCordManager::TurnPowerCordsOff()
 {
 	for (APowerCord* PowerCord : _msPowerCordsInLevel)
 	{
+		if (!PowerCord) continue;
 		PowerCord->TurnPowerCordsOff();
 	}
 }
