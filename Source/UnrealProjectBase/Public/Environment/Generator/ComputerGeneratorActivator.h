@@ -134,19 +134,6 @@ protected:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void OnBeginplayBroadcastActorInitializationDelegates();
 
-	
-
-	
-
-	// UFUNCTION()
-	// void RegisterListenersForHealthOfGeneratorForceField(AGeneratorBase* GeneratorBase);
-
-	// UFUNCTION()
-	// void PopulateArrayWithActorsOfClass();
-
-	// UFUNCTION()
-	// void RemoveNullReferencesFromPreviousLevels();
-
 	UFUNCTION()
 	void SetLeverState(TEnumAsByte<eLeverState> LeverState);
 	
@@ -155,10 +142,6 @@ protected:
 
 	UFUNCTION(BlueprintCallable)
 	void OnLeverPullRestoreForceField();
-
-
-	// UFUNCTION()
-	// void UpdateGeneratorData();
 
 	//FUNCTIONS - timerr
 	UFUNCTION()

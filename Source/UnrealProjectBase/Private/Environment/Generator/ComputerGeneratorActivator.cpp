@@ -32,7 +32,6 @@ void AComputerGeneratorActivator::BeginPlay()
 void AComputerGeneratorActivator::OnBeginplayBroadcastActorInitializationDelegates_Implementation()
 {
 	IDelegateBindBroadcastable::OnBeginplayBroadcastActorInitializationDelegates_Implementation();
-	// DelegateBindComponentComputer->GameStateEventManager->OnComputerGeneratorActivatorInitializedDelegate.Broadcast();
 }
 
 
@@ -79,61 +78,10 @@ void AComputerGeneratorActivator::OnInteract_Implementation()
 
 
 
-// void AComputerGeneratorActivator::RegisterListenersForHealthOfGeneratorForceField(AGeneratorBase* GeneratorBase)
-// {
-// 	GeneratorBase->OnHealthDepetedForceFieldDelegate.AddUniqueDynamic(this, &AComputerGeneratorActivator::OnHealthDepletedOfGeneratorForcceFieldChangeComputerState);
-// }
-
-
-// void AComputerGeneratorActivator::PopulateArrayWithActorsOfClass()
-// {
-// 	TArray<AActor*> FoundActors;
-// 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AGeneratorBase::StaticClass(), FoundActors);
-//
-// 	_maGeneratorData.Empty();
-//
-// 	if (FoundActors.Num() <= 0)
-// 	{
-// 		UE_LOG(LogTemp, Warning, TEXT("Zero Generators are in level. Place at least 1 to use Computer"));
-// 	}
-//
-// 	for (AActor* Actor : FoundActors)
-// 	{
-// 		FGeneratorData GeneratorData;
-// 		AGeneratorBase* GeneratorBase = Cast<AGeneratorBase>(Actor);
-// 		if (GeneratorBase)
-// 		{
-// 			
-// 			GeneratorData.GeneratorBaseActor = GeneratorBase;
-// 			GeneratorData.IsForceFieldActive = _mIsGeneratorForceFieldStartingActive;
-// 			GeneratorData.IsGeneratorHealthDepleted = false;
-// 			//RegisterListenersForHealthOfGeneratorForceField(GeneratorBase);
-// 		}
-// 		_maGeneratorData.Add(GeneratorData);
-// 	}
-// }
-
-// void AComputerGeneratorActivator::RemoveNullReferencesFromPreviousLevels()
-// {
-// 	TArray<FGeneratorData> AGeneratorDataWithPossibleNullReferences = _maGeneratorData;
-// 	int32 ArrayIndex = 0;
-// 	for (FGeneratorData& GeneratorData : AGeneratorDataWithPossibleNullReferences)
-// 	{
-// 		if (IsValid(GeneratorData.GeneratorBaseActor) == false)
-// 		{
-// 			_maGeneratorData.RemoveAt(ArrayIndex);
-// 			ArrayIndex++;
-// 		}
-// 	}
-// }
 
 void AComputerGeneratorActivator::OnEncounterStartBroadcastActorInitializationDelegates_Implementation()
 {
 	IDelegateBindBroadcastable::OnEncounterStartBroadcastActorInitializationDelegates_Implementation();
-	if (DelegateBindComponentComputer->GameStateEventManager)
-	{
-		//DelegateBindComponentComputer->GameStateEventManager->OnEncounterStartComputerGeneratorActivatorInitializeDelegate.Broadcast();
-	}
 	
 }
 
@@ -147,30 +95,16 @@ void AComputerGeneratorActivator::SetLeverState(TEnumAsByte<eLeverState> LeverSt
 void AComputerGeneratorActivator::OnHealthDepletedOfGeneratorForcceFieldChangeComputerState()
 {
 	SetLeverState(eLeverState::UpAndPullable);
-	//ReverseInteractVisual();
 	Execute_ReverseInteractVisual(this);
 	PauseTimer();
-	//UpdateGeneratorData();
 }
 
 
 
 void AComputerGeneratorActivator::OnLeverPullRestoreForceField()
 {
-	// if (DelegateBindComponentComputer->GameStateEventManager)
-	// {
-	// 	DelegateBindComponentComputer->GameStateEventManager->OnComputerGeneratorLeverPullDelegate.Broadcast();
-	// }
 }
 
-// void AComputerGeneratorActivator::UpdateGeneratorData()
-// {
-// 	for (FGeneratorData& GeneratorData : _maGeneratorData)
-// 	{
-// 		GeneratorData.IsForceFieldActive = GeneratorData.GeneratorBaseActor->GetForceField()->GetIsForceFieldActive();
-// 		GeneratorData.IsGeneratorHealthDepleted = GeneratorData.GeneratorBaseActor->GetHealthComponent()->IsHealthDepleted();
-// 	}
-// }
 
 void AComputerGeneratorActivator::InitializeAndStartTimer()
 {
@@ -195,18 +129,10 @@ void AComputerGeneratorActivator::OpenDoorToNextLevel()
 {
 	GetWorldTimerManager().ClearTimer(TimerHandleEncounterDuration);
 	GetWorldTimerManager().ClearTimer(TimerHandleDelegateBroadcastTimeUpdate);
-
-	// if (DelegateBindComponentComputer->GameStateEventManager)
-	// {
-	// 	DelegateBindComponentComputer->GameStateEventManager->OnComputerGeneratorActivatorTimerFinishedDelegate.Broadcast();
-	// }
-	
-	//OnGeneratorTimerFinishedDelegate.Broadcast();
 }
 
 void AComputerGeneratorActivator::BroadcastOnSecondElaspedSendTimeRemainingDelegate()
 {
-	//DelegateBindComponentComputer->GameStateEventManager->OnComputerGeneratorActivatorSecondElaspedDelegate.Broadcast(GetRemainingTime());
 }
 
 float AComputerGeneratorActivator::GetElaspedTime() const
@@ -214,12 +140,10 @@ float AComputerGeneratorActivator::GetElaspedTime() const
 	if (GetWorldTimerManager().TimerExists(TimerHandleEncounterDuration))
 	{
 		float TimeElasped = GetWorldTimerManager().GetTimerElapsed(TimerHandleEncounterDuration);
-		//UE_LOG(LogTemp, Warning, TEXT("Timer Is set"));
 		return TimeElasped;
 	}
 	else
 	{
-		//UE_LOG(LogTemp, Warning, TEXT("Timer doesn't exist within Computer Generator Activator"));
 		return 0;
 	}
 	
@@ -229,9 +153,6 @@ float AComputerGeneratorActivator::GetRemainingTime() const
 {
 	if (_mTimeLengthUntilDoorOpens <= 0.0f)
 	{
-		//
-		//
-		//UE_LOG(LogTemp, Warning, TEXT("TimeLengthUntilDoorOpens <= 0.0. Set time in Computer Gernator"));
 		return 0.0f;
 	}
 	float TimeElasped = GetElaspedTime();
