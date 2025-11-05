@@ -308,8 +308,6 @@ void UEncounterManagerComponent::InitializeComponent()
 		GameStateEventManager->OnCharacterBaseFrogDeathDelegate.AddUniqueDynamic(this, &UEncounterManagerComponent::OnEnemyDeathStartWaveIfWaveTriggerTypeIsPopulationBaseAndPopulationLow);
 		GameStateEventManager->OnAllObectivesCompleteDelegate.AddUniqueDynamic(this, &UEncounterManagerComponent::AllObjectivesCompleted);
 		GameStateEventManager->OnAllObjectiveInfluencingSpawningCompleteDelegate.AddUniqueDynamic(this, &UEncounterManagerComponent::AllObjectiveInfluencingSpawningComplete);
-		//self ref to call initial spawn functions after others have initialized
-		//GameStateEventManager->OnPooledActorManagerInitializedDelegate.AddUniqueDynamic(this, &APooledActorManager::CallLevelStartFunctions);
 	}
 	
 }

@@ -11,7 +11,8 @@ void UDelegateBindComponentSlimeManger::BindDelegates()
 	{
 		if (ASpawningSlimeManager* SpawningSlimeManagerOwner = Cast<ASpawningSlimeManager>(GetOwner()))
 		{
-			GameStateEventManager->OnActorSpawnedSendTransformOfSpawnPointDelegate.AddUniqueDynamic(SpawningSlimeManagerOwner, &ASpawningSlimeManager::SpawnSlimeAtTranform);
+			GameStateEventManager->OnActorSpawnedSendTransformOfSpawnPointDelegate.AddUniqueDynamic(
+				SpawningSlimeManagerOwner, &ASpawningSlimeManager::SpawnSlimeAtTranform);
 		}
 	}
 }

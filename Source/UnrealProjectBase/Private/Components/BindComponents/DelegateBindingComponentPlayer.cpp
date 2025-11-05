@@ -16,6 +16,9 @@ void UDelegateBindingComponentPlayer::BindDelegates()
 	{
 		if (ACharacterBasePlayer* CharacterBasePlayerOwner = Cast<ACharacterBasePlayer>(GetOwner()))
 		{
+			GameStateEventManager->OnRequestPlayerHealthDelegate.AddUniqueDynamic(
+				CharacterBasePlayerOwner, &ACharacterBasePlayer::OnHealthRequestSendHealth);
+			
 			GameStateEventManager->OnGamePausedDelegate.AddUniqueDynamic(
 				CharacterBasePlayerOwner, &ACharacterBasePlayer::OnGamePausedPauseBuses);
 			
@@ -28,6 +31,8 @@ void UDelegateBindingComponentPlayer::BindDelegates()
 			GameStateEventManager->OnGameOverStopAllExceuptMusicBusDelegate.AddUniqueDynamic(
 				CharacterBasePlayerOwner,
 				&ACharacterBasePlayer::ACharacterBasePlayer::OnGameOverStopAllExecptMusicBuses);
+
+			
 		}
 	}
 }
