@@ -37,15 +37,15 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInvestigateBehaviourFinishedSignature);
 
 
 UCLASS()
-class UNREALPROJECTBASE_API ACharacterBaseFrog : public ACharacterBase,
+class UNREALPROJECTBASE_API ACharacterBaseFrog
+	: public ACharacterBase,
 public IPoolable,
 public IPlayerDamageable,
 public IFrogAIable,
 public IAttackTokenRequesterable
 {
 	GENERATED_BODY()
-
-	public:
+public:
 	ACharacterBaseFrog();
 
 	void Landed(const FHitResult& Hit) override;
