@@ -131,15 +131,19 @@ UHealthComponent* AGeneratorBase::GetHealthComponent()
 void AGeneratorBase::OnEncounterStartBroadcastActorInitializationDelegates_Implementation()
 {
 	IDelegateBindBroadcastable::OnEncounterStartBroadcastActorInitializationDelegates_Implementation();
-	if (DelegateBindComponentGenerator->GameStateEventManager)
+	if (DelegateBindComponentGenerator)
 	{
-		DelegateBindComponentGenerator->GameStateEventManager->
-			OnEncounterStartGeneratorInitializeDelegate.Broadcast();
+		if (DelegateBindComponentGenerator->GameStateEventManager)
+		{
+			DelegateBindComponentGenerator->GameStateEventManager->
+				OnEncounterStartGeneratorInitializeDelegate.Broadcast();
+		}
+		if (_mIsForceFieldActive == true)
+		{
+			SetSoundTimer();
+		}
 	}
-	if (_mIsForceFieldActive == true)
-	{
-		SetSoundTimer();
-	}
+	
 }
 
 
