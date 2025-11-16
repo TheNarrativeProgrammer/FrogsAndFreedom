@@ -15,7 +15,7 @@ void UFrogDestinationTest::RunTest(FEnvQueryInstance& QueryInstance) const
 {
 	TArray<int32> DistanceLengths;
 	TArray<FVector> Positions;
-	for (TObjectIterator<ACharacterBaseFrog> Itr; Itr; ++Itr) // Itteration over all Frogs
+	for (TObjectIterator<ACharacterBaseFrog> Itr; Itr; ++Itr) // Iteration over all Frogs
 	{
 		if (AAIControllerMobileFrogBase* FrogAIController = Cast<AAIControllerMobileFrogBase>
 			((*Itr)->GetController()))
@@ -26,7 +26,7 @@ void UFrogDestinationTest::RunTest(FEnvQueryInstance& QueryInstance) const
 			}
 		}
 	}
-	for (FEnvQueryInstance::ItemIterator It(this, QueryInstance); It; ++It) // Itteration over all points
+	for (FEnvQueryInstance::ItemIterator It(this, QueryInstance); It; ++It) // Iteration over all points
 	{
 		DistanceLengths.Empty();
 		const FVector ItemLocation = GetItemLocation(QueryInstance, It.GetIndex());
