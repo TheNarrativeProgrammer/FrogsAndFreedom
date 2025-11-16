@@ -84,6 +84,9 @@ public:
 	UFUNCTION(BlueprintCallable, meta=(Category="Wave"))
 	void OnObjectiveCompleteStartSpawningWave(const FGameplayTag WaveToSpawn);
 
+	UFUNCTION(BlueprintCallable, meta=(Category="Wave"))
+	void AddWaveToObjectiveCompletionMap (const FGameplayTag WaveToSpawn);
+
 	UFUNCTION(BlueprintCallable,  meta=(Categories="Wave"))
 	void SetActiveWave(const FGameplayTag ActiveWave);
 
@@ -97,7 +100,7 @@ public:
 	void IterateToNextWaveIfTriggerIsFrogPopulationOrEncounter();
 
 	UFUNCTION(BlueprintCallable)
-	void PopulateArraysInPatrolRouteManager();
+	void RunEqsFindPatrolRoutes();
 	
 	
 	UFUNCTION(BlueprintCallable)
@@ -111,6 +114,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void AddEncounterActorSpawnersToArrays(AActor* Actor);
 
+	UPROPERTY()
+	bool IsEqsRunningAndPopulatingArray = false;
+
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void RunEqsFindActorSpawners();
 
@@ -122,6 +128,9 @@ public:
 
 	UPROPERTY()
 	bool _mIsEqsRouteLocationComplete = false;
+
+	UFUNCTION()
+	bool GetIsSpawning() {return _misSpawning;}
 
 
 protected:
@@ -259,7 +268,7 @@ protected:
 
 	//Function - Spawn batches
 	UFUNCTION(BlueprintCallable)
-	void SetStartingSpawnValues();
+	void StartSpawningIfConditionsMet();
 
 	UFUNCTION(BlueprintCallable)
 	void TriggerSpawnTimer();
@@ -314,6 +323,9 @@ protected:
 
 	UFUNCTION()
 	void ResetBoolsToDefault();
+
+	UFUNCTION()
+	void ResetMapOfObjectiveCompletionWaveRelease();
 
 	
 

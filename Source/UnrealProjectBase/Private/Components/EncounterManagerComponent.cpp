@@ -34,27 +34,36 @@ UEncounterManagerComponent::UEncounterManagerComponent()
 
 
 
-void UEncounterManagerComponent::OnObjectiveCompleteStartSpawningWave(const FGameplayTag WaveToSpawn)
+void UEncounterManagerComponent::OnObjectiveCompleteStartSpawningWave(
+	const FGameplayTag WaveToSpawn)
 {
-	if (CurrentlyActiveEncounterTrigger == nullptr
-		|| IsValid(CurrentlyActiveEncounterTrigger) == false
-		|| !CurrentlyActiveEncounterTrigger)
-	{
-		return;
-	}
+	if (!CurrentlyActiveEncounterTrigger)return;
 	
-	if (CurrentlyActiveEncounterTrigger->EncounterData->GetWaveData(WaveToSpawn).HasWaveSpawned == false)
+	if (CurrentlyActiveEncounterTrigger->EncounterData->
+		GetWaveData(WaveToSpawn).HasWaveSpawned == false)
 	{
-		_mmIsWaveObjectiveConditionMet.Add(WaveToSpawn, true);
-		if (_misSpawning == false)
+		if (_misSpawning == false &&
+			IsEqsRunningAndPopulatingArray == false)
 		{
+			IsEqsRunningAndPopulatingArray = true;
 			RunEqsFindActorSpawners();
-			PopulateArraysInPatrolRouteManager();
+			RunEqsFindPatrolRoutes();
 		}
 	}
 }
 
-void UEncounterManagerComponent::SetActiveWave(const FGameplayTag ActiveWave)
+void UEncounterManagerComponent::AddWaveToObjectiveCompletionMap(
+	const FGameplayTag WaveToSpawn)
+{
+	if (CurrentlyActiveEncounterTrigger->EncounterData->GetWaveData(
+		WaveToSpawn).HasWaveSpawned == false)
+	{
+		_mmIsWaveObjectiveConditionMet.Add(WaveToSpawn, true);
+	}
+}
+
+void UEncounterManagerComponent::SetActiveWave(
+	const FGameplayTag ActiveWave)
 {
 	CurrentActiveWave = ActiveWave;
 	SetNextWaveInQue();
@@ -148,7 +157,7 @@ void UEncounterManagerComponent::IterateToNextWaveIfTriggerIsFrogPopulationOrEnc
 		SetActiveWave(NextWaveInQue);
 }
 
-void UEncounterManagerComponent::PopulateArraysInPatrolRouteManager()
+void UEncounterManagerComponent::RunEqsFindPatrolRoutes()
 {
 	if (AGameModeBase* GameMode = UGameplayStatics::GetGameMode(GetWorld()))
 	{
@@ -177,12 +186,15 @@ void UEncounterManagerComponent::RegisterEncounter(AEncounterTrigger* InEncounte
 			for (auto& EncounterWaveData :
 				CurrentlyActiveEncounterTrigger->EncounterData->EncounterWaveData)
 			{
-				EncounterWaveData.CanWaveSpawn = false;
-				EncounterWaveData.HasWaveSpawned = false;
+				CurrentlyActiveEncounterTrigger->EncounterData->SetCanWaveSpawn(
+					EncounterWaveData.WaveTag, false);
+				CurrentlyActiveEncounterTrigger->EncounterData->SetHasWaveSpawned(
+					EncounterWaveData.WaveTag, false);
 			}
 			ResetBoolsToDefault();
+			ResetMapOfObjectiveCompletionWaveRelease();
 			ResetObjectiveComplete();
-			PopulateArraysInPatrolRouteManager();
+			RunEqsFindPatrolRoutes();
 			RunEqsFindActorSpawners();
 			
 			if (AGameStateEventManagerBase* GameState = Cast<AGameStateEventManagerBase>(
@@ -211,6 +223,7 @@ void UEncounterManagerComponent::UnregisterEncounter(const AEncounterTrigger* In
 	{
 		CurrentlyActiveEncounterTrigger = nullptr;
 		GetWorld()->GetTimerManager().ClearTimer(SpawnTimerHandle);
+		ResetMapOfObjectiveCompletionWaveRelease();
 		ResetBoolsToDefault();
 		ResetObjectiveComplete();
 		OffLoadPool();
@@ -408,7 +421,7 @@ void UEncounterManagerComponent::ResetObjectiveComplete()
 	_mIsAllObjectiveInfluencingSpawningComplete = false;
 }
 
-void UEncounterManagerComponent::SetStartingSpawnValues()
+void UEncounterManagerComponent::StartSpawningIfConditionsMet()
 {
 	if (!CurrentlyActiveEncounterTrigger)
 	{
@@ -421,7 +434,7 @@ void UEncounterManagerComponent::SetStartingSpawnValues()
 		return;
 	}
 
-	if (_mTotalCharatersSpawnedInAllWaves >= CurrentlyActiveEncounterTrigger->EncounterData->MaxPopulationToStopSpawningAllWaves
+	if (_mCurrentCharatersInLevel >= CurrentlyActiveEncounterTrigger->EncounterData->MaxPopulationToStopSpawningAllWaves
 		&& CurrentlyActiveEncounterTrigger->EncounterData->MaxPopulationToStopSpawningAllWaves >= 1)
 	{
 		return;
@@ -433,7 +446,6 @@ void UEncounterManagerComponent::SetStartingSpawnValues()
 	
 	SetCanWaveSpawnForEncounterData();
 	TriggerSpawnTimer();
-	
 	
 }
 
@@ -548,13 +560,20 @@ void UEncounterManagerComponent::OnEnemyDeathStartWaveIfWaveTriggerTypeIsPopulat
 	{
 		if (_mCurrentCharatersInLevel <= CurrentlyActiveEncounterTrigger->EncounterData->GetWaveData(CurrentActiveWave).MinPopulationToTriggerSpawningNextWave)
 		{
-			SetStartingSpawnValues();
+			
+			if (IsEqsRunningAndPopulatingArray == false)
+			{
+				IsEqsRunningAndPopulatingArray = true;
+				RunEqsFindActorSpawners();
+				RunEqsFindPatrolRoutes();
+			}
 		}
 	}
 }
 
 void UEncounterManagerComponent::OnEqsCompleteStartFirstSpawn(
-	bool InIsEqsSpawnerLocationComplete, bool InIsEqsRouteLocationComplete)
+	bool InIsEqsSpawnerLocationComplete,
+	bool InIsEqsRouteLocationComplete)
 {
 	if (InIsEqsSpawnerLocationComplete == true)
 	{
@@ -568,7 +587,8 @@ void UEncounterManagerComponent::OnEqsCompleteStartFirstSpawn(
 	if (_mIsEqsSpawnerLocationComplete == true &&
 		_mIsEqsRouteLocationComplete == true)
 	{
-		SetStartingSpawnValues();
+		IsEqsRunningAndPopulatingArray = false;
+		StartSpawningIfConditionsMet();
 	}
 }
 
@@ -726,8 +746,27 @@ void UEncounterManagerComponent::OnWaveCompleteIterateSpawnLocationAndWave()
 		{
 			IterateToNextWaveIfTriggerIsFrogPopulationOrEncounter();
 			OnWaveCompleteSetTimerTimeToNextWavesTime();
-			RunEqsFindActorSpawners();
-			PopulateArraysInPatrolRouteManager();
+			if (IsEqsRunningAndPopulatingArray == false)
+			{
+				IsEqsRunningAndPopulatingArray = true;
+				RunEqsFindActorSpawners();
+				RunEqsFindPatrolRoutes();
+			}
+			
+		}
+		if (CurrentlyActiveEncounterTrigger->EncounterData->GetWaveData(NextWaveInQue).WaveTrigger == EWaveTrigger::Objective)
+		{
+			if (_mmIsWaveObjectiveConditionMet.FindOrAdd(NextWaveInQue) == true)
+			{
+				IterateToNextWaveIfTriggerIsFrogPopulationOrEncounter();
+				OnWaveCompleteSetTimerTimeToNextWavesTime();
+				if (IsEqsRunningAndPopulatingArray == false)
+				{
+					IsEqsRunningAndPopulatingArray = true;
+					RunEqsFindActorSpawners();
+					RunEqsFindPatrolRoutes();
+				}
+			}
 		}
 	}
 	
@@ -951,6 +990,14 @@ void UEncounterManagerComponent::ResetBoolsToDefault()
 	_maActorSpawnerBaseFrogMachinesTank.Empty();
 	_mTotalCharatersSpawnedInAllWaves = 0;
 	CharacterBaseFrogClassOfBatch = nullptr;
+}
+
+void UEncounterManagerComponent::ResetMapOfObjectiveCompletionWaveRelease()
+{
+	for (auto& Pair : _mmIsWaveObjectiveConditionMet)
+	{
+		Pair.Value = false;
+	}
 }
 
 
