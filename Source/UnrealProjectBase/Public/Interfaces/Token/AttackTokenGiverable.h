@@ -22,7 +22,8 @@ class UNREALPROJECTBASE_API IAttackTokenGiverable
 	GENERATED_BODY()
 public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	bool HandleResevereTokenRequest(const FRequesterGeneralTokenData& RequesterTokenData, const TArray<int32>& RequestedIndexes, FRequesterReservationData& ReservationData);
+	bool HandleResevereTokenRequest(const FRequesterGeneralTokenData& RequesterTokenData,
+		const TArray<int32>& RequestedIndexes, FRequesterReservationData& ReservationData);
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void HandleReturningToken(int32 InTokensRequiredForAction, int32 InIndexOfReservedPoint);

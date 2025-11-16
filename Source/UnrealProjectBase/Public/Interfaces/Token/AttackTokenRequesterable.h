@@ -25,7 +25,8 @@ public:
 	bool RequestAttackToken(AActor* AttackTarget);
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void ReserveAttackTokenAndStoreInMap(AActor* AttackTarget, int32 InIndexOfReservedPoint, FVector InLocationOfReservedPoint);
+	void ReserveAttackTokenAndStoreInMap(AActor* AttackTarget,
+		int32 InIndexOfReservedPoint, FVector InLocationOfReservedPoint);
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void ReturnAttackTokens(AActor* AttackTarget);
@@ -38,9 +39,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	bool HasAttackToken(AActor* AttackTarget);
-
 	
-
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void ClearTokenMap();
 };

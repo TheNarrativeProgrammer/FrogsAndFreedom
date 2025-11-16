@@ -45,13 +45,18 @@ class UFrogAIable : public UInterface
 class UNREALPROJECTBASE_API IFrogAIable
 {
 	GENERATED_BODY()
-
-	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	bool GetIsAttacking() const;
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void SetIsGrounded(bool IsGrounded);
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void SetTargetActor(AActor* InTargetActor);
+	
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	float SetMovementSpeed(EMovementSpeedType MovementSpeedType);
-
-
 	
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void IdealBehaviour();
@@ -82,6 +87,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void DeadBehaviour();
+	
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void JumpNormalUpward();
@@ -101,7 +107,6 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void OnLandedOffNavFireLandedDelegate();
 	
-
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	bool GetIsCharging() const;
 
@@ -115,43 +120,46 @@ public:
 	void ResetBlackBoardKeys();
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void BindToOnAttackBehaviourFinishedDelegate(UObject* ListenerObject, const FName& FunctionNameToBind);
+	void BindToLandedDelegate(
+		UObject* ListenerObject, const FName& FunctionNameToBind);
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void UnbindFromAttackBehaviourFinishedDelegate(UObject* ListenerObject, const FName& FunctionNameToUnBind);
+	void UnbindFromLandedDelegate(
+		UObject* ListenerObject, const FName& FunctionNameToUnBind);
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void BindToOnChargeBehaviourFinishedDelegate(UObject* ListenerObject, const FName& FunctionNameToBind);
+	void BindToOnAttackBehaviourFinishedDelegate(
+		UObject* ListenerObject, const FName& FunctionNameToBind);
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void UnbindFromChargeBehaviourFinishedDelegate(UObject* ListenerObject, const FName& FunctionNameToUnBind);
+	void UnbindFromAttackBehaviourFinishedDelegate(
+		UObject* ListenerObject, const FName& FunctionNameToUnBind);
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void BindToOnInvestigateBehaviourFinishedDelegate(UObject* ListenerObject, const FName& FunctionNameToBind);
+	void BindToOnChargeBehaviourFinishedDelegate(
+		UObject* ListenerObject, const FName& FunctionNameToBind);
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void UnbindFromInvestigatekBehaviourFinishedDelegate(UObject* ListenerObject, const FName& FunctionNameToUnBind);
+	void UnbindFromChargeBehaviourFinishedDelegate(
+		UObject* ListenerObject, const FName& FunctionNameToUnBind);
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void BindToOnReachJumpApexDelegate(UObject* ListenerObject, const FName& FunctionNameToBind);
+	void BindToOnInvestigateBehaviourFinishedDelegate(
+		UObject* ListenerObject, const FName& FunctionNameToBind);
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void UnbindFromReachJumpApexDelegate(UObject* ListenerObject, const FName& FunctionNameToUnBind);
+	void UnbindFromInvestigatekBehaviourFinishedDelegate(
+		UObject* ListenerObject, const FName& FunctionNameToUnBind);
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void BindToLandedDelegate(UObject* ListenerObject, const FName& FunctionNameToBind);
+	void BindToOnReachJumpApexDelegate(
+		UObject* ListenerObject, const FName& FunctionNameToBind);
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void UnbindFromLandedDelegate(UObject* ListenerObject, const FName& FunctionNameToUnBind);
+	void UnbindFromReachJumpApexDelegate(
+		UObject* ListenerObject, const FName& FunctionNameToUnBind);
 
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	bool GetIsAttacking() const;
-
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void SetIsGrounded(bool IsGrounded);
-
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void SetTargetActor(AActor* InTargetActor);
+	
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void SetNofityJumpApex(bool InNotifyJumpApex);
