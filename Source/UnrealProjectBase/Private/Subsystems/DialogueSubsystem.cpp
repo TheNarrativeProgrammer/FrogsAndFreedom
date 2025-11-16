@@ -23,7 +23,6 @@ TArray<FDialogueTextData>  UDialogueSubsystem::GetDiaglogueTextOfTableRow(FName 
 	{
 		return DialogueDataForRow->DialogueTextData;
 	}
-	//UE_LOG(LogTemp, Warning, TEXT("PROGRAMMER: GetDiaglogueTextOfTableRow was passed an invalid Gameplaytag for text."))
 	return TArray<FDialogueTextData>();
 }
 
@@ -35,26 +34,19 @@ UFMODEvent* UDialogueSubsystem::GetDiaglogueFmodEventOfTableRow(FName GameplayTa
 	{
 		return DialogueDataForRow->FmodAudioEvent;
 	}
-	//UE_LOG(LogTemp, Warning, TEXT("PROGRAMMER: GetDiaglogueFmodEventOfTableRow was passed an invalid Gameplaytag for audio"));
 	return nullptr;
 }
 
 void UDialogueSubsystem::AddDialogueTextDataToQue(FName GameplayTagAsName)
 {
 	FString LookUpContext = "Dialogue Query add to que";
-	 
-	//TArray<FDialogueTextData> DialogueTextData = GetDiaglogueTextOfTableRow(GameplayTagAsName);
-
-	
-	FDialogueData* DialogueData = DialogueTable->FindRow<FDialogueData>(GameplayTagAsName, LookUpContext);
+	FDialogueData* DialogueData = DialogueTable->FindRow<
+		FDialogueData>(GameplayTagAsName, LookUpContext);
 
 	if (DialogueData)
 	{
 		DialogueQueue.Enqueue(*DialogueData);
 	}
-	
-	
-	//DialogueTextQueue.Enqueue(DialogueTextData);
 }
 
 void UDialogueSubsystem::TriggerDialogueIfNonPlaying()
@@ -86,7 +78,8 @@ void UDialogueSubsystem::IterateDialogueQue()
 				if (_mIsDialogueBoxVisible == false)
 				{
 					SetIsDialogueBoxVisible(true);
-					if (AGameStateEventManagerBase* GameStateEventManagerBase = Cast<AGameStateEventManagerBase>(GetWorld()->GetGameState()))
+					if (AGameStateEventManagerBase* GameStateEventManagerBase = Cast<
+						AGameStateEventManagerBase>(GetWorld()->GetGameState()))
 					{
 						GameStateEventManagerBase->OnDialogueStartDelegate.Broadcast();
 					}
@@ -95,34 +88,39 @@ void UDialogueSubsystem::IterateDialogueQue()
 				IterateDialogueText();
 			}
 		}
-		
 	}
 	else
 	{
-		if (AGameStateEventManagerBase* GameStateEventManagerBase = Cast<AGameStateEventManagerBase>(GetWorld()->GetGameState()))
+		if (AGameStateEventManagerBase* GameStateEventManagerBase = Cast<
+			AGameStateEventManagerBase>(GetWorld()->GetGameState()))
 		{
 			SetIsDialogueBoxVisible(false);
 			GameStateEventManagerBase->OnDialogueFinishedDelegate.Broadcast();
 		}
 	}
-	
-	
 }
 
 void UDialogueSubsystem::IterateDialogueText()
 {
-
 	if (CurrentDialogueTextDataOfRow.IsValidIndex(0))
 	{
-		OnDialogueTextChangeDelegate.Broadcast(CurrentDialogueTextDataOfRow[0].DialogueText, CurrentDialogueTextDataOfRow[0].CharacterSpeakingGameplayTag);
+		OnDialogueTextChangeDelegate.Broadcast(
+			CurrentDialogueTextDataOfRow[0].DialogueText,
+			CurrentDialogueTextDataOfRow[0].CharacterSpeakingGameplayTag);
+		
 		GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
+		
 		if (GetWorld()->GetTimerManager().IsTimerActive(TimerHandle) == false)
 		{
-			GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &UDialogueSubsystem::IterateDialogueText, CurrentDialogueTextDataOfRow[0].TimeToDisplayText, false);
+			GetWorld()->GetTimerManager().SetTimer(TimerHandle,
+				this, &UDialogueSubsystem::IterateDialogueText,
+				CurrentDialogueTextDataOfRow[0].TimeToDisplayText,
+				false);
 		}
 		CurrentDialogueTextDataOfRow.RemoveAt(0);
 	}
-	else if (CurrentDialogueTextDataOfRow.IsEmpty() && CurrentDialogueTextDataOfRow.IsValidIndex(0) == false)
+	else if (CurrentDialogueTextDataOfRow.IsEmpty()
+		&& CurrentDialogueTextDataOfRow.IsValidIndex(0) == false)
 	{
 		OnDialogueFinishedIterate();
 	}
@@ -131,7 +129,8 @@ void UDialogueSubsystem::IterateDialogueText()
 void UDialogueSubsystem::OnDialogueFinishedIterate()
 {
 	GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
-	if (CurrentDialogueTextDataOfRow.IsEmpty() == true || CurrentDialogueTextDataOfRow.Num() == 0)
+	
+	if (CurrentDialogueTextDataOfRow.IsEmpty())
 	{
 		CurrentDialogueTextDataOfRow.Empty();
 		if (DialogueQueue.IsEmpty() == false)
@@ -142,7 +141,8 @@ void UDialogueSubsystem::OnDialogueFinishedIterate()
 		else
 		{
 			_mIsDialogueCurrentlyPlaying = false;
-			if (AGameStateEventManagerBase* GameStateEventManagerBase = Cast<AGameStateEventManagerBase>(GetWorld()->GetGameState()))
+			if (AGameStateEventManagerBase* GameStateEventManagerBase = Cast<
+				AGameStateEventManagerBase>(GetWorld()->GetGameState()))
 			{
 				SetIsDialogueBoxVisible(false);
 				GameStateEventManagerBase->OnDialogueFinishedDelegate.Broadcast();
@@ -153,22 +153,15 @@ void UDialogueSubsystem::OnDialogueFinishedIterate()
 
 void UDialogueSubsystem::PlayDialogue()
 {
-	// FVector SoundLocation = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)->GetActorLocation();
-	// UFMODBlueprintStatics::PlayEventAtLocation(GetWorld(), CurrentDialogueOfRow.FmodAudioEvent, FTransform(SoundLocation), true);
-	
 	if (CurrentDialogueOfRow.FmodAudioEvent)
 	{
-		if (USceneComponent* SoundLocationPlayerRoot = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)->GetRootComponent())
+		if (USceneComponent* SoundLocationPlayerRoot = UGameplayStatics::GetPlayerCharacter(
+			GetWorld(), 0)->GetRootComponent())
 		{
 			UFMODAudioComponent* AudioComponent = UFMODBlueprintStatics::PlayEventAttached(
-			CurrentDialogueOfRow.FmodAudioEvent,
-			SoundLocationPlayerRoot,
-			NAME_None,
-			FVector::ZeroVector,
-			EAttachLocation::Type::KeepRelativeOffset,
-			true,
-			true,
-			false
+			CurrentDialogueOfRow.FmodAudioEvent, SoundLocationPlayerRoot,
+			NAME_None,FVector::ZeroVector,EAttachLocation::Type::KeepRelativeOffset,
+			true,true,false
 			);
 
 			if (AudioComponent)
@@ -176,10 +169,7 @@ void UDialogueSubsystem::PlayDialogue()
 				AudioComponent->Release();
 			}
 		}
-	
-		
 	}
-	
 }
 
 void UDialogueSubsystem::SetIsDialogueBoxVisible(bool InIsDialogueBoxVisible)

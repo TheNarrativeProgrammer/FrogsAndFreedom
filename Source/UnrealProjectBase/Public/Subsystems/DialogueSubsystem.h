@@ -13,21 +13,20 @@
  * 
  */
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnDialogueTextChangeSignature, FText, DialogText, FGameplayTag, CharacterSpeakingTag);
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDialogueQueEmptySignature);
-
-
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(
+	FOnDialogueTextChangeSignature,
+	FText, DialogText, FGameplayTag, CharacterSpeakingTag);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(
+	FOnDialogueQueEmptySignature);
 
 UCLASS()
-class UNREALPROJECTBASE_API UDialogueSubsystem : public UGameInstanceSubsystem
+class UNREALPROJECTBASE_API UDialogueSubsystem
+	: public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
-
-
 protected:
-
 	TQueue<FDialogueData> DialogueQueue;
+	
 	TQueue<TArray<FDialogueTextData>> DialogueTextQueue;
 
 	UPROPERTY()
@@ -72,12 +71,10 @@ protected:
 	UFUNCTION()
 	void SetIsDialogueBoxVisible(bool InIsDialogueBoxVisible);
 
-
-	
 public:
 	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
-	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	
+	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	
 	UFUNCTION(BlueprintCallable)
 	void SetDialogueTable (UDataTable* InDialogueTable);

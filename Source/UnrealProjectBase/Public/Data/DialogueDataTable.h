@@ -16,24 +16,21 @@ USTRUCT(BlueprintType)
 struct FDialogueTextData
 {
 	GENERATED_BODY()
-
-public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Dialogue Text")
 	FText DialogueText;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Dialogue Text")
 	float TimeToDisplayText = 4.0f;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(Categories="DialogueCharacters"), Category="Dialogue Text")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly,
+		meta=(Categories="DialogueCharacters"), Category="Dialogue Text")
 	FGameplayTag CharacterSpeakingGameplayTag;
 };
-
 
 USTRUCT(BlueprintType)
 struct FDialogueData : public FTableRowBase
 {
 	GENERATED_BODY()
-public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FGameplayTag RowLoopUpGameplayTag;
 
@@ -44,10 +41,8 @@ public:
 	TArray<FDialogueTextData> DialogueTextData;
 };
 
-
 UCLASS()
 class UNREALPROJECTBASE_API UDialogueDataTable : public UDataTable
 {
 	GENERATED_BODY()
-	
 };
