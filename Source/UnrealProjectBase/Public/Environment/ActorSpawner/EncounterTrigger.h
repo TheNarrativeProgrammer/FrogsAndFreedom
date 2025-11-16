@@ -69,10 +69,6 @@ public:
 	UFUNCTION()
 	void StartObjectives();
 
-	
-	UFUNCTION()
-	void IncreaseCountOfCompletedObjectives();
-
 	UFUNCTION()
 	void SetCountOfTotalObjectives();
 
@@ -82,6 +78,12 @@ public:
 
 	UFUNCTION()
 	void IfAllObjectivesCompeleteThenBroadcast();
+
+	UFUNCTION()
+	void UpdateCountOfCompletedObjectives();
+
+	UFUNCTION()
+	void BroadcastObjectiveCompletionGameEvents();
 
 protected:
 	UFUNCTION(BlueprintNativeEvent)

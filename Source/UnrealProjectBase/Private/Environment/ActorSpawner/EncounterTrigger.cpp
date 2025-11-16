@@ -24,21 +24,17 @@ AEncounterTrigger::AEncounterTrigger()
 }
 
 
-void AEncounterTrigger::OnEncounterEnd_Implementation(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+void AEncounterTrigger::OnEncounterEnd_Implementation(
+	UPrimitiveComponent* OverlappedComponent,AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	ACharacter* PlayerCharacter = UGameplayStatics::GetPlayerCharacter(this, 0);
-	if (OtherActor == PlayerCharacter)
+	if (_mCountCompletedObjectives >= _mCountTotalObjectives)
 	{
-		if (AGameModeBase* GameMode = GetWorld()->GetAuthGameMode())
+		if (OtherActor->Implements<UPlayerCharacterable>())
 		{
-			if (UEncounterManagerComponent* EncounterManagerComponent = GameMode->FindComponentByClass<UEncounterManagerComponent>())
-			{
-				if (EncounterManagerComponent->_mIsAllObjectiveComplete == true)
-				{
-					TriggerBox->OnComponentEndOverlap.RemoveDynamic(this, &AEncounterTrigger::OnEncounterEnd);
-					UnregisterFromEncounterManager();
-				}
-			}
+			TriggerBox->OnComponentEndOverlap.RemoveDynamic(
+				this, &AEncounterTrigger::OnEncounterEnd);
+			UnregisterFromEncounterManager();
 		}
 	}
 }
@@ -57,70 +53,66 @@ void AEncounterTrigger::StartObjectives()
 	}
 }
 
-void AEncounterTrigger::IncreaseCountOfCompletedObjectives()
-{
-	//_mCountCompletedObjectives++;
-	IfAllObjectivesCompeleteThenBroadcast();
-}
-
 void AEncounterTrigger::SetCountOfTotalObjectives()
 {
 	if (ObjectiveActors.IsEmpty() == false)
 	{
-		//count of Total Objectives that must be compelted before spawning stops. This excludes the door and kill count.
 		for (AObjectiveActorBase* ObjectiveActor : ObjectiveActors)
 		{
 			if (!ObjectiveActor)
 			{
-				//UE_LOG(LogTemp, Warning, TEXT("DESGINER: Add the objectives to the Encounter Trigger. The array is empty or missing objectives"));
 				continue;
 			}
 			if (ObjectiveActor->Implements<UObjectiveable>())
 			{
-				if (IObjectiveable::Execute_GetIsMustCompleteToOpenDoor(ObjectiveActor) == true)
+				if (IObjectiveable::Execute_GetIsMustCompleteToOpenDoor(
+					ObjectiveActor) == true)
 				{
 					_mCountTotalObjectivesInfluencingDoorOpening++;
 				}
-				if (IObjectiveable::Execute_GetIsMustCompleteToStopSpawn(ObjectiveActor) == true)
+				if (IObjectiveable::Execute_GetIsMustCompleteToStopSpawn(
+					ObjectiveActor) == true)
 				{
 					_mCountTotalObjectivesInfluencingSpawnStopping++;
 				}
-				
 			}
 		}
-
 		_mCountTotalObjectives = ObjectiveActors.Num();
 	}
-	
 }
 
-// void AEncounterTrigger::DecreaseCountOfCompletedObjectives()
-// {
-// 	_mCountCompletedObjectives--;
-// }
 
 void AEncounterTrigger::IfAllObjectivesCompeleteThenBroadcast()
 {
 	SetObjectiveCountsToZero();
+	UpdateCountOfCompletedObjectives();
+	BroadcastObjectiveCompletionGameEvents();
+}
+
+void AEncounterTrigger::UpdateCountOfCompletedObjectives()
+{
 	for (AObjectiveActorBase* ObjectiveActor : ObjectiveActors)
 	{
 		if (ObjectiveActor->Implements<UObjectiveable>())
 		{
-			if (ObjectiveActor->IsObjectiveCompleted() == true)
+			if (ObjectiveActor->IsObjectiveCompleted())
 			{
 				_mCountCompletedObjectives++;
-				if (IObjectiveable::Execute_GetIsMustCompleteToOpenDoor(ObjectiveActor) == true)
+				if (IObjectiveable::Execute_GetIsMustCompleteToOpenDoor(ObjectiveActor))
 				{
 					_mCountCompletedObjectivesInfluencingDoorOpening++;
 				}
-				if (IObjectiveable::Execute_GetIsMustCompleteToStopSpawn(ObjectiveActor) == true)
+				if (IObjectiveable::Execute_GetIsMustCompleteToStopSpawn(ObjectiveActor))
 				{
 					_mCountCompletedObjectivesInfluencingSpawnStopping++;
 				}
 			}
 		}
 	}
-	//All objectives complete
+}
+
+void AEncounterTrigger::BroadcastObjectiveCompletionGameEvents()
+{
 	if (_mCountCompletedObjectives >= _mCountTotalObjectives)
 	{
 		DelegateBindComponentEncountrTrg->GameStateEventManager->
@@ -145,39 +137,45 @@ void AEncounterTrigger::IfAllObjectivesCompeleteThenBroadcast()
 		DelegateBindComponentEncountrTrg->GameStateEventManager->
 			OnAllObjectiveInfluencingDoorOpeningCompleteDelegate.Broadcast();
 	}
-	
 }
 
-void AEncounterTrigger::
-SetObjectiveCountsToZero()
+void AEncounterTrigger::SetObjectiveCountsToZero()
 {
 	_mCountCompletedObjectives = 0;
 	_mCountCompletedObjectivesInfluencingDoorOpening = 0;
 	_mCountCompletedObjectivesInfluencingSpawnStopping = 0;
 }
 
-// Called when the game starts or when spawned
+
 void AEncounterTrigger::BeginPlay()
 {
 	Super::BeginPlay();
-	TriggerBox->OnComponentBeginOverlap.AddUniqueDynamic(this, &AEncounterTrigger::OnEncounterBegin);
-	TriggerBox->OnComponentEndOverlap.AddUniqueDynamic(this, &AEncounterTrigger::OnEncounterEnd);
+	TriggerBox->OnComponentBeginOverlap.AddUniqueDynamic(
+		this, &AEncounterTrigger::OnEncounterBegin);
+	TriggerBox->OnComponentEndOverlap.AddUniqueDynamic(
+		this, &AEncounterTrigger::OnEncounterEnd);
+
+	SetObjectiveCountsToZero();
+	SetCountOfTotalObjectives();
+	
 	if (TriggerBox)
 	{
-		if (ACharacter* PlayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0))
+		if (ACharacter* PlayerCharacter = UGameplayStatics::
+			GetPlayerCharacter(GetWorld(), 0))
 		{
-			if (ACharacterBasePlayer* CharacterBasePlayer = Cast<ACharacterBasePlayer>(PlayerCharacter))
+			if (ACharacterBasePlayer* CharacterBasePlayer = Cast<
+				ACharacterBasePlayer>(PlayerCharacter))
 			{
 				if (TriggerBox->IsOverlappingActor(CharacterBasePlayer))
 				{
-					TriggerBox->OnComponentBeginOverlap.RemoveDynamic(this, &AEncounterTrigger::OnEncounterBegin);
+					TriggerBox->OnComponentBeginOverlap.RemoveDynamic(
+						this, &AEncounterTrigger::OnEncounterBegin);
 					RegisterWithEncounterManager();
 				}
 			}
 		}
 	}
-	SetObjectiveCountsToZero();
-	SetCountOfTotalObjectives();
+	
 }
 
 void AEncounterTrigger::OnEncounterBegin_Implementation(
@@ -196,10 +194,12 @@ void AEncounterTrigger::OnEncounterBegin_Implementation(
 
 void AEncounterTrigger::RegisterWithEncounterManager()
 {
-	if (AGameModeBase* GameMode  = GetWorld()->GetAuthGameMode())
+	if (AGameModeBase* GameMode  =
+		GetWorld()->GetAuthGameMode())
 	{
 		if (UEncounterManagerComponent* EncounterManager =
-			GameMode->FindComponentByClass<UEncounterManagerComponent>())
+			GameMode->FindComponentByClass<
+			UEncounterManagerComponent>())
 		{
 			EncounterManager->RegisterEncounter(this);
 		}
