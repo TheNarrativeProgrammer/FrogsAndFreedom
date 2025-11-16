@@ -37,6 +37,61 @@ void AObjectiveActorBase::IncreaseCountOfPreObjectivesCompleted()
 	_mCountNumberOfPreObjectivesCompleted++;
 }
 
+void AObjectiveActorBase::SpawnWave1IfStartIsObjectiveDependent(
+	UEncounterManagerComponent* EncounterManagerComponent,
+	const FGameplayTagContainer& InWaveToTriggerOnObjectiveComplete) const
+{
+	if (!EncounterManagerComponent) return;
+	if (!EncounterManagerComponent->CurrentlyActiveEncounterTrigger)
+	{
+		return;
+	}
+	
+	if(EncounterManagerComponent->CurrentActiveWave.MatchesTagExact(
+				FGameplayTag::RequestGameplayTag(FName("Wave.1"), false)))
+	{
+		if (InWaveToTriggerOnObjectiveComplete.HasTag(
+			FGameplayTag::RequestGameplayTag(FName("Wave.1"))))
+		{
+			
+			FEncounterWaveData EncounterWaveData = EncounterManagerComponent->
+				CurrentlyActiveEncounterTrigger->EncounterData->GetWaveData(
+				FGameplayTag::RequestGameplayTag(FName("Wave.1"), false));
+
+			if (EncounterWaveData.WaveTrigger == EWaveTrigger::Objective)
+			{
+				EncounterManagerComponent->OnObjectiveCompleteStartSpawningWave(
+					FGameplayTag::RequestGameplayTag(FName("Wave.1")));
+			}
+		}
+	}
+}
+
+bool AObjectiveActorBase::IsNextWaveInQue(
+	UEncounterManagerComponent* EncounterManagerComponent,
+	const FGameplayTag InWaveToTriggerOnObjectiveComplete) const
+{
+	if (InWaveToTriggerOnObjectiveComplete.IsValid())
+	{
+		EncounterManagerComponent->AddWaveToObjectiveCompletionMap(
+				InWaveToTriggerOnObjectiveComplete);
+		
+		if (EncounterManagerComponent->NextWaveInQue == InWaveToTriggerOnObjectiveComplete
+			&& EncounterManagerComponent->GetIsSpawning() == false)
+		{
+			EncounterManagerComponent->SetActiveWave(InWaveToTriggerOnObjectiveComplete);
+			
+			EncounterManagerComponent->OnObjectiveCompleteStartSpawningWave(
+				InWaveToTriggerOnObjectiveComplete);
+			return true;
+		}
+	}
+	return false;
+}
+
+
+
+
 void AObjectiveActorBase::SetIsFreed_Implementation(bool InIsFreed)
 {
 	_mIsFreed = InIsFreed;
@@ -56,7 +111,8 @@ void AObjectiveActorBase::CompleteObjectiveBroadcast_Implementation()
 
 	if (SubObjectives.IsEmpty() == true)
 	{
-		if (AGameStateEventManagerBase* GameStateEventManager = Cast<AGameStateEventManagerBase>(UGameplayStatics::GetGameState(World)))
+		if (AGameStateEventManagerBase* GameStateEventManager =
+			Cast<AGameStateEventManagerBase>(UGameplayStatics::GetGameState(World)))
 		{
 			if (GameStateEventManager)
 			{
@@ -70,8 +126,11 @@ void AObjectiveActorBase::CompleteObjectiveBroadcast_Implementation()
 		if (isTimerActive == false)
 		{
 			World->GetTimerManager().ClearTimer(TimerHandle);
-			FTimerDelegate TimerDelegate = FTimerDelegate::CreateUObject(this, &AObjectiveActorBase::CompleteObjective);
-			World->GetTimerManager().SetTimer(TimerHandle, TimerDelegate, mTimeDisplayCompletionText, false);
+			FTimerDelegate TimerDelegate = FTimerDelegate::CreateUObject(
+				this, &AObjectiveActorBase::CompleteObjective);
+			
+			World->GetTimerManager().SetTimer(TimerHandle,
+				TimerDelegate, mTimeDisplayCompletionText, false);
 		}
 	}
 }
@@ -102,41 +161,20 @@ void AObjectiveActorBase::TriggerWave(const FGameplayTagContainer& InWaveToTrigg
 		if (UEncounterManagerComponent* EncounterManagerComponent = Cast<UEncounterManagerComponent>(
 			Gamemode->GetComponentByClass(UEncounterManagerComponent::StaticClass())))
 		{
-			if(EncounterManagerComponent->CurrentActiveWave.MatchesTagExact(
-				FGameplayTag::RequestGameplayTag(FName("Wave.1"), false)))
-			{
-				if (InWaveToTriggerOnObjectiveComplete.HasTag(FGameplayTag::RequestGameplayTag(FName("Wave.1"))))
-				{
-					if (!EncounterManagerComponent->CurrentlyActiveEncounterTrigger)
-					{
-						return;
-					}
-					FEncounterWaveData EncounterWaveData = EncounterManagerComponent->
-						CurrentlyActiveEncounterTrigger->EncounterData->GetWaveData(
-						FGameplayTag::RequestGameplayTag(FName("Wave.1"), false));
+			if (InWaveToTriggerOnObjectiveComplete.IsEmpty()) return;
+			
+			SpawnWave1IfStartIsObjectiveDependent(EncounterManagerComponent, InWaveToTriggerOnObjectiveComplete);
 
-					if (EncounterWaveData.WaveTrigger == EWaveTrigger::Objective)
-					{
-						EncounterManagerComponent->OnObjectiveCompleteStartSpawningWave(
-							FGameplayTag::RequestGameplayTag(FName("Wave.1")));
-						return;
-					}
-				}
-			
-			}
-			
-			 if (EncounterManagerComponent->NextWaveInQue == InWaveToTriggerOnObjectiveComplete.First())
+			bool ShouldNotCheckNextTag = false;
+			for (auto WaveGameplayTag : InWaveToTriggerOnObjectiveComplete)
 			{
-				EncounterManagerComponent->SetActiveWave(InWaveToTriggerOnObjectiveComplete.First());
-				EncounterManagerComponent->OnObjectiveCompleteStartSpawningWave(InWaveToTriggerOnObjectiveComplete.First());
-				return;
-			}
-			else if (InWaveToTriggerOnObjectiveComplete.IsValidIndex(1))
-			{
-				 if (EncounterManagerComponent->NextWaveInQue == InWaveToTriggerOnObjectiveComplete.GetByIndex(1))
+				if (ShouldNotCheckNextTag == false)
 				{
-					EncounterManagerComponent->SetActiveWave(InWaveToTriggerOnObjectiveComplete.GetByIndex(1));
-					EncounterManagerComponent->OnObjectiveCompleteStartSpawningWave(InWaveToTriggerOnObjectiveComplete.GetByIndex(1));
+					ShouldNotCheckNextTag = IsNextWaveInQue(EncounterManagerComponent, WaveGameplayTag);
+				}
+				else
+				{
+					EncounterManagerComponent->AddWaveToObjectiveCompletionMap(WaveGameplayTag);
 				}
 			}
 		}

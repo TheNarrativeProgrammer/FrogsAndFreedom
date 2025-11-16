@@ -8,7 +8,7 @@
 #include "GameplayTagAssetInterface.h"
 #include "Interfaces/Objectiveable.h"
 #include "ObjectiveActorBase.generated.h"
-
+class EncounterManagerComponent;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FObjectiveEventSignature);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FObjectiveEventCompletedSignature);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FObjectiveEventCompletionReversedSignature);
@@ -91,6 +91,12 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void SetIsFreed(bool InIsFreed);
+
+	UFUNCTION()
+	void SpawnWave1IfStartIsObjectiveDependent(UEncounterManagerComponent* EncounterManagerComponent, const FGameplayTagContainer& InWaveToTriggerOnObjectiveComplete) const;
+
+	UFUNCTION()
+	bool IsNextWaveInQue(UEncounterManagerComponent* EncounterManagerComponent, const FGameplayTag InWaveToTriggerOnObjectiveComplete) const;
 	
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void StartObjective();

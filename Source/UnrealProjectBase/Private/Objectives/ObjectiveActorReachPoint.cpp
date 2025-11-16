@@ -52,13 +52,16 @@ void AObjectiveActorReachPoint::SetHasPlayerReachedPoint(bool InHasPlayerReached
 }
 
 void AObjectiveActorReachPoint::OnOverlapObjectiveComplete_Implementation(
-	UPrimitiveComponent* OverlappedComponent,AActor* OtherActor,UPrimitiveComponent* OtherComp,
-	int32 OtherBodyIndex, bool bFromSweep,const FHitResult& SweepResult)
+	UPrimitiveComponent* OverlappedComponent,AActor* OtherActor,
+	UPrimitiveComponent* OtherComp,int32 OtherBodyIndex,
+	bool bFromSweep,const FHitResult& SweepResult)
 {
-		if (OtherActor->Implements<UPlayerCharacterable>())
+		if (OtherActor->Implements<UPlayerCharacterable>()
+			&& _mHasObjectiveStarted == true)
 		{
 			TriggerBox->OnComponentBeginOverlap.RemoveDynamic(this,
 				&AObjectiveActorReachPoint::OnOverlapObjectiveComplete);
+			
 			SetHasPlayerReachedPoint(true);
 			IfCompleteTriggerSubObjectivesAndWave();
 		}

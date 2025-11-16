@@ -59,7 +59,6 @@ void AObjectiveActorTurnOnAllGenerator::BroadcastCompletionReverseredEvent()
 				CountActiveForceFields++;
 			}
 		}
-
 		if (CountActiveForceFields == _msGeneratorActorsInLevel.Num() - 1)
 		{
 			SetIsFreed(false);
@@ -67,7 +66,8 @@ void AObjectiveActorTurnOnAllGenerator::BroadcastCompletionReverseredEvent()
 			StopSubObjectives();
 			SetIsFirstIterationComplete();
 			DelegateBindingComponentObjGenOn->GameStateEventManager->
-				OnActorObjectiveCompletionReversedUpdateUIDelegate.Broadcast(this);
+				OnActorObjectiveCompletionReversedUpdateUIDelegate.Broadcast(
+					this);
 		}
 	}
 }
@@ -137,7 +137,8 @@ FText AObjectiveActorTurnOnAllGenerator::GetObjectiveDisplayText_Implementation(
 	return Super::GetObjectiveDisplayText_Implementation();
 }
 
-void AObjectiveActorTurnOnAllGenerator::SetIsTimerFinished(bool InIsTimerFinished)
+void AObjectiveActorTurnOnAllGenerator::SetIsTimerFinished(
+	bool InIsTimerFinished)
 {
 	_mIsTimerFinished = InIsTimerFinished;
 }

@@ -109,7 +109,8 @@ void AObjectiveActorDefendGenTime::OnTimerFinishedCompleteObjective()
 	IfCompleteTriggerSubObjectivesAndWave();
 }
 
-void AObjectiveActorDefendGenTime::UpdateTimeRemainingAndBroadcastToUI(float InTimeRemaning)
+void AObjectiveActorDefendGenTime::UpdateTimeRemainingAndBroadcastToUI(
+	float InTimeRemaning)
 {
 	_mTimeRemaining = InTimeRemaning;
 	if (DelegateBindingComponentGenTimer)
