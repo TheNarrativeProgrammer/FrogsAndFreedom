@@ -46,6 +46,7 @@ bool UAttackTokenRequesterComponent::HasAttackTokens_Implementation(AActor* Atta
 	if (AttackTarget)
 	{
 		FRequesterGeneralTokenData RequesterGeneralTokenData = _mmTakenAttackTokens.FindOrAdd(AttackTarget);
+		
 		if (RequesterGeneralTokenData.CountTokensTaken >= 1)
 		{
 			return true;
@@ -98,10 +99,14 @@ void UAttackTokenRequesterComponent::ReserveAttackTokenAndStoreInMap_Implementat
 {
 	if (!AttackTarget) return;
 	
-	FRequesterGeneralTokenData& RequesterGeneralTokenData = _mmTakenAttackTokens.FindOrAdd(AttackTarget);
+	FRequesterGeneralTokenData& RequesterGeneralTokenData =
+		_mmTakenAttackTokens.FindOrAdd(AttackTarget);
+	
 	RequesterGeneralTokenData.LocationOfReservedPoint = InLocationOfReservedPoint;
 	RequesterGeneralTokenData.IndexOfReservedPoint = InIndexOfReservedPoint;
-	RequesterGeneralTokenData.CountTokensTaken = RequesterGeneralTokenData.CountTokensTaken + RequesterGeneralTokenData.TokensRequiredForAction;
+	RequesterGeneralTokenData.CountTokensTaken =
+		RequesterGeneralTokenData.CountTokensTaken
+		+ RequesterGeneralTokenData.TokensRequiredForAction;
 }
 
 bool UAttackTokenRequesterComponent::RequestAttackToken_Implementation(AActor* AttackTarget)

@@ -12,7 +12,6 @@ UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class UNREALPROJECTBASE_API UAttackTokenRequesterComponent : public UActorComponent
 {
 	GENERATED_BODY()
-	
 public:	
 	UAttackTokenRequesterComponent();
 	

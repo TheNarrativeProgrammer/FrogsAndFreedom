@@ -43,24 +43,23 @@ public IPowerupBlastRadiusable,
 public IPowerupFireRateable
 {
 	GENERATED_BODY()
-
 public:
 	ACharacterBasePlayer();
+	
+	//IAttackTokenGiverable Function implementation
+	virtual void HandleReturningToken_Implementation(
+		int32 InTokensRequiredForAction, int32 InIndexOfReservedPoint) override;
 
-	// UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	// TArray<FVector> GetEnemyAttackLocations();
+	virtual bool HandleResevereTokenRequest_Implementation(
+		const FRequesterGeneralTokenData& RequesterTokenData,
+		const TArray<int32>& RequestedIndexes,
+		FRequesterReservationData& ReservationData) override;
+
+	virtual FVector HandleAttackLocationRequest_Implementation(
+		int32 InIndexOfReservedPoint) override;
 
 	UFUNCTION()
 	void PopulateEnemyAttackLocationsArray(USceneComponent* EnemyAttackLocation);
-
-
-	//IAttackTokenGiverable Function implementation
-	virtual void HandleReturningToken_Implementation(int32 InTokensRequiredForAction, int32 InIndexOfReservedPoint) override;
-
-	virtual bool HandleResevereTokenRequest_Implementation(const FRequesterGeneralTokenData& RequesterTokenData, const TArray<int32>& RequestedIndexes, FRequesterReservationData& ReservationData) override;
-
-
-	virtual FVector HandleAttackLocationRequest_Implementation(int32 InIndexOfReservedPoint) override;
 
 	//PowerupBlastRadiusable functions
 	virtual bool GetIsBlastRadiusPowerupEnabled_Implementation() override;

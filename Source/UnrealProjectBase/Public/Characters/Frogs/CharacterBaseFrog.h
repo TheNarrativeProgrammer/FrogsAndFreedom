@@ -47,7 +47,23 @@ public IAttackTokenRequesterable
 	GENERATED_BODY()
 public:
 	ACharacterBaseFrog();
+	virtual bool RequestAttackToken_Implementation(
+		AActor* AttackTarget) override;
 
+	virtual void ReturnAttackTokens_Implementation(
+		AActor* AttackTarget) override;
+
+	virtual void ReturnAllAttackTokensForAllTargets_Implementation() override;
+
+	virtual bool HasAttackToken_Implementation(
+		AActor* AttackTarget) override;
+
+	virtual FVector RequestAttackLocation_Implementation(
+		AActor* AttackTarget) override;
+
+	virtual void ClearTokenMap_Implementation() override;
+
+	
 	void Landed(const FHitResult& Hit) override;
 
 	// UPROPERTY()
@@ -130,18 +146,7 @@ public:
 	//
 	// FVector GetPatrolPointQueryLocation_Implementation() override;
 
-	//AttackTokenRequesterable functions
-	virtual bool RequestAttackToken_Implementation(AActor* AttackTarget) override;
-
-	virtual void ReturnAttackTokens_Implementation(AActor* AttackTarget) override;
-
-	virtual void ReturnAllAttackTokensForAllTargets_Implementation() override;
-
-	virtual bool HasAttackToken_Implementation(AActor* AttackTarget) override;
-
-	virtual FVector RequestAttackLocation_Implementation(AActor* AttackTarget) override;
-
-	virtual void ClearTokenMap_Implementation() override;
+	
 
 protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category="Route Variables")
@@ -362,29 +367,42 @@ protected:
 
 	virtual void SetNofityJumpApex_Implementation(bool InNotifyJumpApex) override;
 
-	virtual void BindToOnAttackBehaviourFinishedDelegate_Implementation(UObject* ListenerObject, const FName& FunctionNameToBind) override;
-
-	virtual void UnbindFromAttackBehaviourFinishedDelegate_Implementation(UObject* ListenerObject, const FName& FunctionNameToUnBind) override;
-
-	virtual void BindToOnChargeBehaviourFinishedDelegate_Implementation(UObject* ListenerObject, const FName& FunctionNameToBind) override;
-
-	virtual void UnbindFromChargeBehaviourFinishedDelegate_Implementation(UObject* ListenerObject, const FName& FunctionNameToUnBind) override;
-
-	virtual void BindToOnInvestigateBehaviourFinishedDelegate_Implementation(UObject* ListenerObject, const FName& FunctionNameToBind) override;
-
-	virtual void UnbindFromInvestigatekBehaviourFinishedDelegate_Implementation(UObject* ListenerObject, const FName& FunctionNameToUnBind) override;
-
-	virtual void BindToOnReachJumpApexDelegate_Implementation(UObject* ListenerObject, const FName& FunctionNameToBind) override;
-
-	virtual void UnbindFromReachJumpApexDelegate_Implementation(UObject* ListenerObject, const FName& FunctionNameToUnBind) override;
-
-	virtual void BindToLandedDelegate_Implementation(UObject* ListenerObject, const FName& FunctionNameToBind) override;
-
-	virtual void UnbindFromLandedDelegate_Implementation(UObject* ListenerObject, const FName& FunctionNameToUnBind) override;
-
-
 	UPROPERTY(BlueprintCallable, Blueprintable, BlueprintType, BlueprintAssignable, Category="Behaviour Finished Delegates")
 	FOnAttackBehaviourFinishedSignature OnAttackBehaviourFinishedDelegate;
+
+	virtual void BindToOnAttackBehaviourFinishedDelegate_Implementation(
+		UObject* ListenerObject, const FName& FunctionNameToBind) override;
+
+	virtual void UnbindFromAttackBehaviourFinishedDelegate_Implementation(
+		UObject* ListenerObject, const FName& FunctionNameToUnBind) override;
+
+	virtual void BindToLandedDelegate_Implementation(
+		UObject* ListenerObject, const FName& FunctionNameToBind) override;
+
+	virtual void UnbindFromLandedDelegate_Implementation(
+		UObject* ListenerObject, const FName& FunctionNameToUnBind) override;
+
+	virtual void BindToOnChargeBehaviourFinishedDelegate_Implementation(
+		UObject* ListenerObject, const FName& FunctionNameToBind) override;
+
+	virtual void UnbindFromChargeBehaviourFinishedDelegate_Implementation(
+		UObject* ListenerObject, const FName& FunctionNameToUnBind) override;
+
+	virtual void BindToOnInvestigateBehaviourFinishedDelegate_Implementation(
+		UObject* ListenerObject, const FName& FunctionNameToBind) override;
+
+	virtual void UnbindFromInvestigatekBehaviourFinishedDelegate_Implementation(
+		UObject* ListenerObject, const FName& FunctionNameToUnBind) override;
+
+	virtual void BindToOnReachJumpApexDelegate_Implementation(
+		UObject* ListenerObject, const FName& FunctionNameToBind) override;
+
+	virtual void UnbindFromReachJumpApexDelegate_Implementation(
+		UObject* ListenerObject, const FName& FunctionNameToUnBind) override;
+
+	
+	
+	
 
 	UPROPERTY(BlueprintCallable, Blueprintable, BlueprintType, BlueprintAssignable, Category="Behaviour Finished Delegates")
 	FOnChargeBehaviourFinishedSignature OnChargeBehaviourFinishedDelegate;

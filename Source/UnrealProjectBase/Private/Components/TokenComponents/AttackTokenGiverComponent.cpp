@@ -55,109 +55,71 @@ UAttackTokenGiverComponent::UAttackTokenGiverComponent()
 void UAttackTokenGiverComponent::InitializeComponent()
 {
 	Super::InitializeComponent();
-	SceneComponentEnemyAttackLocationLeftFlusher->AttachToComponent(GetOwner()->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
-	SceneComponentEnemyAttackLocationMidFlusher->AttachToComponent(GetOwner()->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
-	SceneComponentEnemyAttackLocationRightFlusher->AttachToComponent(GetOwner()->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
-	SceneComponentEnemyAttackLocationLeftPinner->AttachToComponent(GetOwner()->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
-	SceneComponentEnemyAttackLocationMidPinner->AttachToComponent(GetOwner()->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
-	SceneComponentEnemyAttackLocationRightPinner->AttachToComponent(GetOwner()->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
+
+	// Gather components for looping
+	TArray<USceneComponent*> FlusherComponents = {
+		SceneComponentEnemyAttackLocationLeftFlusher,
+		SceneComponentEnemyAttackLocationMidFlusher,
+		SceneComponentEnemyAttackLocationRightFlusher
+	};
+
+	TArray<USceneComponent*> PinnerComponents = {
+		SceneComponentEnemyAttackLocationLeftPinner,
+		SceneComponentEnemyAttackLocationMidPinner,
+		SceneComponentEnemyAttackLocationRightPinner
+	};
 	
-		if (_mTotalAttackTokensFlusher >= 3)
-		{
-			int32 RemainderTokens = _mTotalAttackTokensFlusher % 3;
-			int32 TokensAllSlotsHave = _mTotalAttackTokensFlusher / 3;
+	SetUpAttachments(0, FlusherComponents,
+		_mTotalAttackTokensFlusher, TEXT("_mTotalAttackTokensFlusher"));
+	SetUpAttachments(3, PinnerComponents,
+		_mTotalAttackTokensPinner, TEXT("_mTotalAttackTokensPinner"));
 	
-			if (RemainderTokens == 0)
-			{
-				AddAttackLocationToMap(0, SceneComponentEnemyAttackLocationLeftFlusher, true, TokensAllSlotsHave);
-				AddAttackLocationToMap(1, SceneComponentEnemyAttackLocationMidFlusher, true, TokensAllSlotsHave);
-				AddAttackLocationToMap(2, SceneComponentEnemyAttackLocationRightFlusher, true, TokensAllSlotsHave);
-			}
-			else if (RemainderTokens == 1)
-			{
-				AddAttackLocationToMap(0, SceneComponentEnemyAttackLocationLeftFlusher, true, TokensAllSlotsHave + 1);
-				AddAttackLocationToMap(1, SceneComponentEnemyAttackLocationMidFlusher, true, TokensAllSlotsHave);
-				AddAttackLocationToMap(2, SceneComponentEnemyAttackLocationRightFlusher, true, TokensAllSlotsHave);
-			}
-			else if (RemainderTokens == 2)
-			{
-				AddAttackLocationToMap(0, SceneComponentEnemyAttackLocationLeftFlusher, true, TokensAllSlotsHave + 1);
-				AddAttackLocationToMap(1, SceneComponentEnemyAttackLocationMidFlusher, true, TokensAllSlotsHave + 1);
-				AddAttackLocationToMap(2, SceneComponentEnemyAttackLocationRightFlusher, true, TokensAllSlotsHave);
-			}
-		}
-	else if (_mTotalAttackTokensFlusher == 2)
-		{
-			AddAttackLocationToMap(0, SceneComponentEnemyAttackLocationLeftFlusher, true, 1);
-			AddAttackLocationToMap(1, SceneComponentEnemyAttackLocationMidFlusher, true, 1);
-			AddAttackLocationToMap(2, SceneComponentEnemyAttackLocationRightFlusher, false, 0);
-			UE_LOG(LogTemp, Error, TEXT("DESIGNER _mTotalAttackTokensFlusher has only 2 slots"));
-		}
-	else if (_mTotalAttackTokensFlusher == 1)
+}
+
+void UAttackTokenGiverComponent::SetUpAttachments(
+	int32 BaseIndex, const TArray<USceneComponent*>& Components,
+	int32 TotalTokens, const FString& Label)
+{
+	for (USceneComponent* Comp : Components)
 	{
-		AddAttackLocationToMap(0, SceneComponentEnemyAttackLocationLeftFlusher, true, 1);
-		AddAttackLocationToMap(1, SceneComponentEnemyAttackLocationMidFlusher, false, 0);
-		AddAttackLocationToMap(2, SceneComponentEnemyAttackLocationRightFlusher, false, 0);
-		UE_LOG(LogTemp, Error, TEXT("DESIGNER _mTotalAttackTokensFlusher has only 1 slot"));
-	}
-	else if (_mTotalAttackTokensFlusher == 0)
-	{
-		AddAttackLocationToMap(0, SceneComponentEnemyAttackLocationLeftFlusher, false, 0);
-		AddAttackLocationToMap(1, SceneComponentEnemyAttackLocationMidFlusher, false, 0);
-		AddAttackLocationToMap(2, SceneComponentEnemyAttackLocationRightFlusher, false, 0);
-		UE_LOG(LogTemp, Error, TEXT("DESIGNER _mTotalAttackTokensFlusher has zero slots"));
+		Comp->AttachToComponent(GetOwner()->GetRootComponent(),
+								FAttachmentTransformRules::KeepRelativeTransform);
 	}
 	
-		
+	if (TotalTokens <= 0)
+	{
+		UE_LOG(LogTemp, Error, TEXT("DESIGNER %s has zero slots"), *Label);
+		for (int32 i = 0; i < 3; ++i)
+			AddAttackLocationToMap(
+				BaseIndex + i, Components[i], false, 0);
+		return;
+	}
+
+	if (TotalTokens < 3)
+	{
+		for (int32 i = 0; i < 3; ++i)
+		{
+			bool IsTokenAvailable = i < TotalTokens;
+			int32 TokensAvailable = IsTokenAvailable ? 1 : 0;
+			AddAttackLocationToMap(
+				BaseIndex + i, Components[i], IsTokenAvailable, TokensAvailable);
+		}
+		return;
+	}
 	
-	if (_mTotalAttackTokensPinner >= 3)
+	int32 Remainder = TotalTokens % 3;
+	int32 TokensPerSlot = TotalTokens / 3;
+
+	for (int32 i = 0; i < 3; ++i)
 	{
-		int32 RemainderTokens = _mTotalAttackTokensPinner % 3;
-		int32 TokensAllSlotsHave = _mTotalAttackTokensPinner / 3;
-	
-		if (RemainderTokens == 0)
-		{
-			AddAttackLocationToMap(3, SceneComponentEnemyAttackLocationLeftPinner, true, TokensAllSlotsHave);
-			AddAttackLocationToMap(4, SceneComponentEnemyAttackLocationMidPinner, true, TokensAllSlotsHave);
-			AddAttackLocationToMap(5, SceneComponentEnemyAttackLocationRightPinner, true, TokensAllSlotsHave);
-		}
-		else if (RemainderTokens == 1)
-		{
-			AddAttackLocationToMap(3, SceneComponentEnemyAttackLocationLeftPinner, true, TokensAllSlotsHave + 1);
-			AddAttackLocationToMap(4, SceneComponentEnemyAttackLocationMidPinner, true, TokensAllSlotsHave);
-			AddAttackLocationToMap(5, SceneComponentEnemyAttackLocationRightPinner, true, TokensAllSlotsHave);
-		}
-		else if (RemainderTokens == 2)
-		{
-			AddAttackLocationToMap(3, SceneComponentEnemyAttackLocationLeftPinner, true, TokensAllSlotsHave + 1);
-			AddAttackLocationToMap(4, SceneComponentEnemyAttackLocationMidPinner, true, TokensAllSlotsHave + 1);
-			AddAttackLocationToMap(5, SceneComponentEnemyAttackLocationRightPinner, true, TokensAllSlotsHave);
-		}
-	}
-	else if (_mTotalAttackTokensPinner == 2)
-	{
-		AddAttackLocationToMap(3, SceneComponentEnemyAttackLocationLeftPinner, true, 1);
-		AddAttackLocationToMap(4, SceneComponentEnemyAttackLocationMidPinner, true, 1);
-		AddAttackLocationToMap(5, SceneComponentEnemyAttackLocationRightPinner, false, 0);
-		UE_LOG(LogTemp, Error, TEXT("DESIGNER _mTotalAttackTokensPinner has only 2 slots"));
-	}
-	else if (_mTotalAttackTokensPinner == 1)
-	{
-		AddAttackLocationToMap(3, SceneComponentEnemyAttackLocationLeftPinner, true, 1);
-		AddAttackLocationToMap(4, SceneComponentEnemyAttackLocationMidPinner, false, 0);
-		AddAttackLocationToMap(5, SceneComponentEnemyAttackLocationRightPinner, false, 0);
-		UE_LOG(LogTemp, Error, TEXT("DESIGNER _mTotalAttackTokensPinner has only 1 slot"));
-	}
-	else if (_mTotalAttackTokensPinner == 0)
-	{
-		AddAttackLocationToMap(3, SceneComponentEnemyAttackLocationLeftPinner, false, 0);
-		AddAttackLocationToMap(4, SceneComponentEnemyAttackLocationMidPinner, false, 0);
-		AddAttackLocationToMap(5, SceneComponentEnemyAttackLocationRightPinner, false, 0);
-		UE_LOG(LogTemp, Error, TEXT("DESIGNER _mTotalAttackTokensPinner has zero slots"));
+		int32 TokensAvailable = TokensPerSlot + (i < Remainder ? 1 : 0);
+		AddAttackLocationToMap(
+			BaseIndex + i, Components[i], true, TokensAvailable);
 	}
 }
 
-void UAttackTokenGiverComponent::AddAttackLocationToMap(int32 Key, USceneComponent* SceneComponentAttackLocation,
+void UAttackTokenGiverComponent::AddAttackLocationToMap(
+	int32 Key, USceneComponent* SceneComponentAttackLocation,
 	bool InIsTokenAvailable, int32 TokensAvailable)
 {
 	if (!SceneComponentAttackLocation)
@@ -178,7 +140,7 @@ void UAttackTokenGiverComponent::AddAttackLocationToMap(int32 Key, USceneCompone
 
 
 bool UAttackTokenGiverComponent::HandleResevereTokenRequest(const FRequesterGeneralTokenData& RequesterTokenData,
-	const TArray<int32> RequestedIndexes, FRequesterReservationData& RequesterReservationData)
+const TArray<int32> RequestedIndexes,FRequesterReservationData& RequesterReservationData)
 {
 	bool IsTokenRequestSuccessful = false;
 		 for (int32 Index : RequestedIndexes)
@@ -186,7 +148,6 @@ bool UAttackTokenGiverComponent::HandleResevereTokenRequest(const FRequesterGene
 		 	if (_mmTokenDataAttackLocations.Contains(Index) == false) return false;
 		 	
 		 	FGiverAttackTokenData& GiverAttackTokenData = *_mmTokenDataAttackLocations.Find(Index);
-		 	
 		 		if (GiverAttackTokenData.IsTokenAvailable && GiverAttackTokenData.TokensAvailableInSlot <= RequesterTokenData.TokensRequiredForAction)
 		 		{
 		 			//Update Giver Data

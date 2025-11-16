@@ -153,7 +153,7 @@ void ACharacterBaseFrog::ReturnAllAttackTokensForAllTargets_Implementation()
 
 bool ACharacterBaseFrog::HasAttackToken_Implementation(AActor* AttackTarget)
 {
-	if (!AttackTarget || !AttackTokenRequesterComponent) return false;
+	if (!AttackTarget || !AttackTokenRequesterComponent)return false;
 	return AttackTokenRequesterComponent->HasAttackTokens(AttackTarget);
 }
 
@@ -479,14 +479,11 @@ void ACharacterBaseFrog::SetIsAttacking(bool InIsAttacking)
 
 
 
-void ACharacterBaseFrog::BindToOnAttackBehaviourFinishedDelegate_Implementation(UObject* ListenerObject,
-                                                                                const FName& FunctionNameToBind)
+void ACharacterBaseFrog::BindToOnAttackBehaviourFinishedDelegate_Implementation(
+	UObject* ListenerObject,const FName& FunctionNameToBind)
 {
-	if (!ListenerObject || FunctionNameToBind.IsNone())
-	{
-		return;
-	}
-
+	if (!ListenerObject || FunctionNameToBind.IsNone()) return;
+	
 	FScriptDelegate Delelate;
 	Delelate.BindUFunction(ListenerObject, FunctionNameToBind);
 	
@@ -494,16 +491,13 @@ void ACharacterBaseFrog::BindToOnAttackBehaviourFinishedDelegate_Implementation(
 	{
 		OnAttackBehaviourFinishedDelegate.AddUnique(Delelate);
 	}
-	
 }
 
-void ACharacterBaseFrog::UnbindFromAttackBehaviourFinishedDelegate_Implementation(UObject* ListenerObject,
- 	const FName& FunctionNameToUnBind)
+void ACharacterBaseFrog::UnbindFromAttackBehaviourFinishedDelegate_Implementation(
+	UObject* ListenerObject,const FName& FunctionNameToUnBind)
  {
- 	if (!ListenerObject || FunctionNameToUnBind.IsNone())
- 	{
- 		return;
- 	}
+ 	if (!ListenerObject || FunctionNameToUnBind.IsNone()) return;
+ 	
 	FScriptDelegate Delelate;
 	Delelate.BindUFunction(ListenerObject, FunctionNameToUnBind);
 	
@@ -611,8 +605,8 @@ void ACharacterBaseFrog::UnbindFromReachJumpApexDelegate_Implementation(UObject*
 		OnReachedJumpApex.Remove(Delelate);
 	}
 }
-void ACharacterBaseFrog::BindToLandedDelegate_Implementation(UObject* ListenerObject,
-	const FName&FunctionNameToBind)
+void ACharacterBaseFrog::BindToLandedDelegate_Implementation(
+	UObject* ListenerObject, const FName&FunctionNameToBind)
 {
 	if (!ListenerObject || FunctionNameToBind.IsNone()) return;
 	
@@ -623,8 +617,8 @@ void ACharacterBaseFrog::BindToLandedDelegate_Implementation(UObject* ListenerOb
 		LandedDelegate.AddUnique(Delelate);
 	}
 }
-void ACharacterBaseFrog::UnbindFromLandedDelegate_Implementation(UObject* ListenerObject,
-	const FName& FunctionNameToUnBind)
+void ACharacterBaseFrog::UnbindFromLandedDelegate_Implementation(
+	UObject* ListenerObject, const FName& FunctionNameToUnBind)
 {
 	if (!ListenerObject || FunctionNameToUnBind.IsNone()) return;
 	

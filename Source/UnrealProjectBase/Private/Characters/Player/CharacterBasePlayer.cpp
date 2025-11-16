@@ -75,22 +75,27 @@ void ACharacterBasePlayer::PopulateEnemyAttackLocationsArray(USceneComponent* En
     _maEnemyAttackLocations.Add(EnemyAttackLocation);
 }
 
-void ACharacterBasePlayer::HandleReturningToken_Implementation(int32 InTokensRequiredForAction, int32 InIndexOfReservedPoint)
+void ACharacterBasePlayer::HandleReturningToken_Implementation(
+    int32 InTokensRequiredForAction, int32 InIndexOfReservedPoint)
 {
     if (!AttackTokenGiverableComponent) return;
-    AttackTokenGiverableComponent->HandleReturningToken(InTokensRequiredForAction, InIndexOfReservedPoint);
+    AttackTokenGiverableComponent->HandleReturningToken(
+        InTokensRequiredForAction, InIndexOfReservedPoint);
 }
 
-bool ACharacterBasePlayer::HandleResevereTokenRequest_Implementation(
-    const FRequesterGeneralTokenData& RequesterTokenData, const TArray<int32>& RequestedIndexes,FRequesterReservationData& ReservationData)
+bool ACharacterBasePlayer::HandleResevereTokenRequest_Implementation(const FRequesterGeneralTokenData& RequesterTokenData,
+    const TArray<int32>& RequestedIndexes,FRequesterReservationData& ReservationData)
 {
     if (!AttackTokenGiverableComponent) return false;
+    
     return AttackTokenGiverableComponent->HandleResevereTokenRequest(RequesterTokenData,RequestedIndexes, ReservationData);    
 }
 
-FVector ACharacterBasePlayer::HandleAttackLocationRequest_Implementation(int32 InIndexOfReservedPoint)
+FVector ACharacterBasePlayer::HandleAttackLocationRequest_Implementation(
+    int32 InIndexOfReservedPoint)
 {
-    return AttackTokenGiverableComponent->HandleAttackLocationRequest(InIndexOfReservedPoint);
+    return AttackTokenGiverableComponent->HandleAttackLocationRequest(
+        InIndexOfReservedPoint);
 }
 
 bool ACharacterBasePlayer::GetIsBlastRadiusPowerupEnabled_Implementation()

@@ -15,6 +15,8 @@ class UNREALPROJECTBASE_API UAttackTokenGiverComponent : public UActorComponent
 public:	
 	UAttackTokenGiverComponent();
 	void InitializeComponent() override;
+
+	void SetUpAttachments(int32 BaseIndex, const TArray<USceneComponent*>& Components, int32 TotalTokens, const FString& Label);
 	
 	UPROPERTY(EditDefaultsOnly, Category="AttackTokenGiverComponent")
 	int32 _mTotalAttackTokensFlusher;
