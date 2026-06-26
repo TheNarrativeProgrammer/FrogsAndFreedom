@@ -94,11 +94,12 @@ AActor* UObjectPoolingSubsystem::SpawnActorFromPool(TSubclassOf<AActor> poolable
 	//Set Transform, location, Colluision, Tick, and RegisterComponents
 	//check if pooled actor inherits from pawn and if controller is attached. manually trigger possession of controller via setting default.
 	// if (poolByClass.ActorsInPoolOrLevel.Num() > 4)
-	if (ActorQueueWrapper->ActorsInPool.IsEmpty() == false)
+	if (!ActorQueueWrapper->ActorsInPool.IsEmpty())
 	{
 		AActor* pooledActor = nullptr;
 		if (_mdActorPools.FindOrAdd(poolableClass)->ActorsInPool.Dequeue(pooledActor))
 		{
+			if (!pooledActor) {return SpawnNewActor(poolableClass, spawnTransform);;}
 			//UE_LOG(LogTemp, Warning, TEXT("PROGRAMMER: SpawnActorFromPool has Actor in pool"));
 			//_mdActorsInGamePlay.FindOrAdd(poolableClass)->ActorsInGamePlay.Add(pooledActor);
 
@@ -256,6 +257,11 @@ AActor* UObjectPoolingSubsystem::SpawnActorFromPool(TSubclassOf<AActor> poolable
 			return pooledActor;
 		}
 	}
+	return SpawnNewActor(poolableClass, spawnTransform);
+}
+
+AActor* UObjectPoolingSubsystem::SpawnNewActor(TSubclassOf<AActor> poolableClass, const FTransform spawnTransform)
+{
 	//if no pool of this class type exist, or if zero actors remain in pool, then spawn a new actor
 	FActorSpawnParameters spawnParams;
 	spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
@@ -602,7 +608,7 @@ void UObjectPoolingSubsystem::OnLevelLoadReturnCurrentActorsInLevelToPool()
 			}
 
 			AActor* Actor = WeakActorPtr.Get();
-			if (Actor->HasAnyFlags(RF_BeginDestroyed) == true)
+			if (Actor->HasAnyFlags(RF_BeginDestroyed))
 			{
 				//UE_LOG(LogTemp, Warning, TEXT("PROGRAMMER: OnLevelLoadReturnCurrentActorsInLevelToPool tried returning actor marked for garbage"));
 				continue;
@@ -621,22 +627,22 @@ void UObjectPoolingSubsystem::OffloadPool()
 		{
 			continue;
 		}
-		while (!Pair.Value->ActorsInPool.IsEmpty() == false)
+		while (!Pair.Value->ActorsInPool.IsEmpty())
 		{
 			AActor* Actor = nullptr;
 			Pair.Value->ActorsInPool.Dequeue(Actor);
-			if ( IsValid(Actor) == false ||  Actor == nullptr)
+			if (!IsValid(Actor))
 			{
 				continue;
 			}
-			else if (HasAnyFlags(RF_BeginDestroyed) == true)
+			if (Actor->HasAnyFlags(RF_BeginDestroyed))
 			{
 				continue;;
 			}
 			Actor->Destroy();
 		}
 	}
-	_mdActorPools.Empty();
+	
 }
 
 void UObjectPoolingSubsystem::OnDeathClearPoolArrays()

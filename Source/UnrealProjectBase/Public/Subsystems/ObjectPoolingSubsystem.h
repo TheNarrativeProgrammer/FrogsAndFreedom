@@ -91,6 +91,9 @@ public:
 	UFUNCTION(BlueprintCallable, meta=(DeterminesOutputType="poolableClass"))
 	AActor* SpawnActorFromPool(TSubclassOf<AActor> poolableClass, const FTransform spawnTransform);
 
+	UFUNCTION(BlueprintCallable, meta=(DeterminesOutputType="poolableClass"))
+	AActor* SpawnNewActor(TSubclassOf<AActor> poolableClass, const FTransform spawnTransform);
+
 	/*ACTORTORETURN --> removes an actor from the _mdActorsInGamePlay map and adds it to the _mdActorPools.
 	 *The actors tick, physics, collision, and interaction are ENABLED
 	 *The actors location is set based on the _mdPoolLocations map.
