@@ -60,8 +60,16 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Method Of Starting Wave")
 	TEnumAsByte<EWaveTrigger> WaveTrigger = EWaveTrigger::EncounterStart;
 
+	UPROPERTY(VisibleAnywhere, Transient, Category="Method Of Starting Wave")
+	bool bIsWaveTriggerFrogPopulation = false;
+
+	void UpdateDerivedFlags()
+	{
+		bIsWaveTriggerFrogPopulation = (WaveTrigger == EWaveTrigger::FrogPopulation);
+	}
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Encounter",
-		meta=(EditCondition="IsWaveTriggerFrogPopulation", EditConditionHides))
+		meta=(EditCondition="bIsWaveTriggerFrogPopulation", EditConditionHides))
 	int32 MinPopulationToTriggerSpawningNextWave = 0;
 
 	UPROPERTY()
@@ -69,9 +77,6 @@ public:
 
 	UPROPERTY()
 	bool CanWaveSpawn = false;
-	
-	bool IsWaveTriggerFrogPopulation() const {return WaveTrigger == FrogPopulation;}
-	
 };
 
 
@@ -108,6 +113,8 @@ public:
 	
 #if WITH_EDITOR
 	virtual EDataValidationResult IsDataValid(class FDataValidationContext& Context) const override;
+
+	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
 
 #endif
 	
