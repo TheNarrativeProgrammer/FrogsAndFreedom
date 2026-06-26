@@ -28,12 +28,16 @@ void AEncounterTrigger::OnEncounterEnd_Implementation(
 	UPrimitiveComponent* OverlappedComponent,AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
+	if (!OtherActor) return;
 	if (_mCountCompletedObjectives >= _mCountTotalObjectives)
 	{
 		if (OtherActor->Implements<UPlayerCharacterable>())
 		{
-			TriggerBox->OnComponentEndOverlap.RemoveDynamic(
+			if (TriggerBox)
+			{
+				TriggerBox->OnComponentEndOverlap.RemoveDynamic(
 				this, &AEncounterTrigger::OnEncounterEnd);
+			}
 			UnregisterFromEncounterManager();
 		}
 	}
@@ -150,10 +154,13 @@ void AEncounterTrigger::SetObjectiveCountsToZero()
 void AEncounterTrigger::BeginPlay()
 {
 	Super::BeginPlay();
-	TriggerBox->OnComponentBeginOverlap.AddUniqueDynamic(
-		this, &AEncounterTrigger::OnEncounterBegin);
-	TriggerBox->OnComponentEndOverlap.AddUniqueDynamic(
-		this, &AEncounterTrigger::OnEncounterEnd);
+	if (TriggerBox)
+	{
+		TriggerBox->OnComponentBeginOverlap.AddUniqueDynamic(
+			this, &AEncounterTrigger::OnEncounterBegin);
+		TriggerBox->OnComponentEndOverlap.AddUniqueDynamic(
+			this, &AEncounterTrigger::OnEncounterEnd);
+	}
 
 	SetObjectiveCountsToZero();
 	SetCountOfTotalObjectives();
@@ -183,13 +190,16 @@ void AEncounterTrigger::OnEncounterBegin_Implementation(
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
 	bool bFromSweep,const FHitResult& SweepResult)
 {
-		if (OtherActor->Implements<UPlayerCharacterable>())
+	if (!OtherActor) return;
+	if (OtherActor->Implements<UPlayerCharacterable>())
+	{
+		if (TriggerBox)
 		{
 			TriggerBox->OnComponentBeginOverlap.RemoveDynamic(
-				this, &AEncounterTrigger::OnEncounterBegin);
-			
-			RegisterWithEncounterManager();
+			this, &AEncounterTrigger::OnEncounterBegin);
 		}
+		RegisterWithEncounterManager();
+	}
 }
 
 void AEncounterTrigger::RegisterWithEncounterManager()
