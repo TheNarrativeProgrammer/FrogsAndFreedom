@@ -13,7 +13,14 @@ void ACharacterBaseFrogTank::OnPoolActorActivated_Implementation()
 	Super::OnPoolActorActivated_Implementation();
 	
 	IPoolable::OnPoolActorActivated_Implementation();
-	DelegateBindingComponentFrogTank->GameStateEventManager->OnCharacterBaseFrogSpawnedFromPoolDelegate.Broadcast();
+	if (IsValid((DelegateBindingComponentFrogTank)))
+	{
+		if (DelegateBindingComponentFrogTank->GameStateEventManager)
+		{
+			DelegateBindingComponentFrogTank->GameStateEventManager->OnCharacterBaseFrogSpawnedFromPoolDelegate.Broadcast();
+		}
+		
+	}
 }
 
 

@@ -55,6 +55,10 @@ void ACharacterBaseFrog::Landed(const FHitResult& Hit)
 void ACharacterBaseFrog::OnPoolActorActivated_Implementation()
 {
 	mIsDead = false;
+	mIsGrounded = false;
+	_mIsFlailing = false;
+	_mIsEngaged = false;
+	TargetActor = nullptr;
 	IPoolable::OnPoolActorActivated_Implementation();
 }
 

@@ -842,14 +842,17 @@ void UEncounterManagerComponent::SpawnActorFromBatch()
 				//if spawned Actor is a tank, pass a ptr of the Tank to the ActorSpawner. This is used to determine if force field applied
 				if (ACharacterBaseFrogTank* CharacterBaseFrogTank = Cast<ACharacterBaseFrogTank>(pooledActor))
 				{
-					ActorSpawnerBaseFrogMachineMostRecentTankPlaced->SetActorIDTankAtThisSpawner(CharacterBaseFrogTank->GetUniqueID());
-					ActorSpawnerBaseFrogMachineMostRecentTankPlaced->OnSetTankSetForceFieldLocation();
-					//ActorSpawnerBaseFrogMachineMostRecentTankPlaced->SetTankLocation(CharacterBaseFrogTank->GetTransform());
-					CharacterBaseFrogTank->SendLocation();
-					//reset persistent reference to the last ActorSpawnerBaseWithTank. There are null checks to see if this is valid
-					//and it's updated only when a new tank spawns at a ActorSpawnerBaseMachine.
-					//If there are not enough ActorSpawnerBaseMachine with CanSpawnTank set to true, then no further tanks are spawned.
-					ActorSpawnerBaseFrogMachineMostRecentTankPlaced = nullptr;
+					if (IsValid(ActorSpawnerBaseFrogMachineMostRecentTankPlaced))
+					{
+						ActorSpawnerBaseFrogMachineMostRecentTankPlaced->SetActorIDTankAtThisSpawner(CharacterBaseFrogTank->GetUniqueID());
+						ActorSpawnerBaseFrogMachineMostRecentTankPlaced->OnSetTankSetForceFieldLocation();
+						CharacterBaseFrogTank->SendLocation();
+						//reset persistent reference to the last ActorSpawnerBaseWithTank. There are null checks to see if this is valid
+						//and it's updated only when a new tank spawns at a ActorSpawnerBaseMachine.
+						//If there are not enough ActorSpawnerBaseMachine with CanSpawnTank set to true, then no further tanks are spawned.
+						ActorSpawnerBaseFrogMachineMostRecentTankPlaced = nullptr;
+					}
+					
 				}
 			}
 			
