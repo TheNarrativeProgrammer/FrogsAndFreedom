@@ -65,6 +65,12 @@ void ACharacterBaseFrog::OnPoolActorActivated_Implementation()
 void ACharacterBaseFrog::OnPoolActorDeactivated_Implementation()
 {
 	IPoolable::OnPoolActorDeactivated_Implementation();
+	// Clear stale behaviour-delegate bindings so a reused (pooled) enemy never broadcasts to a previous life's BTT listeners.
+	OnAttackBehaviourFinishedDelegate.Clear();
+	OnChargeBehaviourFinishedDelegate.Clear();
+	OnInvestigateBehaviourFinishedDelegate.Clear();
+	OnReachedJumpApex.Clear();
+	LandedDelegate.Clear();
 	if (!AttackTokenRequesterComponent) return;
 	AttackTokenRequesterComponent->ReturnAllAttackTokensForAllTargets();
 	AttackTokenRequesterComponent->ClearTokenMap();
