@@ -641,7 +641,7 @@ FTransform APooledActorManager::GetTransformActorSpawner(FPooledClassSpawningDat
 			indexDecrement = indexDecrement % _maActorSpawnerBaseVent.Num();
 		}
 		
-		for (int i = indexDecrement; i <= _maActorSpawnerBaseVent.Num(); i++)
+		for (int i = indexDecrement; i < _maActorSpawnerBaseVent.Num(); i++)
 		{
 			if (AActorSpawnerBaseVent* ActorSpawnerBase = Cast<AActorSpawnerBaseVent>(_maActorSpawnerBaseVent[i]))
 			{
