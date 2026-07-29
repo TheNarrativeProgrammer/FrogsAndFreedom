@@ -13,6 +13,13 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHealthDepleatedDecrementCountSign
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnHealthChangedSignature, float, NewHealth, float, OldHealth);
 
 
+UENUM(BlueprintType)
+enum class EStartingHealth : uint8
+{
+	MaxHealth UMETA(DisplayName = "Max Health"),
+	DefaultHealth UMETA(DisplayName = "Default Health"),
+	
+};
 
 
 class UDamageType;
@@ -33,7 +40,12 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Health Stats")
 	float MaxHealth;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Health Stats")
+	float DefaultHealth = MaxHealth;
 public:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Health Stats")
+	EStartingHealth StartingHealth;
 	// UPROPERTY(EditDefaultsOnly, Category = "Health Stats")
 	// bool bShouldBroadcastIDOnDeath = false;
 	
