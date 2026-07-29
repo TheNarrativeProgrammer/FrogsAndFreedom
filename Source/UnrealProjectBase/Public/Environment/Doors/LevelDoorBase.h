@@ -28,6 +28,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Blueprintable, BlueprintReadWrite, Category = "Components")
 	TObjectPtr<UStaticMeshComponent> StaticMeshComponent;
 
+	UPROPERTY(EditDefaultsOnly, Blueprintable, BlueprintReadWrite, Category = "Components")
+	TObjectPtr<USceneComponent> SceneComponent;
+
 	
 	// FUNCTIONS - begin play
 	virtual void BeginPlay() override;

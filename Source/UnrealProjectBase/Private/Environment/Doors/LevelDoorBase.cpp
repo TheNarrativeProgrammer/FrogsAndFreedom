@@ -11,9 +11,12 @@ ALevelDoorBase::ALevelDoorBase()
 	PrimaryActorTick.bCanEverTick = false;
 
 	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComponent"));
+	SceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComponent"));
 	DelegateBindingComponentLevelDoor = CreateDefaultSubobject<UDelegateBindComponentLevelDoor>(TEXT("DelegateBindingComponentLevelDoor"));
 	//SceneComponentRoot = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComponentRoot"));
-	SetRootComponent(StaticMeshComponent);
+	
+	SetRootComponent(SceneComponent);
+	StaticMeshComponent->SetupAttachment(SceneComponent);
 }
 
 // Called when the game starts or when spawned
