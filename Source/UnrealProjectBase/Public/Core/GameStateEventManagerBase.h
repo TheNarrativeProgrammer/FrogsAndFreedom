@@ -75,6 +75,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnActorObjectiveCompletionReversedU
 	AObjectiveActorBase*, ObjectiveActorBase);
 //UI Iteract
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnIteractEndOverlapUpdateUISignature);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnTutorialEndTimerUpdateUISignature);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnHideTutorialMessageUpdateUISignature);
 //Match State - Paused, Unpaused, GameOver
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGameOverClearAllActiveTimersSignature);
@@ -220,6 +221,10 @@ class UNREALPROJECTBASE_API AGameStateEventManagerBase
 	//UI Iteract
 	UPROPERTY(BlueprintCallable, Blueprintable, BlueprintAssignable, Category = "Delegate UI")
 	FOnIteractEndOverlapUpdateUISignature OnIteractEndOverlapUpdateUIDelegate;
+
+	
+	UPROPERTY(BlueprintCallable, Blueprintable, BlueprintAssignable, Category = "Delegate UI")
+	FOnTutorialEndTimerUpdateUISignature  OnTutorialEndTimerUpdateUIDelegate;
 
 	UPROPERTY(BlueprintCallable, Blueprintable, BlueprintAssignable, Category = "Delegate UI")
 	FOnHideTutorialMessageUpdateUISignature OnHideTutorialMessageUpdateUIDelegate;
