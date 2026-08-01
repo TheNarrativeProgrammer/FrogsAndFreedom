@@ -10,14 +10,14 @@ UHealthComponent::UHealthComponent()
 {
 	PrimaryComponentTick.bCanEverTick = false;
 	bWantsInitializeComponent = true;
-	CurrentHealth = MaxHealth;
-	OldHealth = CurrentHealth;
-	StartingHealth = EStartingHealth::MaxHealth;
+	
 }
 
 void UHealthComponent::BeginPlay()
 {
 	Super::BeginPlay();
+	CurrentHealth = MaxHealth;
+	OldHealth = CurrentHealth;
 	if (StartingHealth == EStartingHealth::DefaultHealth)
 	{
 		OldHealth = CurrentHealth;
