@@ -117,6 +117,9 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void InteractMessageOff();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	bool CanInteract_Implementation();
 	
 protected:
 	virtual void BeginPlay() override;
@@ -124,6 +127,11 @@ protected:
 	UFUNCTION()
 	void SpawnAndSaveIdOfForceField();
 
+	UFUNCTION(BlueprintCallable)
+	void SetWidgetValues();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	TObjectPtr<AForceFieldBase> mForceFieldPtr = nullptr;
 	
 
 	//PROPERTIES - components

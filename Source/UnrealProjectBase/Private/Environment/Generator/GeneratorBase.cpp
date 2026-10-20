@@ -72,6 +72,7 @@ void AGeneratorBase::OnInteract_Implementation()
 				OnGeneratorInteractDelegate.Broadcast();
 		}
 	}
+	
 }
 
 void AGeneratorBase::ReverseInteractVisual_Implementation()
@@ -89,12 +90,20 @@ void AGeneratorBase::InteractMessageOff_Implementation()
 	IInteractable::InteractMessageOff_Implementation();
 }
 
+
+
+bool AGeneratorBase::CanInteract_Implementation_Implementation()
+{
+	return GetIsForceFieldActive() == false;
+}
+
 // Called when the game starts or when spawned
 void AGeneratorBase::BeginPlay()
 {
 	Super::BeginPlay();
 	SpawnAndSaveIdOfForceField();
 	GetWorld()->GetTimerManager().ClearAllTimersForObject(this);
+	SetWidgetValues();
 }
 
 void AGeneratorBase::SpawnAndSaveIdOfForceField()
@@ -109,10 +118,15 @@ void AGeneratorBase::SpawnAndSaveIdOfForceField()
 			if (AForceFieldBase* FoceForceFieldBase = Cast<AForceFieldBase>(Actor))
 			{
 				FoceForceFieldBase->SetIsActiveOnEncounterBegin(_mIsShieldActiveOnEncounterStart);
+				mForceFieldPtr = FoceForceFieldBase;
 			}
 			SetIsForceFieldActive(_mIsShieldActiveOnEncounterStart);
 		}
 	}
+}
+
+void AGeneratorBase::SetWidgetValues()
+{
 }
 
 
@@ -184,6 +198,13 @@ bool AGeneratorBase::GetIsForceFieldActive()
 void AGeneratorBase::OnObjectiveTimerCompleteStopSoundTimer()
 {
 	GetWorld()->GetTimerManager().ClearTimer(GeneratorSoundTimerHandle);
+
+	if (IsValid(mForceFieldPtr) == true && mForceFieldPtr)
+	{
+		mForceFieldPtr->DelegateBindComponentForceField->UnBindDelegates();
+		mForceFieldPtr->Destroy();
+	}
+	
 }
 
 
@@ -215,8 +236,8 @@ void AGeneratorBase::SetSoundTimer()
 void AGeneratorBase::PlayNoise()
 {
 	FVector Location = GetActorLocation();
-	UAISense_Hearing::ReportNoiseEvent(GetWorld(), Location, 1.0f,
-		Cast<AActor>(this), 0.0f, FName("GeneratorNoise"));
+	UAISense_Hearing::ReportNoiseEvent(GetWorld(), Location, 10000.0f,
+		Cast<AActor>(this), 1000.0f, FName("GeneratorNoise"));
 }
 
 int32 AGeneratorBase::GetForceFieldTag()
