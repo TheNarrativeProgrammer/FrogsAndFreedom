@@ -58,8 +58,9 @@ void UHealthComponent::UpdateHealth(float DeltaHealth)
 	
 	
 	
-	if (FMath::IsNearlyZero(CurrentHealth))
+	if (FMath::IsNearlyZero(CurrentHealth) && mIsDead == false)
 	{
+		mIsDead = true;
 		OnHealthDepletedDelegate.Broadcast();
 		OnHealthDepletedSelfRefDelegate.Broadcast(GetOwner());
 	}
@@ -69,7 +70,7 @@ void UHealthComponent::ResetHealthToDefault()
 {
 	CurrentHealth = MaxHealth;
 	OnHealthChangedDelegate.Broadcast(CurrentHealth, MaxHealth);
-	
+	mIsDead = false;
 	
 }
 
@@ -77,13 +78,14 @@ void UHealthComponent::ResetHealthToHalfOfDefault()
 {
 	CurrentHealth = (MaxHealth / 2);
 	OnHealthChangedDelegate.Broadcast(CurrentHealth, MaxHealth);
-	
+	mIsDead = false;
 }
 
 bool UHealthComponent::IsHealthDepleted()
 {
-	if (CurrentHealth <= 0.0f)
+	if (CurrentHealth <= 0.0f && mIsDead == false)
 	{
+		mIsDead = true;
 		return true;
 	}
 	return false;
@@ -96,7 +98,10 @@ void UHealthComponent::TakeDamage(AActor* DamagedActor,
 	OldHealth = CurrentHealth;
 	CurrentHealth = FMath::Clamp(CurrentHealth - Damage, 0.0f, MaxHealth);
 
-	OnHealthChangedDelegate.Broadcast(CurrentHealth, OldHealth);
+	if (mIsDead == false)
+	{
+		OnHealthChangedDelegate.Broadcast(CurrentHealth, OldHealth);
+	}
 	
 	if (IsHealthDepleted())
 	{

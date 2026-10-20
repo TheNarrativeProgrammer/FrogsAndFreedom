@@ -43,6 +43,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Health Stats")
 	float DefaultHealth = MaxHealth;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Health Stats")
+	bool mIsDead = false;
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Health Stats")
 	EStartingHealth StartingHealth = EStartingHealth::MaxHealth;
