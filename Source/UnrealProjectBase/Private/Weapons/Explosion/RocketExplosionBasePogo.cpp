@@ -7,6 +7,7 @@
 #include "Components/BoxComponent.h"
 #include "Interfaces/BPI_Destructible.h"
 #include "Interfaces/Forceable.h"
+#include "Interfaces/PlayerDamageable.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 ARocketExplosionBasePogo::ARocketExplosionBasePogo()
@@ -67,13 +68,25 @@ void ARocketExplosionBasePogo::IterateOverActorsCollisionDamage_Implementation()
 		ApplyDamageIfConditionsMet(ActorInlcude);
 	}
 
+	
 	//Force only destructibles. Launching the player is handled by different code.
 	TArray<AActor*> DestructiblesInDamageCollision = GetOverlappingActorsInCollision(ReturnValueDamage, _mLocationOfCollision, _mRadiusOrWidithOfCollisionDamage, ObjectTypeApplyForceInDamageSphere);
 	for (AActor* ForceableActor : DestructiblesInDamageCollision)
 	{
 		if (ForceableActor->Implements<UForceable>() && ForceableActor->Implements<UBPI_Destructible>())
 		{
-			IForceable::Execute_OnForceApplied(ForceableActor, _mLaunchForce, _mRadiusOrWidithOfCollisionDamage, GetActorLocation());
+			if (ForceableActor->Implements<UPlayerDamageable>() == true)
+			{
+				if (IPlayerDamageable::Execute_GetIsShielded(ForceableActor) == false)
+				{
+					IForceable::Execute_OnForceApplied(ForceableActor, _mLaunchForce, _mRadiusOrWidithOfCollisionDamage, GetActorLocation());
+				}
+			}
+			else
+			{
+				IForceable::Execute_OnForceApplied(ForceableActor, _mLaunchForce, _mRadiusOrWidithOfCollisionDamage, GetActorLocation());
+			}
+			
 		}
 	}
 	
