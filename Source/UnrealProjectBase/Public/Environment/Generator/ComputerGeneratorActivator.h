@@ -72,6 +72,9 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void ReverseInteractVisual();
 
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	bool CanInteract_Implementation();
+
 	UFUNCTION()
 	void OnHealthDepletedOfGeneratorForcceFieldChangeComputerState();
 

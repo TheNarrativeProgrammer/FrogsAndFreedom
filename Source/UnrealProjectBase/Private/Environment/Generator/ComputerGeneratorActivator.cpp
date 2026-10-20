@@ -92,6 +92,12 @@ void AComputerGeneratorActivator::SetLeverState(TEnumAsByte<eLeverState> LeverSt
 
 
 
+
+bool AComputerGeneratorActivator::CanInteract_Implementation_Implementation()
+{
+	return true;
+}
+
 void AComputerGeneratorActivator::OnHealthDepletedOfGeneratorForcceFieldChangeComputerState()
 {
 	SetLeverState(eLeverState::UpAndPullable);
