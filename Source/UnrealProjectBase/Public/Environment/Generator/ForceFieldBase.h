@@ -32,9 +32,7 @@ public IAttackTokenGiverable
 public:	
 	// Sets default values for this actor's properties
 	AForceFieldBase();
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
-	UNiagaraComponent* NiagaraComponentForceField;
+	
 
 	UPROPERTY(EditDefaultsOnly, Blueprintable, BlueprintReadWrite, Category = "Components")
 	TObjectPtr<UAttackTokenGiverComponent> AttackTokenGiverableComponent;
@@ -67,6 +65,9 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 	FGenericTeamId TeamId;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	TObjectPtr<UDelegateBindComponentForceField> DelegateBindComponentForceField;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -77,8 +78,7 @@ protected:
 	UFUNCTION()
 	void Death();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
-	TObjectPtr<UDelegateBindComponentForceField> DelegateBindComponentForceField;
+	
 
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")

@@ -14,7 +14,7 @@ AForceFieldBase::AForceFieldBase()
 	SceneComponentRoot = CreateDefaultSubobject<USceneComponent>("SceneComponentRo");
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>("HealthComponent");
 	CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>("SphereComponentForceField");
-	NiagaraComponentForceField = CreateDefaultSubobject<UNiagaraComponent>("NiagaraComponentForceField");
+	// NiagaraComponentForceField = CreateDefaultSubobject<UNiagaraComponent>("NiagaraComponentForceField");
 	
 	NiagaraComponentCracks = CreateDefaultSubobject<UNiagaraComponent>("NiagaraComponentCracks");
 	DelegateBindComponentForceField = CreateDefaultSubobject<UDelegateBindComponentForceField>("DelegateBindComponentForceField");
@@ -30,7 +30,7 @@ AForceFieldBase::AForceFieldBase()
 	//Set root and attachments
 	SetRootComponent(SceneComponentRoot);
 	CapsuleComponent->SetupAttachment(SceneComponentRoot);
-	NiagaraComponentForceField->SetupAttachment(SceneComponentRoot);
+	// NiagaraComponentForceField->SetupAttachment(SceneComponentRoot);
 	NiagaraComponentCracks->SetupAttachment(SceneComponentRoot);
 
 	// SceneComponentEnmenyAttackLocationTop->SetupAttachment(SceneComponentRoot);
@@ -68,10 +68,10 @@ void AForceFieldBase::BeginPlay()
 			this, &AForceFieldBase::Death);
 	}
 
-	if (NiagaraComponentForceField)
-	{
-		NiagaraComponentForceField->SetVariableFloat(FName("Radius"), RadiusNiagara);
-	}
+	// if (NiagaraComponentForceField)
+	// {
+	// 	NiagaraComponentForceField->SetVariableFloat(FName("Radius"), RadiusNiagara);
+	// }
 	
 }
 
@@ -121,7 +121,7 @@ void AForceFieldBase::OnEncounterStartBroadcastActorInitializationDelegates_Impl
 	if (DelegateBindComponentForceField->GameStateEventManager)
 	{
 		
-		DelegateBindComponentForceField->GameStateEventManager->OnEncounterStartForceFieldInitalizedIDHealthDelegate.Broadcast(GetUniqueID(), HealthComponent->GetCurrentHealth(), HealthComponent->GetMaxHealth());
+		// DelegateBindComponentForceField->GameStateEventManager->OnEncounterStartForceFieldInitalizedIDHealthDelegate.Broadcast(GetUniqueID(), HealthComponent->GetCurrentHealth(), HealthComponent->GetMaxHealth());
 		//NOTE: this function needs to be implemented b/c of the interface, but b/cc this actor is spawned, it misses the
 		//broadcast of the encounter starting. Use OnBeginplay to send initialize delegates.
 		
@@ -149,11 +149,19 @@ void AForceFieldBase::OnHealthChangeSendIdAndHealth(
 //Functions - Health restore
 void AForceFieldBase::RestoreHealth()
 {
-	if (HealthComponent->GetCurrentHealth() < HealthComponent->GetMaxHealth() / 2)
+	if (HealthComponent)
 	{
-		HealthComponent->ResetHealthToHalfOfDefault();
+		HealthComponent->ResetHealthToDefault();
+		// if (HealthComponent->GetCurrentHealth() < HealthComponent->GetMaxHealth() / 2)
+		// {
+		// 	HealthComponent->ResetHealthToHalfOfDefault();
+		// }
+		// else if (HealthComponent->GetCurrentHealth() / HealthComponent->GetMaxHealth() >= 0.90)
+		// {
+		// 	HealthComponent->ResetHealthToDefault();
+		// }
+		
 	}
-	
 }
 
 
@@ -229,7 +237,12 @@ FVector AForceFieldBase::HandleAttackLocationRequest_Implementation(int32 InInde
 
 void AForceFieldBase::OnEncounterEndDestroyThis_Implementation()
 {
+	if (DelegateBindComponentForceField)
+	{
+		DelegateBindComponentForceField->UnBindDelegates();
+	}
 	Destroy();
+	
 }
 
 
