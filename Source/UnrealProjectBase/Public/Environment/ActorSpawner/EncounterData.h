@@ -63,6 +63,9 @@ public:
 	UPROPERTY(VisibleAnywhere, Transient, Category="Method Of Starting Wave")
 	bool bIsWaveTriggerFrogPopulation = false;
 
+	UPROPERTY(VisibleAnywhere, Transient, Category="Info")
+	int totalSpawnedUpToCurrentWave = 0;
+
 	void UpdateDerivedFlags()
 	{
 		bIsWaveTriggerFrogPopulation = (WaveTrigger == EWaveTrigger::FrogPopulation);

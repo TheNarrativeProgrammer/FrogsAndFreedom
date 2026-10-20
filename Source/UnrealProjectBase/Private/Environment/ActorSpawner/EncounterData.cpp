@@ -86,9 +86,20 @@ void UEncounterData::PostEditChangeProperty(FPropertyChangedEvent& PropertyChang
 {
 	Super::PostEditChangeProperty(PropertyChangedEvent);
 
+	int previousTotal = 0;
 	for (FEncounterWaveData& WaveData : EncounterWaveData)
 	{
 		WaveData.UpdateDerivedFlags();
+		WaveData.totalSpawnedUpToCurrentWave = 0;
+		
+		for (auto keyValue : WaveData.EncounterSpawnMap)
+		{
+			WaveData.totalSpawnedUpToCurrentWave += keyValue.Value.QuantitySpawnedInWave;
+		}
+		WaveData.totalSpawnedUpToCurrentWave += previousTotal;
+		previousTotal = WaveData.totalSpawnedUpToCurrentWave;
+		
+		
 	}
 }
 #endif
