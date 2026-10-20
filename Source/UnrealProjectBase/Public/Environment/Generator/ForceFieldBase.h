@@ -33,56 +33,16 @@ public:
 	// Sets default values for this actor's properties
 	AForceFieldBase();
 	
-
+//PROPERTIES
+	//components
 	UPROPERTY(EditDefaultsOnly, Blueprintable, BlueprintReadWrite, Category = "Components")
 	TObjectPtr<UAttackTokenGiverComponent> AttackTokenGiverableComponent;
-
-	//Function - inherits from IGenericTeamAgentInterface. IdNumber is public and is used to change the TeamId variable
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
-	int32 IdNumber;
-
-	virtual FGenericTeamId GetGenericTeamId() const { return TeamId; }
-	
-
-	UFUNCTION()
-	void RestoreHealth();
-
-	// UFUNCTION()
-	// void PopulateEnemyAttackLocationsArray(USceneComponent* EnemyAttackLocation);
-
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void OnEncounterStartBroadcastActorInitializationDelegates();
-	//
-	// UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	// TArray<FVector> GetEnemyAttackLocations();
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GamePlayTagContainer")
-	FGameplayTagContainer GameplayTagContainer;
-
-	void GetOwnedGameplayTags(FGameplayTagContainer& TagContainer) const;
-
-	//PROPERTIES - team ID for GenericTeamAgentInterface
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
-	FGenericTeamId TeamId;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	TObjectPtr<UDelegateBindComponentForceField> DelegateBindComponentForceField;
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void OnBeginplayBroadcastActorInitializationDelegates();
-	
-	UFUNCTION()
-	void Death();
-
-	
-
-	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
-	UNiagaraComponent* NiagaraComponentCracks;
+	TObjectPtr<UNiagaraComponent> NiagaraComponentCracks;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	TObjectPtr<UCapsuleComponent> CapsuleComponent;
@@ -90,49 +50,76 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	TObjectPtr<USceneComponent> SceneComponentRoot;
 
+protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
-	UHealthComponent* HealthComponent;
+	TObjectPtr<UHealthComponent> HealthComponent;
 
+	
+	//IdNumber is public and is used to change the TeamId variable
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
+	int32 IdNumber;
+
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GamePlayTagContainer")
+	FGameplayTagContainer GameplayTagContainer;
+
+protected:
+	//force field
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	bool _mIsForceFieldActive = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Radius Niagara")
 	float RadiusNiagara = 600;
 
-	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
-	// TObjectPtr<USceneComponent> SceneComponentEnmenyAttackLocationTop;
-	//
-	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
-	// TObjectPtr<USceneComponent> SceneComponentEnmenyAttackLocationBottom;
-	//
-	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
-	// TObjectPtr<USceneComponent> SceneComponentEnmenyAttackLocationLeft;
-	//
-	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
-	// TObjectPtr<USceneComponent> SceneComponentEnmenyAttackLocationRight;
-
-	//PROPERIES - enemy attack location
-	UPROPERTY()
-	TArray<USceneComponent*> _maEnemyAttackLocations;
-
-
-	
-
-public:	
-
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Test")
 	int32 _mForceFieldID;
 
-	UFUNCTION(BlueprintCallable)
-	UHealthComponent* GetHealthComponent();
+	// enemy attack location
+	UPROPERTY()
+	TArray<USceneComponent*> _maEnemyAttackLocations;
 	
+	//team ID for GenericTeamAgentInterface
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	FGenericTeamId TeamId;
 	
 
+//FUNCTIONS
+public:
+	//getters and setters
+	virtual FGenericTeamId GetGenericTeamId() const { return TeamId; }
+
+	void GetOwnedGameplayTags(FGameplayTagContainer& TagContainer) const;
+
+	UFUNCTION(BlueprintCallable)
+	UHealthComponent* GetHealthComponent();
+
+	//health
+	UFUNCTION()
+	void RestoreHealth();
+
+protected:
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void OnBeginplayBroadcastActorInitializationDelegates();
+
+	UFUNCTION()
+	void Death();
+
+	
+public:
+	//delegate broadcast
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void OnEncounterStartBroadcastActorInitializationDelegates();
+
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+
+public:	
+	
 	UFUNCTION()
 	void OnHealthChangeSendIdAndHealth(float NewHealth, float OldHealth);
 	
-
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void OnEncounterEndDestroyThis();
 	
@@ -142,7 +129,6 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void ActivateComponents();
 	
-
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void OnGeneratorInteractRestoreHealthAndActivateIfIdMatches(int32 ActorID);
 	

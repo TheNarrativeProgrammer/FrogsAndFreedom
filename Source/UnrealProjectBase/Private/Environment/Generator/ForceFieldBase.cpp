@@ -67,35 +67,8 @@ void AForceFieldBase::BeginPlay()
 		HealthComponent->OnHealthDepletedDelegate.AddUniqueDynamic(
 			this, &AForceFieldBase::Death);
 	}
-
-	// if (NiagaraComponentForceField)
-	// {
-	// 	NiagaraComponentForceField->SetVariableFloat(FName("Radius"), RadiusNiagara);
-	// }
-	
 }
 
-
-//Functions - Populate Attack locations Array and Getter for Arrat.
-// void AForceFieldBase::PopulateEnemyAttackLocationsArray(USceneComponent* EnemyAttackLocation)
-// {
-// 	_maEnemyAttackLocations.Add(EnemyAttackLocation);
-// 	
-// }
-
-// TArray<FVector> AForceFieldBase::GetEnemyAttackLocations_Implementation()
-// {
-// 	IEnemyDamageable::GetEnemyAttackLocations_Implementation();
-// 	TArray<FVector> AttackLocations;
-// 	for (USceneComponent* SceneComponent : _maEnemyAttackLocations)
-// 	{
-// 		AttackLocations.Add(SceneComponent->GetComponentLocation());
-// 	}
-// 	return AttackLocations;
-// }
-
-
-//Functions - Send event
 void AForceFieldBase::OnBeginplayBroadcastActorInitializationDelegates_Implementation()
 {
 	IDelegateBindBroadcastable::OnBeginplayBroadcastActorInitializationDelegates_Implementation();
@@ -108,24 +81,12 @@ void AForceFieldBase::Death()
 	DelegateBindComponentForceField->GameStateEventManager->FOnForceFieldDeathDelegate.Broadcast();
 }
 
-// void AForceFieldBase::OnHealthChangeSendHealth(float CurrentHealth, float OldHealth)
-// {
-// 	DelegateBindComponentForceField->GameStateEventManager->OnForceFieldHealthChangeDelegate.Broadcast(CurrentHealth, OldHealth);
-// }
 
 
 
 void AForceFieldBase::OnEncounterStartBroadcastActorInitializationDelegates_Implementation()
 {
 	IDelegateBindBroadcastable::OnEncounterStartBroadcastActorInitializationDelegates_Implementation();
-	if (DelegateBindComponentForceField->GameStateEventManager)
-	{
-		
-		// DelegateBindComponentForceField->GameStateEventManager->OnEncounterStartForceFieldInitalizedIDHealthDelegate.Broadcast(GetUniqueID(), HealthComponent->GetCurrentHealth(), HealthComponent->GetMaxHealth());
-		//NOTE: this function needs to be implemented b/c of the interface, but b/cc this actor is spawned, it misses the
-		//broadcast of the encounter starting. Use OnBeginplay to send initialize delegates.
-		
-	}
 }
 
 
@@ -145,30 +106,17 @@ void AForceFieldBase::OnHealthChangeSendIdAndHealth(
 	}
 }
 
-
-//Functions - Health restore
 void AForceFieldBase::RestoreHealth()
 {
 	if (HealthComponent)
 	{
 		HealthComponent->ResetHealthToDefault();
-		// if (HealthComponent->GetCurrentHealth() < HealthComponent->GetMaxHealth() / 2)
-		// {
-		// 	HealthComponent->ResetHealthToHalfOfDefault();
-		// }
-		// else if (HealthComponent->GetCurrentHealth() / HealthComponent->GetMaxHealth() >= 0.90)
-		// {
-		// 	HealthComponent->ResetHealthToDefault();
-		// }
-		
 	}
 }
 
 
-//Functions - Deactivate and Activate 
 void AForceFieldBase::DeactivateComponents_Implementation()
 {
-
 	CapsuleComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	SetIsForceFieldActive(false);
 }
@@ -180,7 +128,6 @@ void AForceFieldBase::ActivateComponents_Implementation()
 }
 
 
-//Fucntion - Generator Interact
 void AForceFieldBase::OnGeneratorInteractRestoreHealthAndActivateIfIdMatches_Implementation(int32 ActorID)
 {
 	if (ActorID == GetUniqueID())
@@ -190,8 +137,6 @@ void AForceFieldBase::OnGeneratorInteractRestoreHealthAndActivateIfIdMatches_Imp
 	}
 }
 
-
-//Funtions - Set and Get _mIsForceFieldActive
 void AForceFieldBase::SetIsForceFieldActive(bool IsForceFieldActive)
 {
 	_mIsForceFieldActive = IsForceFieldActive;
@@ -203,14 +148,11 @@ bool AForceFieldBase::GetIsForceFieldActive()
 }
 
 
-//Fucntion - Encounter start and Encounter End
 void AForceFieldBase::SetIsActiveOnEncounterBegin(bool InIsActiveOnEncounterBegin)
 {
 	if (InIsActiveOnEncounterBegin == true)
 	{
 		ActivateComponents();
-		// DelegateBindComponentForceField->GameStateEventManager->
-		// 	OnGeneratorActiveOnEncounterStartSendForceFieldIDDelegate.Broadcast(GetUniqueID());
 	}
 	else
 	{
@@ -242,7 +184,6 @@ void AForceFieldBase::OnEncounterEndDestroyThis_Implementation()
 		DelegateBindComponentForceField->UnBindDelegates();
 	}
 	Destroy();
-	
 }
 
 
