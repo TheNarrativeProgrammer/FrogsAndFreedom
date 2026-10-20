@@ -36,13 +36,24 @@ void ADoorProgressFloodLights::AssignTimeToTurnOnLight(float TimeLengthObjective
 	int32 index = arrayLength -1;
 	for (auto& LightData : _aLightDatas)
 	{
-		LightData.TimeToTurnOnLight = (TimeLengthObjectiveGeneratorDefence / arrayLength) * index;
+		if (index <= 0)
+		{
+			LightData.TimeToTurnOnLight = 1;
+		}
+		else
+		{
+			LightData.TimeToTurnOnLight = (TimeLengthObjectiveGeneratorDefence / arrayLength) * index;
+		}
 		index--;
 	}
 }
 
 void ADoorProgressFloodLights::CheckIfLightCanTurnOn(float RemainingTime)
 {
+if (_aLightDatas.IsValidIndex(indexToCheck) == false)
+{
+	return;
+}
 	if (RemainingTime > _aLightDatas[indexToCheck].TimeToTurnOnLight ||
 		_aLightDatas[indexToCheck].IsTurnedOn == true)
 	{
@@ -55,6 +66,10 @@ void ADoorProgressFloodLights::TurnOnLight_Implementation(
 	UStaticMeshComponent* StaticMeshComponentLight,
 	int32 IndexToTurnOn)
 {
+	if (_aLightDatas.IsValidIndex(IndexToTurnOn) == false)
+	{
+		return;
+	}
 	_aLightDatas[IndexToTurnOn].IsTurnedOn = true;
 	indexToCheck++;
 }
