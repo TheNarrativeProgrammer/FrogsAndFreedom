@@ -23,6 +23,15 @@ AEncounterTrigger::AEncounterTrigger()
 
 }
 
+FGameplayTag AEncounterTrigger::GetCurrentlyActiveWave()
+{
+	if (mEncounterManagerComponent && IsValid(mEncounterManagerComponent) && mEncounterManagerComponent->IsActive())
+	{
+		return mEncounterManagerComponent->CurrentActiveWave;
+	}
+	return DefaultWave;
+}
+
 
 void AEncounterTrigger::OnEncounterEnd_Implementation(
 	UPrimitiveComponent* OverlappedComponent,AActor* OtherActor,
@@ -212,6 +221,7 @@ void AEncounterTrigger::RegisterWithEncounterManager()
 			UEncounterManagerComponent>())
 		{
 			EncounterManager->RegisterEncounter(this);
+			mEncounterManagerComponent = EncounterManager;
 		}
 	}
 }

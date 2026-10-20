@@ -5,12 +5,14 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "GameplayTagContainer.h"
+#include "Components/EncounterManagerComponent.h"
 #include "Components/BindComponents/DelegateBindComponentEncountrTrg.h"
 #include "EncounterTrigger.generated.h"
 
 class UBoxComponent;
 class UEncounterData;
 class AObjectiveActorBase;
+class EncounterManagerComponent;
 
 UCLASS(Blueprintable, BlueprintType)
 class UNREALPROJECTBASE_API AEncounterTrigger : public AActor
@@ -31,11 +33,12 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	TObjectPtr<UBoxComponent> TriggerBox;
 	
+	UFUNCTION(BlueprintCallable)
+	FGameplayTag GetCurrentlyActiveWave();
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<UEncounterManagerComponent> mEncounterManagerComponent;
 	
-
-	
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Encounter", meta = (ExposeFunctionCategories="Wave"))
 	FGameplayTag DefaultWave;
 
@@ -71,11 +74,7 @@ public:
 
 	UFUNCTION()
 	void SetCountOfTotalObjectives();
-
 	
-	// UFUNCTION()
-	// void DecreaseCountOfCompletedObjectives();
-
 	UFUNCTION()
 	void IfAllObjectivesCompeleteThenBroadcast();
 
@@ -109,8 +108,6 @@ protected:
 
 	UFUNCTION()
 	void UnregisterFromEncounterManager();
-
-	
 
 public:	
 	// Called every frame
