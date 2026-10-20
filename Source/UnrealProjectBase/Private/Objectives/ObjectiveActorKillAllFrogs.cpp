@@ -35,6 +35,15 @@ void AObjectiveActorKillAllFrogs::StartObjective_Implementation()
 	// {
 	// 	GameStateEventManager->OnActorStateChangeUpdateUIDelegate.Broadcast();
 	// }
+	if (DelegateBindComponentObjKillAll)
+	{
+		if (DelegateBindComponentObjKillAll->GameStateEventManager)
+		{
+			DelegateBindComponentObjKillAll->GameStateEventManager->OnKillAllFrogsStartedSignature.Broadcast();
+		}
+	}
+	
+
 }
 
 void AObjectiveActorKillAllFrogs::CompleteObjectiveBroadcast_Implementation()
