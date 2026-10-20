@@ -31,3 +31,26 @@ void UDelegateBindComponentForceField::BindDelegates()
 		}
 	}
 }
+
+void UDelegateBindComponentForceField::UnBindDelegates()
+{
+	if (GameStateEventManager)
+	{
+		if (AForceFieldBase* ForceFieldOwner = Cast<AForceFieldBase>(GetOwner()))
+		{
+			GameStateEventManager->OnGeneratorInteractSendForceFieldIDDelegate.RemoveDynamic(
+				ForceFieldOwner,
+				&AForceFieldBase::OnGeneratorInteractRestoreHealthAndActivateIfIdMatches);
+			
+			GameStateEventManager->OnEncounterStartedDelegate.RemoveDynamic(
+				ForceFieldOwner,
+				&AForceFieldBase::OnEncounterStartBroadcastActorInitializationDelegates);
+			
+			GameStateEventManager->FOnEncounterEndedDelegate.RemoveDynamic(
+				ForceFieldOwner, &AForceFieldBase::OnEncounterEndDestroyThis);
+			
+			GameStateEventManager->FOnForceFieldDeathDelegate.RemoveDynamic(
+				ForceFieldOwner, &AForceFieldBase::DeactivateComponents);
+		}
+	}
+}

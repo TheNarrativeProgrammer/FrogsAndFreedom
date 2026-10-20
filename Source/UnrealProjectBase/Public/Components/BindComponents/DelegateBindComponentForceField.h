@@ -17,5 +17,7 @@ class UNREALPROJECTBASE_API UDelegateBindComponentForceField : public UDelegateB
 	virtual void BindDelegateFromBP();
 	
 	virtual void BindDelegates();
+public:
+	void UnBindDelegates();
 	
 };
