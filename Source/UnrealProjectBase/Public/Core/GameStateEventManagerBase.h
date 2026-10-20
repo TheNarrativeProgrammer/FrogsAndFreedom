@@ -39,6 +39,9 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGeneratorTimerManagerSecondElaspe
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGeneratorTimerManagerTimerStartSignature);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGeneratorTimerManagerTimerStarSendTotalTimeSignature,
 	float, TotalTime);
+
+//kill all frogs started
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnKillAllFrogsStartedSignature);
 //Generator
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGeneratorInteractSendForceFieldIDSignature,
 	int32, ActorUniqueID);
@@ -146,6 +149,11 @@ class UNREALPROJECTBASE_API AGameStateEventManagerBase
 
 	UPROPERTY(BlueprintCallable, Blueprintable, BlueprintAssignable, Category = "Delegates Generator Timer Manager")
 	FOnGeneratorTimerManagerTimerStarSendTotalTimeSignature OnGeneratorTimerManagerTimerStarSendTotalTimeDelegate;
+
+	//kill all frogs started
+	UPROPERTY(BlueprintCallable, Blueprintable, BlueprintAssignable, Category = "Delegates Generator Timer Manager")
+	FOnKillAllFrogsStartedSignature OnKillAllFrogsStartedSignature;
+	
 	//Generator
 	UPROPERTY(BlueprintCallable, Blueprintable, BlueprintAssignable, Category = "Delegates Computer Generator Activator")
 	FOnGeneratorInteractSendForceFieldIDSignature OnGeneratorInteractSendForceFieldIDDelegate;
