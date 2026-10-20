@@ -354,7 +354,7 @@ protected:
 
 	virtual void JumpSpecialToDestinationForwardBoost_Implementation(FVector DestinationLocation, float ZaxisOffset, float XaxisOffset) override;
 
-	virtual void ScaleJumpZVelocity_Implementation(int32 ScaleMultiplier) override;
+	virtual void ScaleJumpZVelocity_Implementation(float ScaleMultiplier) override;
 
 	virtual void ResetJumpZVelocityToDefault_Implementation() override;
 

@@ -279,11 +279,12 @@ void ACharacterBaseFrog::OnDeathReturnToPool()
 void ACharacterBaseFrog::Death()
 {
 	DelegateBindingComponentFrog->GameStateEventManager->OnCharacterBaseFrogDeathDelegate.Broadcast();
+
+	OnDeathReturnToPool();
 }
 
 void ACharacterBaseFrog::BindHealthComponent()
 {
-	HealthComponent->OnHealthDepletedDelegate.AddUniqueDynamic(this, &ACharacterBaseFrog::OnDeathReturnToPool);
 	HealthComponent->OnHealthDepletedDelegate.AddUniqueDynamic(this, &ACharacterBaseFrog::Death);
 }
 
@@ -440,7 +441,7 @@ void ACharacterBaseFrog::JumpSpecialToDestinationForwardBoost_Implementation(FVe
 }
 
 
-void ACharacterBaseFrog::ScaleJumpZVelocity_Implementation(int32 ScaleMultiplier)
+void ACharacterBaseFrog::ScaleJumpZVelocity_Implementation(float ScaleMultiplier)
 {
 	if (UCharacterMovementComponent* CharacterMovementComponent = GetCharacterMovement())
 	{
