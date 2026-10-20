@@ -47,6 +47,7 @@ void APoolInitalizerBase::InitalizePool(const FPoolOfClassData& poolOfClassData)
 void APoolInitalizerBase::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
+	
 	if (UObjectPoolingSubsystem* ObjectPoolingSubsystem = GetWorld()->GetGameInstance()->GetSubsystem<UObjectPoolingSubsystem>())
 	{
 		ObjectPoolingSubsystem->UnBindDelegates();

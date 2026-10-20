@@ -55,6 +55,8 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void InitalizePool(const FPoolOfClassData& poolOfClassData);
 
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
