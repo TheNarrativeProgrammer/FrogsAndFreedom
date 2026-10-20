@@ -99,7 +99,7 @@ public:
 	void JumpSpecialToDestinationForwardBoost(FVector DestinationLocation, float ZaxisOffset, float XaxisOffset);
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void ScaleJumpZVelocity(int32 ScaleMultiplier);
+	void ScaleJumpZVelocity(float ScaleMultiplier);
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void ResetJumpZVelocityToDefault();
