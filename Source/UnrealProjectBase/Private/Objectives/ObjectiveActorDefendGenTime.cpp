@@ -4,6 +4,7 @@
 #include "Objectives/ObjectiveActorDefendGenTime.h"
 #include "Kismet/GameplayStatics.h"
 #include "Environment/Generator/GeneratorTimerManager.h"
+#include"Environment/Generator/ForceFieldBase.h"
 
 AObjectiveActorDefendGenTime::AObjectiveActorDefendGenTime()
 {
