@@ -7,7 +7,7 @@
 #include "BasePickup.h"
 #include "HealthPickup.generated.h"
 
-UCLASS()
+UCLASS(Blueprintable, BlueprintType)
 class UNREALPROJECTBASE_API AHealthPickup : public ABasePickup
 {
 	GENERATED_BODY()
