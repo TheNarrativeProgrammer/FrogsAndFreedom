@@ -4,7 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+
 #include "BasePickup.generated.h"
+
+
+class UProjectileMovementComponent;
+
+
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPickedUpSignature);
 
@@ -31,6 +37,10 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = "Default")
 	FOnPickedUpSignature OnPickedUp;
+
+	/** Projectile movement component */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
+	UProjectileMovementComponent* ProjectileMovement;
 
 protected:
 	// Called when the game starts or when spawned
