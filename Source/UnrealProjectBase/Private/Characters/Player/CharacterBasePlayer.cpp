@@ -222,9 +222,13 @@ void ACharacterBasePlayer::OnBeginOverlapForInteractableToggleMessageOn(UPrimiti
 {
     if (OtherActor->Implements<UInteractable>())
     {
-        OverlapActorInteractable = OtherActor;
-        FRotator CurrentRotation = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)->GetCapsuleComponent()->GetComponentRotation().GetInverse();
-        IInteractable::Execute_InteractMessageOn(OtherActor, CurrentRotation);
+        if (IInteractable::Execute_CanInteract(OtherActor))
+        {
+            OverlapActorInteractable = OtherActor;
+            FRotator CurrentRotation = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)->GetCapsuleComponent()->GetComponentRotation().GetInverse();
+            IInteractable::Execute_InteractMessageOn(OtherActor, CurrentRotation);
+        }
+        
     }
 }
 
