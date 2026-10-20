@@ -33,5 +33,8 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void InteractMessageOff();
 
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	bool CanInteract();
+
 
 };
