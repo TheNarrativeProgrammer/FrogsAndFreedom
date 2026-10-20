@@ -51,7 +51,7 @@ void UPatrolRouteManagerComponent::AddEncounterPatrolRoutesToArrays(AActor* Acto
 	if (APatrolRouteBase* PatrolRouteBase = Cast<APatrolRouteBase>(Actor))
 	{
 		FGameplayTagContainer GameplayTagContainer = PatrolRouteBase->GameplayTagContainer;
-		if (GameplayTagContainer.IsValid())
+		if (GameplayTagContainer.IsValid() && IsValid(Actor) && Actor != nullptr)
 		{
 			if (GameplayTagContainer.HasTagExact(FGameplayTag::RequestGameplayTag(FName("Environment.PatrolRoute.Type.Flusher"))))
 			{
