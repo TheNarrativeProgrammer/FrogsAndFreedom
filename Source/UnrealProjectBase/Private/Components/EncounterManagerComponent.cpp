@@ -17,6 +17,7 @@
 #include "Interfaces/IPluginManager.h"
 #include "Interfaces/PatrolRouteable.h"
 #include "GameplayTagAssetInterface.h"
+#include "Kismet/KismetMathLibrary.h"
 
 
 // Sets default values for this component's properties
@@ -236,6 +237,13 @@ void UEncounterManagerComponent::UnregisterEncounter(const AEncounterTrigger* In
 	{
 		GameStateEventManager->FOnEncounterEndedDelegate.Broadcast();
 	}
+
+	TArray<AActor*> foundActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), TSubclassOf<AForceFieldBase>(), foundActors);
+	for (AActor* FoundActor : foundActors)
+	{
+		FoundActor->Destroy();
+	}
 }
 
 void UEncounterManagerComponent::AddEncounterActorSpawnersToArrays(AActor* Actor)
@@ -334,9 +342,13 @@ void UEncounterManagerComponent::EndPlay(const EEndPlayReason::Type EndPlayReaso
 
 void UEncounterManagerComponent::EmptyArraysActorSpawnLocations()
 {
-	_maActorSpawnerBaseVent.Empty();
-	_maActorSpawnerBaseFrogMachinesFlusherPinner.Empty();
-	_maActorSpawnerBaseFrogMachinesTank.Empty();
+	if ( _misSpawning == false)
+	{
+		_maActorSpawnerBaseVent.Empty();
+		_maActorSpawnerBaseFrogMachinesFlusherPinner.Empty();
+		_maActorSpawnerBaseFrogMachinesTank.Empty();
+	}
+	
 }
 
 
@@ -353,12 +365,17 @@ void UEncounterManagerComponent::AddForceToSpawnedActor(AActor* InSpawnedActor)
 			
 			if (_mIsSpawningFromVent == true)
 			{
-				LaunchDirection = FVector(0, 0, -1500.0f);	
+				LaunchDirection = FVector(0, 0, -1700.0f);	
 			}
 			else
 			{
 				FVector ForwardVector = InSpawnedActor->GetActorForwardVector();
-				LaunchDirection = ForwardVector * 3000;
+				FVector RightVector = InSpawnedActor->GetActorRightVector();
+				float RightAddition = UKismetMathLibrary::RandomFloatInRange(1,1000);
+				RightVector *= RightAddition;
+				ForwardVector *= 5500;
+				FVector finalVector = ForwardVector + RightVector;
+				LaunchDirection = finalVector;
 			}
 
 			Character->LaunchCharacter(LaunchDirection, true, true);
@@ -376,7 +393,7 @@ void UEncounterManagerComponent::RemoveDeadMachineFromArray(AActor* Actor)
 	if (AActorSpawnerBaseFrogMachine* ActorSpawnerBaseFrogMachine = Cast<AActorSpawnerBaseFrogMachine>(Actor))
 	{
 		FGameplayTagContainer GameplayTagContainer = ActorSpawnerBaseFrogMachine->GameplayTagContainer;
-
+	
 		if (GameplayTagContainer.IsValid())
 		{
 			if (GameplayTagContainer.HasTagExact(FGameplayTag::RequestGameplayTag(FName("Environment.ActorSpawner.Machine"))))
@@ -385,7 +402,7 @@ void UEncounterManagerComponent::RemoveDeadMachineFromArray(AActor* Actor)
 				{
 					_maActorSpawnerBaseFrogMachinesFlusherPinner.Remove(Actor);
 				}
-
+	
 				if (_maActorSpawnerBaseFrogMachinesTank.Contains(Actor))
 				{
 					_maActorSpawnerBaseFrogMachinesTank.Remove(Actor);
@@ -738,7 +755,7 @@ void UEncounterManagerComponent::OnWaveCompleteIterateSpawnLocationAndWave()
 	{
 		return;
 	}
-
+	
 	if (CurrentlyActiveEncounterTrigger->EncounterData->IsWaveInMap(NextWaveInQue) == true)
 	{
 		if (CurrentlyActiveEncounterTrigger->EncounterData->GetWaveData(NextWaveInQue).WaveTrigger == EWaveTrigger::FrogPopulation
@@ -836,7 +853,11 @@ void UEncounterManagerComponent::SpawnActorFromBatch()
 				if (pooledActor->Implements<UPatrolRouteable>())
 				{
 					IPatrolRouteable::Execute_SetPatrolRoute(pooledActor, PatrolRouteBaseOfCurrentBatch);
-					GameStateEventManager->OnActorSpawnedSendTransformOfSpawnPointDelegate.Broadcast(TransformSpawnLocationOfBatch);
+					if (GameStateEventManager)
+					{
+						GameStateEventManager->OnActorSpawnedSendTransformOfSpawnPointDelegate.Broadcast(TransformSpawnLocationOfBatch);
+					}
+					
 					AddForceToSpawnedActor(pooledActor);
 				}
 				//if spawned Actor is a tank, pass a ptr of the Tank to the ActorSpawner. This is used to determine if force field applied
@@ -1039,7 +1060,7 @@ FTransform UEncounterManagerComponent::GetTransformActorSpawner(const FEncounter
 	
 	if (EncounterSpawnData.GameplayTagFrog.MatchesAny(GameplayTagsContainerFlusherPinner))
 	{
-		if (InIndexOfSpawnerArray >= _maActorSpawnerBaseFrogMachinesFlusherPinner.Num() && _maActorSpawnerBaseFrogMachinesFlusherPinner.IsEmpty() == false)
+		if (InIndexOfSpawnerArray >= 0 && _maActorSpawnerBaseFrogMachinesFlusherPinner.IsEmpty() == false)
 		{
 			InIndexOfSpawnerArray = InIndexOfSpawnerArray % _maActorSpawnerBaseFrogMachinesFlusherPinner.Num();
 		}

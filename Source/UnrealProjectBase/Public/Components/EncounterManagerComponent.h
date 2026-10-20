@@ -220,9 +220,11 @@ protected:
 	UPROPERTY()
 	TSubclassOf<ACharacterBaseFrog> CharacterBaseFrogClassOfBatch;
 
-	UPROPERTY()
+public:
+	UPROPERTY(BlueprintReadOnly)
 	bool _misSpawning = false;
 
+protected:
 	UPROPERTY()
 	int32 TotalActorsToSpawn;
 
