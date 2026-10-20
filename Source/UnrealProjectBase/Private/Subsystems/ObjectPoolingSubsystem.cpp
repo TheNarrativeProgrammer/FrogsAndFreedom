@@ -5,9 +5,11 @@
 #include "AIController.h"
 #include "BrainComponent.h"
 #include "Characters/Frogs/CharacterBaseFrog.h"
+#include "Characters/Frogs/Enemies/CharacterBaseFrogTank.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Interfaces/Poolable.h"
+#include "Core/GameStateEventManagerBase.h"
 
 class ADetourCrowdAIController;
 
@@ -20,6 +22,7 @@ bool UObjectPoolingSubsystem::ShouldCreateSubsystem(UObject* Outer) const
 void UObjectPoolingSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
+	
 }
 
 void UObjectPoolingSubsystem::Deinitialize()
@@ -27,8 +30,35 @@ void UObjectPoolingSubsystem::Deinitialize()
 	Super::Deinitialize();
 }
 
+void UObjectPoolingSubsystem::StopPoolingOnceKillAllFrogsObjectiveStarts()
+{
+	shouldStopPooling = true;
+}
+
+void UObjectPoolingSubsystem::BindDelegates()
+{
+	if (AGameStateEventManagerBase* GameState = Cast<AGameStateEventManagerBase>(
+		UGameplayStatics::GetGameState(GetWorld())))
+	{
+		GameStateEventManager = GameState;
+		GameStateEventManager->OnKillAllFrogsStartedSignature.AddUniqueDynamic(this, &UObjectPoolingSubsystem::StopPoolingOnceKillAllFrogsObjectiveStarts);
+	}
+}
+
+void UObjectPoolingSubsystem::UnBindDelegates()
+{
+	if (AGameStateEventManagerBase* GameState = Cast<AGameStateEventManagerBase>(
+		UGameplayStatics::GetGameState(GetWorld())))
+	{
+		GameStateEventManager = GameState;
+		GameStateEventManager->OnKillAllFrogsStartedSignature.RemoveDynamic(this, &UObjectPoolingSubsystem::StopPoolingOnceKillAllFrogsObjectiveStarts);
+	}
+}
+
 void UObjectPoolingSubsystem::PreWarmPool(TSubclassOf<AActor> poolableClass, int32 count, FTransform poolTransform)
 {
+	
+	
 	if (!IsValid(poolableClass)
 		|| !poolableClass->ImplementsInterface(UPoolable::StaticClass())
 		|| count < 1
@@ -75,7 +105,7 @@ AActor* UObjectPoolingSubsystem::SpawnActorFromPool(TSubclassOf<AActor> poolable
 		//UE_LOG(LogTemp, Warning, TEXT("PROGRAMMER: SpawnActorFromPool passed a poolableClass that's doesn't implement Poolable interface"));
 		return nullptr;
 	}
-
+#if 0
 	//Pass key, Class of actor, into map and get the value, Array of actors in pool of that class
 	//FActorQueueWrapper& poolByClass = _mdActorPools.FindOrAdd(poolableClass);
 
@@ -95,11 +125,12 @@ AActor* UObjectPoolingSubsystem::SpawnActorFromPool(TSubclassOf<AActor> poolable
 	//check if pooled actor inherits from pawn and if controller is attached. manually trigger possession of controller via setting default.
 	// if (poolByClass.ActorsInPoolOrLevel.Num() > 4)
 	if (!ActorQueueWrapper->ActorsInPool.IsEmpty())
+	if (false)
 	{
 		AActor* pooledActor = nullptr;
 		if (_mdActorPools.FindOrAdd(poolableClass)->ActorsInPool.Dequeue(pooledActor))
 		{
-			if (!pooledActor) {return SpawnNewActor(poolableClass, spawnTransform);;}
+			if (!pooledActor) {return SpawnNewActor(poolableClass, spawnTransform);}
 			//UE_LOG(LogTemp, Warning, TEXT("PROGRAMMER: SpawnActorFromPool has Actor in pool"));
 			//_mdActorsInGamePlay.FindOrAdd(poolableClass)->ActorsInGamePlay.Add(pooledActor);
 
@@ -257,6 +288,8 @@ AActor* UObjectPoolingSubsystem::SpawnActorFromPool(TSubclassOf<AActor> poolable
 			return pooledActor;
 		}
 	}
+#endif
+	
 	return SpawnNewActor(poolableClass, spawnTransform);
 }
 
@@ -351,12 +384,12 @@ AActor* UObjectPoolingSubsystem::SpawnNewActor(TSubclassOf<AActor> poolableClass
 
 		if (!ActorSetWrapperPtr)
 		{
-			_mdActorsInGamePlay.Add(poolableClass, MakeUnique<FActorSetWrapper>());
-			ActorSetWrapperPtr = _mdActorsInGamePlay.Find(poolableClass);
+			// _mdActorsInGamePlay.Add(poolableClass, MakeUnique<FActorSetWrapper>());
+			// ActorSetWrapperPtr = _mdActorsInGamePlay.Find(poolableClass);
 		}
 
-		FActorSetWrapper* ActorSetWrapper = ActorSetWrapperPtr->Get();
-		ActorSetWrapper->ActorsInGamePlay.Add(newActor);
+		// FActorSetWrapper* ActorSetWrapper = ActorSetWrapperPtr->Get();
+		// ActorSetWrapper->ActorsInGamePlay.Add(newActor);
 
 		if (APawn* newPawn = Cast<APawn>(newActor) )
 		{
@@ -400,19 +433,22 @@ void UObjectPoolingSubsystem::ReturnToPool(AActor* actorToReturn)
 		return;
 	
 	IPoolable::Execute_OnPoolActorDeactivated(actorToReturn);
+	
+	
+	// if (_mdActorsInGamePlay.FindOrAdd(actorToReturn->GetClass())->ActorsInGamePlay.Contains(actorToReturn))
+	// {
+	// 	_mdActorsInGamePlay.FindOrAdd(actorToReturn->GetClass())->ActorsInGamePlay.Remove(actorToReturn);
+	// }
+	_mCountActorsInGame--;
 
+	actorToReturn->Destroy();
+
+#if 0
 	_mCountActorsInPool++;
-	
-	
-	if (_mdActorsInGamePlay.FindOrAdd(actorToReturn->GetClass())->ActorsInGamePlay.Contains(actorToReturn))
-	{
-		_mdActorsInGamePlay.FindOrAdd(actorToReturn->GetClass())->ActorsInGamePlay.Remove(actorToReturn);
-	}
 	
 	//Add actor to pool of it's class
 	//FActorArrayWrapper& poolByClass = _mdActorPools.FindOrAdd(actorToReturn->GetClass());
 	//poolByClass.ActorsInPoolOrLevel.Add(actorToReturn);
-
 	TUniquePtr<FActorQueueWrapper>* ActorQueueWrapperPtr = _mdActorPools.Find(actorToReturn->GetClass());
 
 	if (!ActorQueueWrapperPtr)
@@ -423,6 +459,7 @@ void UObjectPoolingSubsystem::ReturnToPool(AActor* actorToReturn)
 
 	ActorQueueWrapperPtr->Get()->ActorsInPool.Enqueue(actorToReturn);
 
+	
 	
 	//_mdActorPools.FindOrAdd(actorToReturn->GetClass())->ActorsInPool.Enqueue(actorToReturn);
 
@@ -571,7 +608,10 @@ void UObjectPoolingSubsystem::ReturnToPool(AActor* actorToReturn)
 	
 
 	//IPoolable::Execute_OnPoolActorDeactivated(actorToReturn);
+#endif
 }
+
+
 
 int32 UObjectPoolingSubsystem::GetTotalFrogsInGamePlayAllClasses()
 {
@@ -653,6 +693,10 @@ void UObjectPoolingSubsystem::OnDeathClearPoolArrays()
 
 void UObjectPoolingSubsystem::ReturnAllGamePlayActorsToPool()
 {
+	if (_mdActorPools.Num() == 0)
+	{
+		return;
+	}
 	TArray<TSubclassOf<AActor>> Keys;
 	_mdActorsInGamePlay.GetKeys(Keys);
 
@@ -673,4 +717,6 @@ void UObjectPoolingSubsystem::ReturnAllGamePlayActorsToPool()
 	{
 		ReturnToPool(Actor);
 	}
+
+	
 }

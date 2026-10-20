@@ -6,6 +6,7 @@
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "ObjectPoolingSubsystem.generated.h"
 
+class AGameStateEventManagerBase;
 
 class ACharacterBaseFrog;
 /**
@@ -44,6 +45,20 @@ public:
 	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;
+
+	UPROPERTY(BlueprintReadWrite, Blueprintable)
+	AGameStateEventManagerBase* GameStateEventManager;
+
+	bool shouldStopPooling = false;
+
+	UFUNCTION()
+	void StopPoolingOnceKillAllFrogsObjectiveStarts();
+
+	UFUNCTION()
+	void BindDelegates();
+
+	UFUNCTION()
+	void UnBindDelegates();
 
 
 	/*MAP OF ACTORS --> ptr to all Actors of a given class within the pool. Key is Class. Value is ptr to Actors of that class 

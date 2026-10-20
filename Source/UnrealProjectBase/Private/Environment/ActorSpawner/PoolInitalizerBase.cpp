@@ -16,6 +16,11 @@ APoolInitalizerBase::APoolInitalizerBase()
 void APoolInitalizerBase::BeginPlay()
 {
 	Super::BeginPlay();
+	if (UObjectPoolingSubsystem* ObjectPoolingSubsystem = GetWorld()->GetGameInstance()->GetSubsystem<UObjectPoolingSubsystem>())
+	{
+		ObjectPoolingSubsystem->BindDelegates();
+	}
+	
 	//Initialize pool with Actors of class
 	InitalizePool(_mPoolOfClassDataFlusher);
 	InitalizePool(_mPoolOfClassDataPinner);
@@ -36,6 +41,15 @@ void APoolInitalizerBase::InitalizePool(const FPoolOfClassData& poolOfClassData)
 	if (UObjectPoolingSubsystem* ObjectPoolingSubsystem = GetWorld()->GetGameInstance()->GetSubsystem<UObjectPoolingSubsystem>())
 	{
 		ObjectPoolingSubsystem->PreWarmPool(poolOfClassData.ActorClassToSpawn, poolOfClassData.PopulationInPool, poolOfClassData.Transform);
+	}
+}
+
+void APoolInitalizerBase::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+	if (UObjectPoolingSubsystem* ObjectPoolingSubsystem = GetWorld()->GetGameInstance()->GetSubsystem<UObjectPoolingSubsystem>())
+	{
+		ObjectPoolingSubsystem->UnBindDelegates();
 	}
 }
 

@@ -785,8 +785,12 @@ void APooledActorManager::SpawnActorFromBatch()
 			if (ACharacterBaseFrogTank* CharacterBaseFrogTank = Cast<ACharacterBaseFrogTank>(pooledActor))
 			{
 				//todo try to docouple OnSetTankSetForceFieldLocation(); this is temp solution
-				ActorSpawnerBaseWithTank->SetActorIDTankAtThisSpawner(CharacterBaseFrogTank->GetUniqueID());
-				ActorSpawnerBaseWithTank->OnSetTankSetForceFieldLocation();
+				if (ActorSpawnerBaseWithTank && IsValid(ActorSpawnerBaseWithTank))
+				{
+					ActorSpawnerBaseWithTank->SetActorIDTankAtThisSpawner(CharacterBaseFrogTank->GetUniqueID());
+					ActorSpawnerBaseWithTank->OnSetTankSetForceFieldLocation();
+				}
+				
 				//ActorSpawnerBaseWithTank->SetFrogTankAtThisMachine(CharacterBaseFrogTank);
 				//ActorSpawnerBaseWithTank->RegisterListenerToTankDeathDelegate();
 				//reset persistent reference to the last ActorSpawnerBaseWithTank. There are null checks to see if this is valid
@@ -797,7 +801,12 @@ void APooledActorManager::SpawnActorFromBatch()
 		}
 		SpawnCountOfBatch++;
 		SpawnCountTotalAllActorsOfClass++;
-		
+	}
+	else
+	{
+		//fall back incase pooling subsystem ptr fails. This prevents infinite while loop on while (SpawnCountOfBatch < BatchSize)
+		SpawnCountOfBatch++;
+		SpawnCountTotalAllActorsOfClass++;
 	}
 }
 
