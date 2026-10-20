@@ -40,10 +40,66 @@ public IAttackTokenGiverable
 	
 public:	
 	AGeneratorBase();
+
+//PROPERTIES
+
+	//Delegates
+	UPROPERTY(BlueprintCallable, BlueprintAssignable)
+	FOnHealthDepetedForceFieldSignature OnHealthDepetedForceFieldDelegate;
+
+	//Gameplay tags
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="GameplayTagContainer")
+	FGameplayTagContainer GameplayTagContainer;
+
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	TObjectPtr<AForceFieldBase> mForceFieldPtr = nullptr;
+	
+	//components
+public:
+	UPROPERTY()
+	TObjectPtr<UPawnNoiseEmitterComponent> NoiseEmitterComponent;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	TObjectPtr<UDelegateBindComponentGenerator> DelegateBindComponentGenerator;
 	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
+	TObjectPtr<USceneComponent> SceneComponentJumpOffLocation;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	TObjectPtr<UHealthComponent> HealthComponent;
+
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	TObjectPtr<UStaticMeshComponent> StaticMeshComponent;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	TObjectPtr<UBoxComponent> BoxComponent;
+
+	UPROPERTY(EditAnywhere, Blueprintable, BlueprintReadWrite, Category = "Components")
+	TObjectPtr<UAttackTokenGiverComponent> AttackTokenGiverableComponent;
+	
+
+	//Force field
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "Encounter Options")
+	bool _mIsShieldActiveOnEncounterStart = false;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "ForceFieldID")
+	int32 _mForceFieldID;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Force Field Class")
+	TSubclassOf<AForceFieldBase> ForceFieldClass;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Force Field Class")
+	bool _mIsForceFieldActive;
+
+	UPROPERTY()
+	FTimerHandle GeneratorSoundTimerHandle;
+
+	UPROPERTY()
+	float TimeBetweenNoises = 5.0f;
+
+public:
 	UFUNCTION()
 	void CheckForceFieldIDMatchesThisOwner(int32 InForceField);
 
@@ -52,60 +108,25 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SetSoundTimer();
-	
-	//Functions - inherited from IGameplayerTagAssetInterface
-	void GetOwnedGameplayTags(FGameplayTagContainer& TagContainer) const;
 
-	//Function - inherits from IGenericTeamAgentInterface. IdNumber is public and is used to change the TeamId variable
+private:
+	//PROPERTIES - team ID for GenericTeamAgentInterface
+	UPROPERTY(EditDefaultsOnly)
+	FGenericTeamId TeamId;
+
+
+//INTERFACES
+public:
+	//IGameplayerTagAssetInterface
+	void GetOwnedGameplayTags(FGameplayTagContainer& TagContainer) const;
+	
+	//IGenericTeamAgentInterface. IdNumber is public and is used to change the TeamId variable
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
 	int32 IdNumber;
 
 	virtual FGenericTeamId GetGenericTeamId() const { return TeamId; }
 
-	//PROPERTIES - team ID for GenericTeamAgentInterface
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
-	FGenericTeamId TeamId;
-
-	
-	
-	UFUNCTION(BlueprintCallable)
-	UHealthComponent* GetHealthComponent();
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
-	USceneComponent* SceneComponentJumpOffLocation;
-
-	
-
-	UPROPERTY(BlueprintCallable, BlueprintAssignable)
-	FOnHealthDepetedForceFieldSignature OnHealthDepetedForceFieldDelegate;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="GameplayTagContainer")
-	FGameplayTagContainer GameplayTagContainer;
-
-	UPROPERTY()
-	TObjectPtr<UPawnNoiseEmitterComponent> NoiseEmitterComponent;
-
-	
-
-	UFUNCTION(BlueprintCallable)
-	bool GetIsForceFieldActive();
-
-
-	//FUNCTIONS - enemy attack locations
-	//  UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	//  TArray<FVector> GetEnemyAttackLocations();
-	//
-	// //FUNCTIONS - enemy attack locations
-	//  UFUNCTION()
-	//  void PopulateEnemyAttackLocationsArray(USceneComponent* EnemyAttackLocation);
-	
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void OnBeginplayBroadcastActorInitializationDelegates();
-
-	UFUNCTION()
-	void OnObjectiveTimerCompleteStopSoundTimer();
-
-	//FUNCTIONS - Interactable interface
+	//Interactable interface
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void OnInteract();
 
@@ -121,122 +142,57 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	bool CanInteract_Implementation();
 	
-protected:
-	virtual void BeginPlay() override;
-
-	UFUNCTION()
-	void SpawnAndSaveIdOfForceField();
-
-	UFUNCTION(BlueprintCallable)
-	void SetWidgetValues();
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
-	TObjectPtr<AForceFieldBase> mForceFieldPtr = nullptr;
-	
-
-	//PROPERTIES - components
-	
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
-	UHealthComponent* HealthComponent;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
-	TObjectPtr<UStaticMeshComponent> StaticMeshComponent;
-
-	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
-	// TObjectPtr<USphereComponent> SphereComponent;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
-	TObjectPtr<UBoxComponent> BoxComponent;
-
-	UPROPERTY(EditAnywhere, Blueprintable, BlueprintReadWrite, Category = "Components")
-	TObjectPtr<UAttackTokenGiverComponent> AttackTokenGiverableComponent;
-
-	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
-	// TObjectPtr<USceneComponent> SceneComponentEnmenyAttackLocationTop;
-	//
-	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
-	// TObjectPtr<USceneComponent> SceneComponentEnmenyAttackLocationBottom;
-	//
-	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
-	// TObjectPtr<USceneComponent> SceneComponentEnmenyAttackLocationLeft;
-	//
-	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
-	// TObjectPtr<USceneComponent> SceneComponentEnmenyAttackLocationRight;
-
-	//PROPERTIES - Force field
-	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "Encounter Options")
-	bool _mIsShieldActiveOnEncounterStart = false;
-
-	//PROPERTIES - Force field
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "ForceFieldID")
-	int32 _mForceFieldID;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Force Field Class")
-	TSubclassOf<AForceFieldBase> ForceFieldClass;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Force Field Class")
-	bool _mIsForceFieldActive;
-
-	//PROPERIES - enemy attack location
-	// UPROPERTY(VisibleInstanceOnly, BlueprintReadWrite, Category = "AttackLocations")
-	// TArray<USceneComponent*> _maEnemyAttackLocations;
-
-	
-
-	//Functions - GenericTeamAgentInterface
-	//virtual void SetGenericTeamId(const FGenericTeamId& TeamID) override;
-
-	
-
-	//FUNCTIONS - register delegates for force field health
-	// UFUNCTION(BlueprintCallable)
-	// void RegisterListenersForHealthOfForceFields();
-
-	// UFUNCTION()
-	// void BroadcastHealthDepletedOfForceField();
-
-	
-	
-
-	UFUNCTION(BlueprintCallable)
-	void SetForceFieldID(int32 InForceFieldID);
-
-	UFUNCTION(BlueprintCallable)
-	void SetIsForceFieldActive(bool InIsForceFieldActive);
-
-	
-	
-
-public:
-	virtual void Tick(float DeltaTime) override;
-
-	UPROPERTY()
-	FTimerHandle GeneratorSoundTimerHandle;
-
-	UPROPERTY()
-	float TimeBetweenNoises = 5.0f;
-	
-
-	
-
-	UFUNCTION(BlueprintCallable)
-	void PlayNoise();
-
-	UFUNCTION(BlueprintCallable)
-	int32 GetForceFieldTag();
-
-	//IAttackTokenGiverable Function implementation
+	//IAttackTokenGiverable
 	virtual void HandleReturningToken_Implementation(int32 InTokensRequiredForAction, int32 InIndexOfReservedPoint) override;
 
 	virtual bool HandleResevereTokenRequest_Implementation(const FRequesterGeneralTokenData& RequesterTokenData, const TArray<int32>& RequestedIndexes, FRequesterReservationData& ReservationData) override;
 
 	virtual FVector HandleAttackLocationRequest_Implementation(int32 InIndexOfReservedPoint) override;
 
+
+//METHODS (not inherited from abstract) 
+	//GETTERS & SETTERS
+	UFUNCTION(BlueprintCallable)
+	UHealthComponent* GetHealthComponent();
+	
+	UFUNCTION(BlueprintCallable)
+	bool GetIsForceFieldActive();
+	
+	UFUNCTION(BlueprintCallable, Blueprintable)
+	void SetWidgetValues();
+	
+	UFUNCTION(BlueprintCallable)
+	void SetForceFieldID(int32 InForceFieldID);
+
+	UFUNCTION(BlueprintCallable)
+	void SetIsForceFieldActive(bool InIsForceFieldActive);
+
+	UFUNCTION(BlueprintCallable)
+	int32 GetForceFieldTag();
+
+
+	//DELEGATE BROADCAST
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void OnBeginplayBroadcastActorInitializationDelegates();
+
+	UFUNCTION()
+	void OnObjectiveTimerCompleteStopSoundTimer();
+
+protected:
+	virtual void BeginPlay() override;
+
+	UFUNCTION()
+	void SpawnAndSaveIdOfForceField();
+
+public:
+	virtual void Tick(float DeltaTime) override;
+	
+	UFUNCTION(BlueprintCallable)
+	void PlayNoise();
+	
 	UFUNCTION(BlueprintCallable)
 	void OnGameOverClearTimer();
 
 	UFUNCTION(BlueprintCallable)
 	void OnLeverPullRestoreHealthOfForceField();
-	
 };

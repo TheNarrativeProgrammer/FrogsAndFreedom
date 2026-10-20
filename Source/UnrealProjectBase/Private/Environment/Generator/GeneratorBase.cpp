@@ -21,16 +21,10 @@ AGeneratorBase::AGeneratorBase()
 	
 	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComponent"));
 	BoxComponent =  CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComponent"));
-	//SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
-	// SceneComponentEnmenyAttackLocationTop = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComponentEnemyAttackLocationTop"));
-	// SceneComponentEnmenyAttackLocationBottom = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComponentEnemyAttackLocationBottom"));
-	// SceneComponentEnmenyAttackLocationLeft = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComponentEnemyAttackLocationLeft"));
-	// SceneComponentEnmenyAttackLocationRight = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComponentEnemyAttackLocationRight"));
 	
 	AttackTokenGiverableComponent = CreateDefaultSubobject<UAttackTokenGiverComponent>(TEXT("AttackTokenGiverComponent"));
 
 	SetRootComponent(StaticMeshComponent);
-	//SphereComponent->SetupAttachment(StaticMeshComponent);
 	BoxComponent->SetupAttachment(StaticMeshComponent);
 
 	AttackTokenGiverableComponent->SceneComponentEnemyAttackLocationLeftFlusher->SetupAttachment(StaticMeshComponent);
@@ -39,10 +33,6 @@ AGeneratorBase::AGeneratorBase()
 	AttackTokenGiverableComponent->SceneComponentEnemyAttackLocationLeftPinner->SetupAttachment(StaticMeshComponent);
 	AttackTokenGiverableComponent->SceneComponentEnemyAttackLocationMidPinner->SetupAttachment(StaticMeshComponent);
 	AttackTokenGiverableComponent->SceneComponentEnemyAttackLocationRightPinner->SetupAttachment(StaticMeshComponent);
-	// SceneComponentEnmenyAttackLocationTop->SetupAttachment(StaticMeshComponent);
-	// SceneComponentEnmenyAttackLocationBottom->SetupAttachment(StaticMeshComponent);
-	// SceneComponentEnmenyAttackLocationLeft->SetupAttachment(StaticMeshComponent);
-	// SceneComponentEnmenyAttackLocationRight->SetupAttachment(StaticMeshComponent);
 
 	//Populate Array
 	SceneComponentJumpOffLocation = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComponentJumpOffLocation"));
@@ -72,7 +62,6 @@ void AGeneratorBase::OnInteract_Implementation()
 				OnGeneratorInteractDelegate.Broadcast();
 		}
 	}
-	
 }
 
 void AGeneratorBase::ReverseInteractVisual_Implementation()
@@ -97,7 +86,6 @@ bool AGeneratorBase::CanInteract_Implementation_Implementation()
 	return GetIsForceFieldActive() == false;
 }
 
-// Called when the game starts or when spawned
 void AGeneratorBase::BeginPlay()
 {
 	Super::BeginPlay();
@@ -204,7 +192,6 @@ void AGeneratorBase::OnObjectiveTimerCompleteStopSoundTimer()
 		mForceFieldPtr->DelegateBindComponentForceField->UnBindDelegates();
 		mForceFieldPtr->Destroy();
 	}
-	
 }
 
 
